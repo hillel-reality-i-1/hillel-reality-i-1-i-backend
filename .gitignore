@@ -160,4 +160,8 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+# User-specific stuff
+.idea/git_toolbox_prj.xml
+
+# Local files
 docker-compose.override.yml
