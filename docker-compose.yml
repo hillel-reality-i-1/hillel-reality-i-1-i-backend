@@ -1,0 +1,31 @@
+version: '3.9'
+
+volumes:
+  postgres_data: { }
+
+
+services:
+  app:
+    build: .
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    profiles:
+      - full_dev
+    command: /start.sh
+
+  postgres:
+    image: postgres:15.4
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data:rw
+    profiles:
+      - full_dev
+      - local_dev

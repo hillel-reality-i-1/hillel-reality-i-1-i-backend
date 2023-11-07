@@ -1,0 +1,19 @@
+[project]
+# https://packaging.python.org/en/latest/specifications/declaring-project-metadata/
+requires-python = "~=3.12"
+
+[tool.black]
+# https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html
+line-length = 120
+target-version = ['py312']
+extend-exclude = '''
+venv
+'''
+
+[tool.autoflake]
+# https://github.com/PyCQA/autoflake
+check = true
+in-place = true
+remove-unused-variables = true
+remove-duplicate-keys = true
+remove-all-unused-imports = true

@@ -1,0 +1,7 @@
+# Pro-tip: Try not to put anything here. Avoid dependencies in
+#	production that aren't in development.
+
+--requirement base.txt
+
+# Web server.
+# gunicorn==21.2.0
