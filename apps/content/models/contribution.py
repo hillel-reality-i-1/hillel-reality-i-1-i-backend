@@ -4,6 +4,7 @@ from .article import Article
 
 User = get_user_model()
 
+
 class Contribution(models.Model):
     text = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
