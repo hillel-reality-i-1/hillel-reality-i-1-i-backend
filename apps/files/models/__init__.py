@@ -1,2 +1,2 @@
-from file import File
-from image import Image
+from .file import File
+from .image import Image

@@ -60,6 +60,9 @@ LOCAL_APPS = [
     # Users and related.
     "apps.users",
     "apps.expert",
+    "apps.files",
+    "apps.content",
+
 ]
 
 # Third-party installed applications.
