@@ -59,6 +59,7 @@ LOCAL_APPS = [
     "apps.base",
     # Users and related.
     "apps.users",
+    "apps.expert",
 ]
 
 # Third-party installed applications.
