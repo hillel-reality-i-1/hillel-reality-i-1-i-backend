@@ -64,6 +64,7 @@ LOCAL_APPS = [
 # Third-party installed applications.
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "dj_rest_auth",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -150,3 +151,5 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+REST_USE_JWT = True
