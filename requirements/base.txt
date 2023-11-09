@@ -17,3 +17,15 @@ djangorestframework==3.14.0
 # Docs
 drf-yasg==1.21.7
 # [drf]-[END]
+
+# Countries and Cities
+django-cities-light==3.10.0
+
+# Authentication
+django-allauth
+
+# For file processing
+Pillow==10.1.0
+
+# phone number's validating
+django-phonenumber-field==7.2.0

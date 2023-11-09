@@ -51,6 +51,9 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.postgres",
+    "rest_framework.authtoken",
+    "allauth",
+    "allauth.account",
 ]
 
 # Local applications.
@@ -60,12 +63,15 @@ LOCAL_APPS = [
     # Users and related.
     "apps.users",
     "apps.expert",
+    "apps.content",
+    "apps.files",
 ]
 
 # Third-party installed applications.
 THIRD_PARTY_APPS = [
     "rest_framework",
     "dj_rest_auth",
+    "cities_light",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -79,6 +85,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
