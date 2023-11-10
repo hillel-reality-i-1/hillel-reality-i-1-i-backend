@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from apps.files.models import Image
+from apps.expert.models import Profession
 
 User = get_user_model()
 
@@ -12,6 +13,7 @@ class Article(models.Model):
     likes = models.ManyToManyField(User, related_name='article_likes', blank=True)
     dislikes = models.ManyToManyField(User, related_name='article_dislikes', blank=True)
     images = models.ManyToManyField(Image, related_name='article_images', blank=True)
+    professional_tags = models.ManyToManyField(Profession, related_name='professional_tags', blank=True)
     creation_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -25,3 +27,6 @@ class Article(models.Model):
 
     def get_images(self):
         return self.images.all()
+
+    def get_professional_tags(self):
+        return self.professional_tags.all()
