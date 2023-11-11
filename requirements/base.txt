@@ -29,10 +29,11 @@ drf-yasg==1.21.7
 django-cities-light==3.10.0
 
 # Authentication
-django-allauth
-dj_rest_auth==1.0.0
+django-allauth==0.58.2
+dj_rest_auth==5.0.1
 
 
 # phone number's validating
 django-phonenumber-field==7.2.0
 phonenumbers==8.13.24
+

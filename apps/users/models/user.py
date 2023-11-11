@@ -1,3 +1,5 @@
+from random import randint
+
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
@@ -13,6 +15,10 @@ class CustomUserManager(BaseUserManager):
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.date_joined = timezone.now()
+        first_name = extra_fields.get("first_name", "")
+        last_name = extra_fields.get("last_name", "")
+        username = self.generate_unique_username(first_name, last_name)
+        user.username = username
         user.save(using=self._db)
         return user
 
@@ -26,6 +32,17 @@ class CustomUserManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True.")
 
         return self.create_user(email, password, **extra_fields)
+
+    def is_username_unique(self, username):
+        return not self.get_queryset().filter(username=username).exists()
+
+    def generate_unique_username(self, first_name, last_name):
+        username = f"{first_name.lower()}_{last_name.lower()}_{randint(1, 99999)}"
+
+        while not self.is_username_unique(username):
+            username = f"{first_name.lower()}_{last_name.lower()}_{randint(1, 99999)}"
+
+        return username
 
 
 class User(AbstractBaseUser, PermissionsMixin):
