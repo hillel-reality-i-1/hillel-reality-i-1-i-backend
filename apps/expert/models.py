@@ -2,7 +2,8 @@ from django.db import models
 
 
 class Profession(models.Model):
-    name = models.CharField(max_length=100, unique=True, verbose_name="title")
+    name = models.CharField(max_length=100, unique=True, blank=True, verbose_name="name")
+    services = models.ManyToManyField("Service", related_name="professions")
     approved = models.BooleanField(default=False, verbose_name="approved")
 
     def __str__(self):
@@ -10,7 +11,7 @@ class Profession(models.Model):
 
 
 class Service(models.Model):
-    name = models.CharField(max_length=100, blank=True, verbose_name="title")
+    name = models.CharField(max_length=100, unique=True, blank=True, verbose_name="name")
     approved = models.BooleanField(default=False, verbose_name="approved")
 
     def __str__(self):
