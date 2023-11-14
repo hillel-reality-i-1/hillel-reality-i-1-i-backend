@@ -109,6 +109,16 @@ TEMPLATES = [
     },
 ]
 
+REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'post.permissions.IsAdminOrReadOnly'
+    # ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+}
+
 WSGI_APPLICATION = "core.wsgi.application"
 
 # Database
@@ -161,9 +171,16 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-REST_USE_JWT = True
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
 
-# REST_USE_CUSTOM_REGISTER_SERIALIZER = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
@@ -180,3 +197,9 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = env.str('EMAIL_HOST_USER', 'email_user')
 EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD', 'email_password')
+AUTHENTICATION_CLASSES = [
+    "dj_rest_auth.authentication.AllAuthJWTAuthentication",
+]
+
+REST_USE_JWT = True
+JWT_AUTH_COOKIE = "access_token"
