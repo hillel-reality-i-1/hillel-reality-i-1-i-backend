@@ -6,4 +6,4 @@ from ..models import Profession
 class ProfessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profession
-        fields = ["title"]
+        fields = ["name"]
