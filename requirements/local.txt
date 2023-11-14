@@ -14,3 +14,6 @@ flake8==6.1.0
 # Removes unused imports and unused variables.
 autoflake==2.2.1
 # [code_style]-[END]
+
+# Requests
+requests==2.31.0

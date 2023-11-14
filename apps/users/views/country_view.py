@@ -1,8 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from cities_light.models import Country
-
-from ..serializers import CountrySerializer
+from apps.users.serializers.country_serializer import CountrySerializer
 
 
 class CountryListView(APIView):

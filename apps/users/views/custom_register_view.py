@@ -4,11 +4,11 @@ from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 
-from apps.users.serializers.custom_register_serializer import CustomUserSerializer
+from apps.users.serializers.custom_registration_serializer import CustomRegistrationSerializer
 
 
 class CustomRegisterView(generics.CreateAPIView):
-    serializer_class = CustomUserSerializer
+    serializer_class = CustomRegistrationSerializer
     permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
