@@ -1,13 +1,34 @@
 from rest_framework import serializers
-from apps.users.models import User
+from dj_rest_auth.registration.serializers import RegisterSerializer
 
 
-class CustomRegistrationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ("id", "email", "password", "first_name", "last_name")
-        extra_kwargs = {"password": {"write_only": True}, "last_name": {"required": False}}
+class CustomRegistrationSerializer(RegisterSerializer):
 
-    def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
+    declared_fields = RegisterSerializer.__dict__["_declared_fields"]
+
+    declared_fields.pop("password1")
+    declared_fields.pop("password2")
+    declared_fields.pop("username")
+    declared_fields["password"] = serializers.CharField(write_only=True)
+    declared_fields["first_name"] = serializers.CharField(write_only=True)
+    declared_fields["last_name"] = serializers.CharField(write_only=True, required=False)
+
+    def validate(self, data):
+        return data
+
+    def get_cleaned_data(self):
+        return {
+            'username': self.validated_data.get('username', ''),
+            'password': self.validated_data.get('password', ''),
+            'email': self.validated_data.get('email', ''),
+            'first_name': self.validated_data.get('first_name', ''),
+            'last_name': self.validated_data.get('last_name', ''),
+        }
+
+    def save(self, request):
+        user = super().save(request)
+        cleaned_data = self.get_cleaned_data()
+        user.first_name = cleaned_data['first_name']
+        user.last_name = cleaned_data['last_name']
+        user.save()
         return user
