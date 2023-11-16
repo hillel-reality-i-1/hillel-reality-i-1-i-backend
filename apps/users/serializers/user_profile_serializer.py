@@ -18,7 +18,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return obj.user.email
 
     def create(self, validated_data):
-        print("CREATE FROM SERIALIZER")
         # Извлечь данные для вложенного поля profile_picture
         profile_picture_data = validated_data.pop("profile_picture", None)
 
@@ -51,12 +50,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     def image_handle(self, image_data):
         image = PilImg.open(image_data)
-        max_size = (320, 240)
+        if image.format.lower() not in ["jpeg", "png"]:
+            raise serializers.ValidationError("Invalid image format. Supported formats: JPEG, PNG.")
 
+        max_size = (320, 240)
         if image.size[0] > max_size[0] or image.size[1] > max_size[1]:
             image.thumbnail(max_size)
             compressed_image_buffer = BytesIO()
-            image.save(compressed_image_buffer, format="JPEG")
+            image.save(compressed_image_buffer, format=image.format.upper())
 
             return ContentFile(compressed_image_buffer.getvalue(), name=image_data.name)
 
