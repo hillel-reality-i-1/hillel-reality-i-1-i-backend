@@ -1,5 +1,6 @@
 from random import randint
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
@@ -33,11 +34,15 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
-    def is_username_unique(self, username):
-        return not self.get_queryset().filter(username=username).exists()
+    @staticmethod
+    def is_username_unique(username):
+        return not get_user_model().objects.filter(username=username).exists()
 
     def generate_unique_username(self, first_name, last_name):
         username = f"{first_name.lower()}_{last_name.lower()}_{randint(1, 99999)}"
+
+        if not User.objects.count():
+            return f"{first_name.lower()}_{last_name.lower()}_{randint(1, 99999)}"
 
         while not self.is_username_unique(username):
             username = f"{first_name.lower()}_{last_name.lower()}_{randint(1, 99999)}"
@@ -61,9 +66,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
 
-    def __str__(self):
+    def str(self):
         return self.email
 
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "Users"
+
+    def save(self, *args, **kwargs):
+        if self.username.lower() == self.first_name.lower() or not self.username:
+            self.username = CustomUserManager().generate_unique_username(
+                self.first_name,
+                self.last_name,
+            )
+        return super().save(*args, **kwargs)

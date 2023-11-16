@@ -70,6 +70,8 @@ THIRD_PARTY_APPS = [
     "rest_framework.authtoken",
     "allauth",
     "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
     "dj_rest_auth",
     "cities_light",
     "dj_rest_auth.registration",
@@ -171,29 +173,49 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+        "SOCIALACCOUNT_EMAIL_VERIFICATION": "none",  # Без подтверждения по электронной почте
+        "SOCIALACCOUNT_AUTO_SIGNUP": True,
+    }
+}
+
+
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
+SITE_ID = 1
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
-ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/'
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/"
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = None
+SOCIALACCOUNT_QUERY_EMAIL = True
 
-ACCOUNT_EXTRA_REQUIRED_FIELDS = ['first_name']
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+ACCOUNT_EXTRA_REQUIRED_FIELDS = ["first_name"]
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-EMAIL_HOST_USER = env.str('EMAIL_HOST_USER', 'email_user')
-EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD', 'email_password')
+EMAIL_HOST_USER = env.str("EMAIL_HOST_USER", "email_user")
+EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD", "email_password")
 AUTHENTICATION_CLASSES = [
     "dj_rest_auth.authentication.AllAuthJWTAuthentication",
 ]
