@@ -1,10 +1,8 @@
 from rest_framework import serializers
 from dj_rest_auth.registration.serializers import RegisterSerializer
-from ..models.user import CustomUserManager
 
 
 class CustomRegistrationSerializer(RegisterSerializer):
-
     declared_fields = RegisterSerializer.__dict__["_declared_fields"]
 
     declared_fields.pop("password1")
@@ -19,19 +17,19 @@ class CustomRegistrationSerializer(RegisterSerializer):
 
     def get_cleaned_data(self):
         return {
-            'username': self.validated_data.get('username', ''),
-            'password': self.validated_data.get('password', ''),
-            'email': self.validated_data.get('email', ''),
-            'first_name': self.validated_data.get('first_name', ''),
-            'last_name': self.validated_data.get('last_name', ''),
+            "username": self.validated_data.get("username", ""),
+            "password": self.validated_data.get("password", ""),
+            "email": self.validated_data.get("email", ""),
+            "first_name": self.validated_data.get("first_name", ""),
+            "last_name": self.validated_data.get("last_name", ""),
         }
 
     def save(self, request):
         user = super().save(request)
 
         cleaned_data = self.get_cleaned_data()
-        user.first_name = cleaned_data['first_name']
-        user.last_name = cleaned_data['last_name']
+        user.first_name = cleaned_data["first_name"]
+        user.last_name = cleaned_data["last_name"]
 
         user.save()
         return user

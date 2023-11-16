@@ -7,7 +7,6 @@ from django.utils import timezone
 
 
 class CustomUserManager(BaseUserManager):
-
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError("Потрібно вказати email")
@@ -75,14 +74,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = "Users"
 
     def save(self, *args, **kwargs):
-        if (
-            self.username.lower() == self.first_name.lower()
-            or
-            not self.username
-        ):
+        if self.username.lower() == self.first_name.lower() or not self.username:
             self.username = CustomUserManager().generate_unique_username(
                 self.first_name,
                 self.last_name,
             )
         return super().save(*args, **kwargs)
-
