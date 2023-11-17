@@ -179,6 +179,11 @@ SOCIALACCOUNT_PROVIDERS = {
             "profile",
             "email",
         ],
+        "APP": {
+            "client_id": env.str("SOCIAL_APP_CLIENT_ID", ""),
+            "secret": env.str("SOCIAL_APP_SECRET_KEY", ""),
+            "key": "",
+        },
         "AUTH_PARAMS": {
             "access_type": "online",
         },

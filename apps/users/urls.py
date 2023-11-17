@@ -21,7 +21,7 @@ urlpatterns = [
     path("auth/registration_user_profile/", RegisterProfileView.as_view(), name="registration_user_profile"),
     path("auth/registration_user_profile_ext/", RegisterProfileExtView.as_view(), name="registration_user_profile_ext"),
     path("accounts/", include("allauth.urls")),
-    path("accounts/confirm-email/", CustomConfirmEmailView.as_view(), name="account_confirm_email"),
+    path("accounts/confirm-email/<str:key>/", CustomConfirmEmailView.as_view(), name="account_confirm_email"),
     path("accounts/verify-email", VerifyEmailView().as_view(), name="account_email_verification_sent"),
     path("users/", include(router.urls)),
 ]
