@@ -66,7 +66,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
 
-    def str(self):
+    def __str__(self):
         return self.email
 
     class Meta:
@@ -74,7 +74,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = "Users"
 
     def save(self, *args, **kwargs):
-        if self.username.lower() == self.first_name.lower() or not self.username:
+        if (
+                self.username.lower() == self.first_name.lower()
+                or not self.username
+                or self.username == 'user'
+        ):
             self.username = CustomUserManager().generate_unique_username(
                 self.first_name,
                 self.last_name,
