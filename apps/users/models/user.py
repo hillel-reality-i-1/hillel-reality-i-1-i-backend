@@ -1,4 +1,5 @@
 from random import randint
+import re
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
@@ -49,6 +50,12 @@ class CustomUserManager(BaseUserManager):
 
         return username
 
+    @staticmethod
+    def validate_user_username(user):
+        pattern = rf'\A({user.first_name.lower()}_{user.last_name.lower()}_\d{{1,5}})\Z'
+        mo = re.compile(pattern).match(user.username.lower())
+        return mo is not None
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, max_length=50)
@@ -74,12 +81,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = "Users"
 
     def save(self, *args, **kwargs):
-        if (
-                self.username.lower() == self.first_name.lower()
-                or not self.username
-                or self.username == 'user'
-        ):
-            self.username = CustomUserManager().generate_unique_username(
+
+        user_manager = CustomUserManager()
+
+        username_is_valid = user_manager.validate_user_username(self)
+
+        if not username_is_valid:
+            self.username = user_manager.generate_unique_username(
                 self.first_name,
                 self.last_name,
             )
