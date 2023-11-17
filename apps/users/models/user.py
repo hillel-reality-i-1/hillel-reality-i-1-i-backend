@@ -40,6 +40,9 @@ class CustomUserManager(BaseUserManager):
         return not get_user_model().objects.filter(username=username).exists()
 
     def generate_unique_username(self, first_name, last_name):
+
+        last_name = last_name if last_name else ''
+
         username = f"{first_name.lower()}_{last_name.lower()}_{randint(1, 99999)}"
 
         if not User.objects.count():
@@ -52,7 +55,7 @@ class CustomUserManager(BaseUserManager):
 
     @staticmethod
     def validate_user_username(user):
-        pattern = rf'\A({user.first_name.lower()}_{user.last_name.lower()}_\d{{1,5}})\Z'
+        pattern = rf'\A({user.first_name.lower()}_{user.last_name.lower() if user.last_name else ''}_\d{{1,5}})\Z'
         mo = re.compile(pattern).match(user.username.lower())
         return mo is not None
 
