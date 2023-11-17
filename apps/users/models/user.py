@@ -1,4 +1,5 @@
 from random import randint
+import re
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
@@ -39,6 +40,8 @@ class CustomUserManager(BaseUserManager):
         return not get_user_model().objects.filter(username=username).exists()
 
     def generate_unique_username(self, first_name, last_name):
+        last_name = last_name if last_name else ""
+
         username = f"{first_name.lower()}_{last_name.lower()}_{randint(1, 99999)}"
 
         if not User.objects.count():
@@ -48,6 +51,12 @@ class CustomUserManager(BaseUserManager):
             username = f"{first_name.lower()}_{last_name.lower()}_{randint(1, 99999)}"
 
         return username
+
+    @staticmethod
+    def validate_user_username(user):
+        pattern = rf'\A({user.first_name.lower()}_{user.last_name.lower() if user.last_name else ""}_\d{{1,5}})\Z'
+        mo = re.compile(pattern).match(user.username.lower())
+        return mo is not None
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -74,8 +83,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = "Users"
 
     def save(self, *args, **kwargs):
-        if self.username.lower() == self.first_name.lower() or not self.username:
-            self.username = CustomUserManager().generate_unique_username(
+        user_manager = CustomUserManager()
+
+        username_is_valid = user_manager.validate_user_username(self)
+
+        if not username_is_valid:
+            self.username = user_manager.generate_unique_username(
                 self.first_name,
                 self.last_name,
             )

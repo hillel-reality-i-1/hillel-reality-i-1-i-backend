@@ -1,4 +1,5 @@
 from apps.users.views.custom_register_view import CustomRegisterView
+from apps.users.views.custom_confirm_email_view import CustomConfirmEmailView
 from dj_rest_auth.registration.views import VerifyEmailView, ConfirmEmailView
 from django.urls import path, include
 from apps.users.views.register_user_profile_ext_view import RegisterProfileExtView
@@ -6,7 +7,6 @@ from apps.users.views.register_user_profile_view import RegisterProfileView
 from apps.users.views.user_profile_extended_view import UserProfileExtendedListView
 from apps.users.views.user_profile_view import UserProfileListView
 from apps.users.views.user_view import UserListView
-from apps.users.views.custom_confirm_email_view import CustomConfirmEmailView
 from rest_framework.routers import DefaultRouter
 
 

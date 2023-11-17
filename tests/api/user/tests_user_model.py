@@ -39,6 +39,6 @@ def test_verification_mail_send(user_data, api_client):
 
     print(body)
 
-    response = api_client.get(url)
+    response = api_client.post(url)
 
     print(response)
