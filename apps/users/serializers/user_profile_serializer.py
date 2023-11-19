@@ -20,7 +20,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # Извлечь данные для вложенного поля profile_picture
         profile_picture_data = validated_data.pop("profile_picture", None)
-
+        print(validated_data)
         # Создать объект UserProfile
         user_profile = UserProfile.objects.create(**validated_data)
 

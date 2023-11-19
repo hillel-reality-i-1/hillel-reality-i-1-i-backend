@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import serializers
 from dj_rest_auth.registration.serializers import RegisterSerializer
 
@@ -30,6 +31,11 @@ class CustomRegistrationSerializer(RegisterSerializer):
         cleaned_data = self.get_cleaned_data()
         user.first_name = cleaned_data["first_name"]
         user.last_name = cleaned_data["last_name"]
+        password = cleaned_data["password"]
+        user.email = cleaned_data["email"]
+
+        user.set_password(password)
+        user.date_joined = timezone.now()
 
         user.save()
         return user
