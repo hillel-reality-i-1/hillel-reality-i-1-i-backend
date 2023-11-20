@@ -8,6 +8,7 @@ from django.core.files.base import ContentFile
 
 class UserProfileSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
+    user = serializers.SerializerMethodField(read_only=True)
     profile_picture = ImageSerializer()
 
     class Meta:
@@ -17,10 +18,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def get_email(self, obj):
         return obj.user.email
 
+    def get_user(self, obj):
+        return obj.user.pk
+
     def create(self, validated_data):
         # Извлечь данные для вложенного поля profile_picture
         profile_picture_data = validated_data.pop("profile_picture", None)
-
+        print(validated_data)
         # Создать объект UserProfile
         user_profile = UserProfile.objects.create(**validated_data)
 
