@@ -23,7 +23,6 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("auth/", include("dj_rest_auth.urls")),
     path("api/v1/", include("apps.users.urls")),  # тут находится ендпоинт с регистрацией .../api/v1/auth/registration/
     path("api/v1/content/", include("apps.content.api.urls")),
     path("api/v1/prof_service/", include("apps.expert.urls")),
