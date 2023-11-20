@@ -6,14 +6,15 @@ User = get_user_model()
 
 def _user_data():
     return {
-        'email': 'test@example.com',
-        'username': 'test@example.com',
+        'email': 'test@test.test',
         'password': 'StrongPassword123',
+        'first_name': 'first_name',
+        'last_name': 'last_name',
     }
 
 
-def _create_user(email, username, password):
-    return User.objects.create_user(username=username, email=email, password=password)
+def _create_user(**user_data):
+    return User.objects.create_user(**user_data)
 
 
 def get_default_user():
