@@ -66,3 +66,37 @@ class UserProfileSerializer(serializers.ModelSerializer):
             return ContentFile(compressed_image_buffer.getvalue(), name=image_data.name)
 
         return image_data
+
+    def update(self, instance, validated_data):
+        # Обновите поля профиля на основе входных данных
+        instance.about_my_self = validated_data.get("about_my_self", instance.about_my_self)
+        instance.country = validated_data.get("country", instance.country)
+        instance.city = validated_data.get("city", instance.city)
+        # ... обновите другие поля по необходимости
+
+        # Обработайте обновление изображения, если есть новые данные
+        profile_picture_data = validated_data.get("profile_picture")
+        if profile_picture_data:
+            img = self.image_handle(profile_picture_data.get("image"))
+            image_data = {
+                "author": instance.user.pk,
+                "image_name": profile_picture_data.get("image_name"),
+                "image": img,
+            }
+
+            # Если у профиля уже есть изображение, обновите его, иначе создайте новое
+            if instance.profile_picture:
+                image_serializer = ImageSerializer(instance.profile_picture, data=image_data)
+            else:
+                image_serializer = ImageSerializer(data=image_data)
+
+            if image_serializer.is_valid():
+                image = image_serializer.save()
+                instance.profile_picture = image
+
+            else:
+                raise serializers.ValidationError(image_serializer.errors)
+
+        # Сохраните обновленный профиль
+        instance.save()
+        return instance

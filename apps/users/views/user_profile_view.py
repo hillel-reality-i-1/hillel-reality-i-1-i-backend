@@ -12,12 +12,3 @@ class UserProfileListView(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
     permission_classes = [IsAdminUser]
-
-
-# class UserProfileListView(APIView):
-#     permission_classes = [IsAdminUser]
-#
-#     def get(self, request):
-#         profiles = UserProfile.objects.all()
-#         serializer = UserProfileSerializer(profiles, many=True)
-#         return Response(serializer.data)
