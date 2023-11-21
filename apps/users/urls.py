@@ -42,7 +42,7 @@ allauth_views_urlpatterns = [
     path("accounts/inactive/", allauth_views.account_inactive, name="account_inactive"),
     # Email
     path("accounts/email/", allauth_views.email, name="account_email"),
-    path("allauth_account", include("allauth.urls"))
+    path("allauth_account/", include("allauth.urls"))
 ]
 
-# urlpatterns += allauth_views_urlpatterns
+urlpatterns += allauth_views_urlpatterns
