@@ -5,12 +5,20 @@ from apps.files.api.serializers import ImageSerializer
 from apps.files.models import Image
 from apps.users.models import UserProfile
 from django.core.files.base import ContentFile
+from drf_yasg.utils import swagger_serializer_method
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
     user = serializers.SerializerMethodField(read_only=True)
-    profile_picture = ImageSerializer()
+    # profile_picture = ImageSerializer()
+
+    @swagger_serializer_method(serializer_or_field=ImageSerializer)
+    def get_profile_picture(self, obj):
+        if isinstance(obj, UserProfile):
+            return ImageSerializer(obj.profile_picture).data if obj.profile_picture else None
+        elif isinstance(obj, Image):
+            return ImageSerializer(obj).data
 
     class Meta:
         model = UserProfile

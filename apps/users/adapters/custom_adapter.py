@@ -22,3 +22,12 @@ class CustomAdapter(DefaultAccountAdapter):
         url = reverse("front_account_confirm_email", args=[emailconfirmation.key])
         ret = build_absolute_uri(request, url)
         return ret
+
+    def send_mail(self, template_prefix, email, context, fail_silently=False):
+        msg = self.render_mail(template_prefix, email, context)
+        if not msg.recipients():
+            # Don't bother creating the network connection if there's nobody to
+            # send to.
+            return 0
+        connection = msg.get_connection(fail_silently)
+        connection.send_messages([msg])

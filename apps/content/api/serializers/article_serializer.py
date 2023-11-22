@@ -20,6 +20,12 @@ class ArticleSerializer(serializers.ModelSerializer):
             'id', 'author', 'title', 'content', 'likes', 'dislikes', 'images', 'professional_tags', 'creation_date'
         )
 
+    def create(self, validated_data):
+        author = self.context['request'].user
+        validated_data['author'] = author
+
+        return super().create(validated_data)
+
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['total_likes'] = instance.total_likes()

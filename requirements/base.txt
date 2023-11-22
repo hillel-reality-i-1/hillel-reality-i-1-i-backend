@@ -37,3 +37,4 @@ dj_rest_auth==5.0.1
 django-phonenumber-field==7.2.0
 phonenumbers==8.13.24
 
+celery[redis]==5.3.5

@@ -1,0 +1,1 @@
+from .send_adapter_mail_task import send_adapter_mail_task
