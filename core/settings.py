@@ -153,6 +153,21 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
+    {
+        "NAME": "django.contrib.auth.password_validation.UppercaseValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.LowercaseValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.SymbolValidator",
+    },
+    {
+        "NAME": "core.password_validation.MaxLengthValidator",
+        "OPTIONS": {
+            "max_length": 16,
+        },
+    },
 ]
 
 # Internationalization
