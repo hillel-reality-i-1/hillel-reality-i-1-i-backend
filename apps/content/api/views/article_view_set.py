@@ -12,7 +12,7 @@ from ...filters import ArticleFilter
 
 
 class ArticleViewSet(viewsets.ModelViewSet):
-    queryset = Article.objects.all()
+    queryset = Article.objects.all().order_by('id')
     serializer_class = ArticleSerializer
     pagination_class = TenHundredPagination
     filter_backends = (
@@ -24,6 +24,9 @@ class ArticleViewSet(viewsets.ModelViewSet):
         'professional_tags',
         'creation_date',
     )
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
     def create(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
