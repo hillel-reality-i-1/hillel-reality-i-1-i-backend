@@ -15,5 +15,9 @@ class UserProfile(models.Model):
     # profile_picture = models.ImageField(upload_to="files/")
     profile_picture = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True)
 
+    # Fields for Twilio verification
+    twilio_phone_verified = models.BooleanField(default=False)
+    twilio_verification_sid = models.CharField(max_length=255, null=True, blank=True)
+
     def __str__(self):
         return f"{self.user.username}'s user profile"
