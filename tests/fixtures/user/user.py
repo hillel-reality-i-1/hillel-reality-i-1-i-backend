@@ -1,5 +1,6 @@
 import pytest
 from django.contrib.auth import get_user_model
+from .email import add_verified_email, add_unverified_email
 
 User = get_user_model()
 
@@ -22,6 +23,18 @@ def get_default_user():
     return user
 
 
+def get_default_verified_user():
+    user = get_default_user()
+    add_verified_email(user)
+    return user
+
+
+def get_default_unverified_user():
+    user = get_default_user()
+    add_unverified_email(user)
+    return user
+
+
 @pytest.fixture
 def user_data():
     return _user_data()
@@ -40,3 +53,13 @@ def user_model():
 @pytest.fixture()
 def default_user():
     return get_default_user()
+
+
+@pytest.fixture()
+def default_verified_user():
+    return get_default_verified_user()
+
+
+@pytest.fixture()
+def default_unverified_user():
+    return get_default_unverified_user()

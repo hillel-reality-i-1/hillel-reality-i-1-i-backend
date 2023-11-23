@@ -1,4 +1,5 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.response import Response
 
 from ...models import Article
 from ..serializers import ArticleSerializer
@@ -11,7 +12,7 @@ from ...filters import ArticleFilter
 
 
 class ArticleViewSet(viewsets.ModelViewSet):
-    queryset = Article.objects.all()
+    queryset = Article.objects.all().order_by('id')
     serializer_class = ArticleSerializer
     pagination_class = TenHundredPagination
     filter_backends = (
@@ -23,3 +24,14 @@ class ArticleViewSet(viewsets.ModelViewSet):
         'professional_tags',
         'creation_date',
     )
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return Response(
+                {'detail': 'Authentication credentials were not provided.'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+        return super().create(request, *args, **kwargs)

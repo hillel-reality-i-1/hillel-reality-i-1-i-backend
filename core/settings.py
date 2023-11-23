@@ -75,6 +75,7 @@ THIRD_PARTY_APPS = [
     "dj_rest_auth",
     "cities_light",
     "dj_rest_auth.registration",
+    "drf_yasg",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -153,6 +154,12 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
+    {
+        "NAME": "core.password_validation.MaxLengthValidator",
+        "OPTIONS": {
+            "max_length": 16,
+        },
+    },
 ]
 
 # Internationalization
@@ -197,6 +204,18 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
+
+CELERY_BROKER_URL = 'amqp://{0}:{1}@{2}:{3}//'.format(
+    env.str('RABBITMQ_DEFAULT_USER', 'guest'),
+    env.str('RABBITMQ_DEFAULT_PASS', 'guest'),
+    env.str('RABBITMQ_DEFAULT_HOST', '127.0.0.1'),
+    env.str('RABBITMQ_DEFAULT_PORT', '5672'),
+)
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
 
 SITE_ID = 1
 ACCOUNT_ADAPTER = "apps.users.adapters.CustomAdapter"

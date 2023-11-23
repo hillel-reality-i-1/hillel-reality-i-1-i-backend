@@ -8,7 +8,7 @@ User = get_user_model()
 
 
 class ArticleSerializer(serializers.ModelSerializer):
-    author = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    author = serializers.ReadOnlyField(source='author.username', read_only=True)
     likes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     dislikes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     images = ImageSerializer(many=True, read_only=True)
