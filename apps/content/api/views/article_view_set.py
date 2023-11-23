@@ -12,7 +12,7 @@ from ...filters import ArticleFilter
 
 
 class ArticleViewSet(viewsets.ModelViewSet):
-    queryset = Article.objects.all()
+    queryset = Article.objects.all().order_by('id')
     serializer_class = ArticleSerializer
     pagination_class = TenHundredPagination
     filter_backends = (
