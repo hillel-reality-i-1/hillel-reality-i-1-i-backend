@@ -206,10 +206,10 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 CELERY_BROKER_URL = 'amqp://{0}:{1}@{2}:{3}//'.format(
-    env.str('RABBITMQ_DEFAULT_USER', 'guest'),
-    env.str('RABBITMQ_DEFAULT_PASS', 'guest'),
-    env.str('RABBITMQ_DEFAULT_HOST', '127.0.0.1'),
-    env.str('RABBITMQ_DEFAULT_PORT', '5672'),
+    env.str('RABBITMQ_USER', 'guest'),
+    env.str('RABBITMQ_PASSWORD', 'guest'),
+    env.str('RABBITMQ_HOST', '127.0.0.1'),
+    env.str('RABBITMQ_PORT', '5672'),
 )
 
 CELERY_ACCEPT_CONTENT = ['json']

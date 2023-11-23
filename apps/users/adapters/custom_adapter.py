@@ -6,6 +6,8 @@ from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework import status
 from rest_framework.response import Response
 
+from apps.users.tasks import send_adapter_mail_task
+
 
 class CustomAdapter(DefaultAccountAdapter):
 
@@ -25,9 +27,6 @@ class CustomAdapter(DefaultAccountAdapter):
 
     def send_mail(self, template_prefix, email, context, fail_silently=False):
         msg = self.render_mail(template_prefix, email, context)
-        if not msg.recipients():
-            # Don't bother creating the network connection if there's nobody to
-            # send to.
-            return 0
-        connection = msg.get_connection(fail_silently)
-        connection.send_messages([msg])
+        # Serialize the message
+        serialized_msg = msg.__dict__
+        send_adapter_mail_task.delay(serialized_msg)
