@@ -25,6 +25,9 @@ class ArticleViewSet(viewsets.ModelViewSet):
         'creation_date',
     )
 
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
     def create(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return Response(

@@ -8,7 +8,7 @@ User = get_user_model()
 
 
 class ArticleSerializer(serializers.ModelSerializer):
-    author = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    author = serializers.ReadOnlyField(source='author.username', read_only=True)
     likes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     dislikes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     images = ImageSerializer(many=True, read_only=True)
@@ -19,12 +19,6 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'author', 'title', 'content', 'likes', 'dislikes', 'images', 'professional_tags', 'creation_date'
         )
-
-    def create(self, validated_data):
-        author = self.context['request'].user
-        validated_data['author'] = author
-
-        return super().create(validated_data)
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
