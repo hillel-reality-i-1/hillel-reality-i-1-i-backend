@@ -51,6 +51,7 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.postgres",
+    "corsheaders",
 ]
 
 # Local applications.
@@ -90,6 +91,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -205,17 +207,17 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-CELERY_BROKER_URL = 'amqp://{0}:{1}@{2}:{3}//'.format(
-    env.str('RABBITMQ_DEFAULT_USER', 'guest'),
-    env.str('RABBITMQ_DEFAULT_PASS', 'guest'),
-    env.str('RABBITMQ_DEFAULT_HOST', '127.0.0.1'),
-    env.str('RABBITMQ_DEFAULT_PORT', '5672'),
+CELERY_BROKER_URL = "amqp://{}:{}@{}:{}//".format(
+    env.str("RABBITMQ_DEFAULT_USER", "guest"),
+    env.str("RABBITMQ_DEFAULT_PASS", "guest"),
+    env.str("RABBITMQ_DEFAULT_HOST", "127.0.0.1"),
+    env.str("RABBITMQ_DEFAULT_PORT", "5672"),
 )
 
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "UTC"
 
 SITE_ID = 1
 ACCOUNT_ADAPTER = "apps.users.adapters.CustomAdapter"
@@ -248,3 +250,7 @@ AUTHENTICATION_CLASSES = [
 
 REST_USE_JWT = True
 JWT_AUTH_COOKIE = "access_token"
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # or the origin of your frontend
+]
