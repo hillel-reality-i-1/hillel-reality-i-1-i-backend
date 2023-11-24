@@ -41,3 +41,5 @@ celery[redis]==5.3.5
 
 # Sender sms for validation phone_numbers
 twilio==8.10.2
+
+django-cors-headers==4.3.1

@@ -76,6 +76,7 @@ THIRD_PARTY_APPS = [
     "cities_light",
     "dj_rest_auth.registration",
     "drf_yasg",
+    "corsheaders",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -90,6 +91,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -248,3 +250,9 @@ AUTHENTICATION_CLASSES = [
 
 REST_USE_JWT = True
 JWT_AUTH_COOKIE = "access_token"
+
+# CORS
+CORS_ALLOWED_ORIGINS = [
+    # Frond-end origins
+    "http://localhost:3000",
+]
