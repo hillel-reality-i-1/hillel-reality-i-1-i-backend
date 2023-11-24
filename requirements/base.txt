@@ -26,7 +26,9 @@ drf-yasg==1.21.7
 # [drf]-[END]
 
 # Countries and Cities
+# googlemaps~=4.10.0 (if we would use API Place from Google)
 django-cities-light==3.10.0
+
 
 # Authentication
 django-allauth==0.58.2

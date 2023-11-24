@@ -207,17 +207,17 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-CELERY_BROKER_URL = 'amqp://{0}:{1}@{2}:{3}//'.format(
-    env.str('RABBITMQ_USER', 'guest'),
-    env.str('RABBITMQ_PASSWORD', 'guest'),
-    env.str('RABBITMQ_HOST', '127.0.0.1'),
-    env.str('RABBITMQ_PORT', '5672'),
+CELERY_BROKER_URL = "amqp://{}:{}@{}:{}//".format(
+    env.str("RABBITMQ_USER", "guest"),
+    env.str("RABBITMQ_PASSWORD", "guest"),
+    env.str("RABBITMQ_HOST", "127.0.0.1"),
+    env.str("RABBITMQ_PORT", "5672"),
 )
 
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "UTC"
 
 SITE_ID = 1
 ACCOUNT_ADAPTER = "apps.users.adapters.CustomAdapter"
@@ -256,3 +256,6 @@ CORS_ALLOWED_ORIGINS = [
     # Frond-end origins
     "http://localhost:3000",
 ]
+
+# If we use API Place from Google for choose Country/City
+# GOOGLE_API_KEY = "AIzaSyCjoUFXRx5M-qmmpSeHNW9iNThUwHjuTNI"

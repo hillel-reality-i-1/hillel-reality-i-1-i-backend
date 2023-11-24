@@ -31,3 +31,24 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+    # # ##### виталик!!!!!!!
+    # def to_representation(self, instance):
+    #     data = super().to_representation(instance)
+    #
+    #     country_result = get_places(settings.GOOGLE_API_KEY, data['country'])
+    #     if country_result:
+    #         country_info = next((place for place in country_result if 'country' in place.get('types', [])), None)
+    #         if country_info:
+    #             data['country'] = {
+    #                 'name': country_info.get('description', ''),
+    #             }
+    #
+    #             city_result = get_places(settings.GOOGLE_API_KEY, f"{data['city']} {data['country']['name']}")
+    #             city_info = next((place for place in city_result if 'locality' in place.get('types', [])), None)
+    #             if city_info:
+    #                 data['city'] = {
+    #                     'name': city_info.get('description', ''),
+    #                 }
+    #
+    #     return data
