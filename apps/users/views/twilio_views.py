@@ -11,11 +11,11 @@ class SendTwilioVerificationCode(APIView):
     def post(self, request):
         user_profile = request.user.userprofile
 
-        if user_profile.twilio_verified:
+        if user_profile.twilio_phone_verified:
             return Response({"status": "already_verified"}, status=status.HTTP_200_OK)
 
         account_sid = "ACe52a664583f7732652f8c2069a5b480d"
-        auth_token = "df5de515682c0a21e6172d027cb056ed"
+        auth_token = "b47a7eec05cf39a7f048dd817c138572"
         verify_sid = "VA7d3bbb583680cc5fec2d80ba58083184"
         client = Client(account_sid, auth_token)
 
@@ -35,11 +35,11 @@ class CheckTwilioVerificationCode(APIView):
         user_profile = request.user.userprofile
         verification_code = request.data.get("verification_code")
 
-        if user_profile.twilio_verified:
+        if user_profile.twilio_phone_verified:
             return Response({"status": "already_verified"}, status=status.HTTP_200_OK)
 
         account_sid = "ACe52a664583f7732652f8c2069a5b480d"
-        auth_token = "df5de515682c0a21e6172d027cb056ed"
+        auth_token = "b47a7eec05cf39a7f048dd817c138572"
         verify_sid = "VA7d3bbb583680cc5fec2d80ba58083184"
         client = Client(account_sid, auth_token)
 
@@ -48,7 +48,7 @@ class CheckTwilioVerificationCode(APIView):
         )
 
         if verification_check.status == "approved":
-            user_profile.twilio_verified = True
+            user_profile.twilio_phone_verified = True
             user_profile.save()
             return Response({"status": "verified"}, status=status.HTTP_200_OK)
         else:
