@@ -19,7 +19,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return obj.user.pk
 
     def create(self, validated_data):
-        user_profile = UserProfile.objects.create(**validated_data)
+        user = validated_data.get("user")
+        if not UserProfile.objects.filter(user=user).exists():
+            user_profile = UserProfile.objects.create(**validated_data)
+        else:
+            raise serializers.ValidationError("This user already has a profile")
 
         return user_profile
 

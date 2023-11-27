@@ -157,7 +157,7 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
     {
-        "NAME": "core.password_validation.MaxLengthValidator",
+        "NAME": "core.password_validation.CustomPasswordValidator",
         "OPTIONS": {
             "max_length": 16,
         },
@@ -208,10 +208,10 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 CELERY_BROKER_URL = "amqp://{}:{}@{}:{}//".format(
-    env.str("RABBITMQ_USER", "guest"),
-    env.str("RABBITMQ_PASSWORD", "guest"),
-    env.str("RABBITMQ_HOST", "127.0.0.1"),
-    env.str("RABBITMQ_PORT", "5672"),
+    env.str("RABBITMQ_DEFAULT_USER", "guest"),
+    env.str("RABBITMQ_DEFAULT_PASS", "guest"),
+    env.str("RABBITMQ_DEFAULT_HOST", "127.0.0.1"),
+    env.str("RABBITMQ_DEFAULT_PORT", "5672"),
 )
 
 CELERY_ACCEPT_CONTENT = ["json"]
@@ -258,6 +258,3 @@ CORS_ALLOWED_ORIGINS = [
     # Frond-end origins
     "http://localhost:3000",
 ]
-
-# If we use API Place from Google for choose Country/City
-# GOOGLE_API_KEY = "AIzaSyCjoUFXRx5M-qmmpSeHNW9iNThUwHjuTNI"

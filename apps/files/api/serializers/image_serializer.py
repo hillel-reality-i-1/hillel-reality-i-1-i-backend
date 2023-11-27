@@ -31,9 +31,12 @@ class ImageSerializer(serializers.ModelSerializer):
 
         created_image = super().create({**validated_data, "image": processed_image_data})
         if avatara:
-            user_profile = UserProfile.objects.get(user=validated_data.get("author"))
-            user_profile.profile_picture = created_image
-            user_profile.save()
+            if UserProfile.objects.filter(user=validated_data.get("author")).exists():
+                user_profile = UserProfile.objects.get(user=validated_data.get("author"))
+                user_profile.profile_picture = created_image
+                user_profile.save()
+            else:
+                raise serializers.ValidationError("The user does not have a profile. You can't upload the image")
 
         return created_image
 
