@@ -51,7 +51,6 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.postgres",
-    "corsheaders",
 ]
 
 # Local applications.
@@ -77,6 +76,7 @@ THIRD_PARTY_APPS = [
     "cities_light",
     "dj_rest_auth.registration",
     "drf_yasg",
+    "corsheaders",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -251,6 +251,8 @@ AUTHENTICATION_CLASSES = [
 REST_USE_JWT = True
 JWT_AUTH_COOKIE = "access_token"
 
+# CORS
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # or the origin of your frontend
+    # Frond-end origins
+    "http://localhost:3000",
 ]
