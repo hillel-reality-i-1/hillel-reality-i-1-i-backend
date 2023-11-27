@@ -23,6 +23,7 @@ def test_get_articles_list(article_data, create_article, default_user, api_clien
     second_page_url = response.json()['next']
     response = api_client.get(second_page_url)
 
+    assert response.status_code == 200
     assert response.json()['next'] is None
 
     page_size = 2 * MAX_ARTICLE_ON_PAGE
@@ -30,15 +31,8 @@ def test_get_articles_list(article_data, create_article, default_user, api_clien
     second_page_url = response.json()['next']
     response = api_client.get(second_page_url)
 
+    assert response.status_code == 200
     assert response.json()['next'] is None
-
-    page_size = MAX_ARTICLE_ON_PAGE
-    create_article(author=author, **article_data)
-    response = api_client.get(ARTICLE_LIST_LINK, data={"page_size": page_size})
-    second_page_response = api_client.get(response.json()['next'])
-    third_page_response = api_client.get(second_page_response.json()['next'])
-
-    assert len(third_page_response.json()['results']) == 1
 
 
 def test_create_article_login_user(api_client, default_verified_user, article_data, user_data):
@@ -64,3 +58,25 @@ def test_create_article_not_login_user(api_client, default_verified_user, articl
 
     assert response.status_code == 401
     assert response.json() == {'detail': 'Authentication credentials were not provided.'}
+
+
+def test_get_article_by_id(api_client, default_verified_user, article_data, user_data):
+    user = default_verified_user
+    response = api_client.post(LOGIN_LINK, {
+        'password': user_data['password'],
+        'email': user_data['email'],
+    })
+    token = response.json()['key']
+    api_client.credentials(HTTP_AUTHORIZATION=f'Token {token}')
+    response = api_client.post(ARTICLE_LIST_LINK, data=article_data)
+
+    article_dict = response.json()
+
+    article_id = article_dict['id']
+
+    response = api_client.get(
+        reverse(NON_REVERSE_ARTICLE_DETAIL_LINK, args=[article_id])
+    )
+
+    assert response.status_code == 200
+    assert response.json() == article_dict

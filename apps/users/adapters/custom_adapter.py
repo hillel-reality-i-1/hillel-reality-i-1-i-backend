@@ -5,6 +5,7 @@ from allauth.utils import (
 from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework import status
 from rest_framework.response import Response
+from django.conf import settings
 
 from apps.users.tasks import send_adapter_mail_task
 
@@ -25,8 +26,11 @@ class CustomAdapter(DefaultAccountAdapter):
         ret = build_absolute_uri(request, url)
         return ret
 
-    def send_mail(self, template_prefix, email, context, fail_silently=False):
-        msg = self.render_mail(template_prefix, email, context)
-        # Serialize the message
-        serialized_msg = msg.__dict__
-        send_adapter_mail_task.delay(serialized_msg)
+    def send_mail(self, template_prefix, email, context):
+        if getattr(settings, 'CUSTOM_SETTINGS_ACCOUNT_EMAIL_CELERY_SEND', False):
+            msg = self.render_mail(template_prefix, email, context)
+            # Serialize the message
+            serialized_msg = msg.__dict__
+            send_adapter_mail_task.delay(serialized_msg)
+        else:
+            super().send_mail(template_prefix, email, context)
