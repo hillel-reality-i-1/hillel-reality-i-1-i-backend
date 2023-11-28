@@ -9,12 +9,14 @@ from django_filters import rest_framework as filters
 from rest_framework import filters as rest_framework_filters
 
 from ...filters import ArticleFilter
+from ...permissions import IsAuthorOrReadOnly
 
 
 class ArticleViewSet(viewsets.ModelViewSet):
-    queryset = Article.objects.all().order_by('id')
+    queryset = Article.objects.all().order_by('-creation_date')
     serializer_class = ArticleSerializer
     pagination_class = TenHundredPagination
+    permission_classes = [IsAuthorOrReadOnly]
     filter_backends = (
         filters.DjangoFilterBackend,
         rest_framework_filters.OrderingFilter,

@@ -29,3 +29,29 @@ services:
     profiles:
       - full_dev
       - local_dev
+
+  rabbitmq:
+    image: "rabbitmq:3.9"
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  celery:
+    build: .
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+      - RABBITMQ_HOST=rabbitmq
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - rabbitmq
+    profiles:
+      - full_dev
+    command: celery -A core.celery_app worker -l info

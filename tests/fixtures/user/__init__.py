@@ -6,3 +6,7 @@ from .user import (
 from .email import (
     email_model, add_unverified_email, add_verified_email,
 )
+
+from .user_profile import (
+    get_default_user_profile, user_profile_model, user_profile_data, create_user_profile, default_user_profile
+)

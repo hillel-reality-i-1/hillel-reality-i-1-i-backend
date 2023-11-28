@@ -43,6 +43,7 @@ d-run-i-local-dev:
 # Purge all data related with services
 d-purge:
 	@COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
+		COMPOSE_PROFILES=full_dev \
 		docker compose down --volumes --remove-orphans --rmi local --timeout 0
 
 
