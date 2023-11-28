@@ -8,7 +8,7 @@ User = get_user_model()
 def _user_data():
     return {
         'email': 'test@test.test',
-        'password': 'StrongPassword123',
+        'password': 'StrongP@ss123',
         'first_name': 'first_name',
         'last_name': 'last_name',
     }
