@@ -7,10 +7,22 @@ class UserProfileSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
     user = serializers.SerializerMethodField(read_only=True)
     profile_picture = ImageSerializer(read_only=True)
+    first_name = serializers.SerializerMethodField(read_only=True)
+    last_name = serializers.SerializerMethodField(read_only=True)
+    username = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = UserProfile
         fields = "__all__"
+
+    def get_first_name(self, obj):
+        return obj.user.first_name
+
+    def get_last_name(self, obj):
+        return obj.user.last_name
+
+    def get_username(self, obj):
+        return obj.user.username
 
     def get_email(self, obj):
         return obj.user.email
@@ -27,14 +39,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
         return user_profile
 
-    def update(self, instance, validated_data):
-        instance.about_my_self = validated_data.get("about_my_self", instance.about_my_self)
-        instance.country = validated_data.get("country", instance.country)
-        instance.city = validated_data.get("city", instance.city)
-        instance.phone_number = validated_data.get("phone_number", instance.phone_number)
-
-        instance.save()
-        return instance
+    # def update(self, instance, validated_data):
+    #     instance.about_my_self = validated_data.get("about_my_self", instance.about_my_self)
+    #     instance.country = validated_data.get("country", instance.country)
+    #     instance.city = validated_data.get("city", instance.city)
+    #     instance.phone_number = validated_data.get("phone_number", instance.phone_number)
+    #
+    #     instance.save()
+    #     return instance
 
     # # ##### виталик!!!!!!!
     # def to_representation(self, instance):
