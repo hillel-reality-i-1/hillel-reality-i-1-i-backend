@@ -1,10 +1,12 @@
 # from rest_framework import status
-from rest_framework.permissions import IsAdminUser
+# from rest_framework.permissions import IsAdminUser
 
 # from rest_framework.views import APIView
 # from rest_framework.response import Response
 # from rest_framework.generics import RetrieveUpdateAPIView, DestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 from apps.users.models import User
+from apps.users.permissions import IsAdminOrSelf
 from apps.users.serializers.user_serializer import UserSerializer
 from rest_framework import viewsets
 
@@ -12,7 +14,7 @@ from rest_framework import viewsets
 class UserListView(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdminOrSelf]
 
 
 # class UserListView(APIView):
