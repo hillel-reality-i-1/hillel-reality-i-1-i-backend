@@ -17,8 +17,7 @@ d-dev-i-purge:
 .PHONY: init-configs
 # Configuration files initialization
 init-configs:
-	@cp .env.example .env &&\
-	cp docker-compose.override.dev.yml docker-compose.override.yml
+	@bash docker/app/init-configs.sh
 
 
 .PHONY: d-run

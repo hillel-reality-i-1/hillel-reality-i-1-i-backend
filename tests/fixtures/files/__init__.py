@@ -1,3 +1,3 @@
 from .image import (
-    image_path
+    image_file
 )

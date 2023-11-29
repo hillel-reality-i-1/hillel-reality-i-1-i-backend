@@ -2,6 +2,7 @@ version: '3.9'
 
 volumes:
   postgres_data: { }
+  pgadmin-data: { }
 
 
 services:
@@ -44,9 +45,9 @@ services:
     environment:
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
-      - RABBITMQ_USER=${RABBITMQ_USER}
-      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
-      - RABBITMQ_HOST=rabbitmq
+#      - CELERY_BROKER_USER=${RABBITMQ_USER}
+#      - CELERY_BROKER_USER_PASS=${RABBITMQ_PASSWORD}
+#      - CELERY_BROKER_USER_HOST=127.0.0.1
     env_file:
       - .env
     depends_on:
@@ -55,3 +56,14 @@ services:
     profiles:
       - full_dev
     command: celery -A core.celery_app worker -l info
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    env_file: .env
+    depends_on:
+      - postgres
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin/data
