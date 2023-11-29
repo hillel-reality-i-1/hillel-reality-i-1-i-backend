@@ -81,5 +81,5 @@ migrate:
 .PHONY: init-dev-i-create-superuser
 # Create superuser only for development
 init-dev-i-create-superuser:
-	@DJANGO_SUPERUSER_PASSWORD=admin123 python manage.py createsuperuser --user admin --email admin@gmail.com --no-input
+	@python manage.py createsuperuser --no-input
 

@@ -16,6 +16,11 @@ set -o xtrace
 # Apply database migrations.
 make migrate
 
+# Create default superuser if not exist
+if python manage.py shell -c "from django.contrib.auth import get_user_model; print(get_user_model().objects.exists())" | grep -q "False"; then
+    make init-dev-i-create-superuser
+fi
+
 # [init]-[END]
 
 # Run application.

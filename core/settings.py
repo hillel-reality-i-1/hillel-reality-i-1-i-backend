@@ -182,6 +182,13 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Superuser
+DJANGO_SUPERUSER_PASSWORD = env.str("SOCIAL_APP_CLIENT_ID", "django@pass123")
+DJANGO_SUPERUSER_USERNAME = env.str("DJANGO_SUPERUSER_USERNAME", "django_super")
+DJANGO_SUPERUSER_EMAIL = env.str("DJANGO_SUPERUSER_EMAIL", "django@gjan.go")
+DJANGO_SUPERUSER_FIRST_NAME = env.str("DJANGO_SUPERUSER_FIRST_NAME", "Firstname")
+DJANGO_SUPERUSER_LAST_NAME = env.str("DJANGO_SUPERUSER_LAST_NAME", "Lastname")
+
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "SCOPE": [

@@ -11,6 +11,7 @@ services:
     environment:
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
+      - CELERY_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
     env_file:
       - .env
     depends_on:
@@ -45,9 +46,7 @@ services:
     environment:
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
-#      - CELERY_BROKER_USER=${RABBITMQ_USER}
-#      - CELERY_BROKER_USER_PASS=${RABBITMQ_PASSWORD}
-#      - CELERY_BROKER_USER_HOST=127.0.0.1
+      - BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672
     env_file:
       - .env
     depends_on:
@@ -67,3 +66,19 @@ services:
       - "5050:80"
     volumes:
       - pgadmin-data:/var/lib/pgadmin/data
+
+  flower:
+    image: local
+    build: .
+    env_file: .env
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+    command: celery --broker=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672// flower
+    container_name: flower
+    depends_on:
+      - rabbitmq
+      - postgres
+      - celery
+    ports:
+      - '5555:5555'
