@@ -14,6 +14,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = "__all__"
+        read_only_fields = (
+            "twilio_phone_verified",
+            "twilio_verification_sid",
+        )
 
     def get_first_name(self, obj):
         return obj.user.first_name

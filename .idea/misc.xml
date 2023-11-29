@@ -3,7 +3,7 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.12 (hillel_reality_i_1_i_backend)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12 (hillel-reality-i-1-i-backend)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.10 (hillel-reality-i-1-i-backend)" project-jdk-type="Python SDK" />
   <component name="PyCharmProfessionalAdvertiser">
     <option name="shown" value="true" />
   </component>
