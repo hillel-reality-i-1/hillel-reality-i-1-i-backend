@@ -8,11 +8,10 @@ from apps.expert.models import Profession, Service
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 django.setup()
 
-json_file_path = "professions_and_services.json"
-
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
+        json_file_path = os.environ.get("JSON_FILE_PATH", "professions_and_services.json")
         with open(json_file_path, encoding="utf-8") as file:
             data = json.load(file)
 

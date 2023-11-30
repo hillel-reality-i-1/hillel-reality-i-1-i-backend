@@ -15,6 +15,7 @@ from apps.users.views.user_profile_extended_view import UserProfileExtendedListV
 from apps.users.views.user_profile_view import UserProfileListView
 from apps.users.views.user_view import UserListView
 from apps.users.views.twilio_views import SendTwilioVerificationCode, CheckTwilioVerificationCode
+from apps.users.views.vonage_views import SendVonageVerificationCode, CheckVonageVerificationCode
 from rest_framework.routers import DefaultRouter
 from allauth.account import views as allauth_views
 
@@ -29,7 +30,17 @@ router.register(r"city_list", CityListView, basename="city_list")
 urlpatterns = [
     path("auth/", include("dj_rest_auth.urls")),
     path("auth/send-verification-code/", SendTwilioVerificationCode.as_view(), name="send-verification-code"),
+    path(
+        "auth/send-verification-code-vonage/",
+        SendVonageVerificationCode.as_view(),
+        name="send-verification-code-vonage",
+    ),
     path("auth/check-verification-code/", CheckTwilioVerificationCode.as_view(), name="check-verification-code"),
+    path(
+        "auth/check-verification-code-vonage/",
+        CheckVonageVerificationCode.as_view(),
+        name="check-verification-code-vonage",
+    ),
     path("auth/registration/", CustomRegisterView.as_view(), name="rest_register"),
     path("auth/upload_img/", UploadImageView.as_view(), name="upload_img"),
     path("auth/registration_user_profile/", RegisterProfileView.as_view(), name="registration_user_profile"),
