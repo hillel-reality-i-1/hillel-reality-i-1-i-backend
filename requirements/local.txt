@@ -14,11 +14,7 @@ flake8==6.1.0
 # Removes unused imports and unused variables.
 autoflake==2.2.1
 # [code_style]-[END]
-# For pytest.
-pytest==7.4.3
-pytest-django==4.7.0
-pytest-cov==4.1.0
-pytest-mock==3.12.0
+
 
 # Requests
 requests==2.31.0
