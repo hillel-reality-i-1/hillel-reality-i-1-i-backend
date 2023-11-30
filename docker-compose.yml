@@ -19,6 +19,8 @@ services:
     profiles:
       - full_dev
     command: /start.sh
+    stdin_open: true
+    tty: true
 
   postgres:
     image: postgres:15.4
@@ -76,6 +78,8 @@ services:
       - POSTGRES_PORT=5432
     command: celery --broker=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672// flower
     container_name: flower
+    stdin_open: true
+    tty: true
     depends_on:
       - rabbitmq
       - postgres
