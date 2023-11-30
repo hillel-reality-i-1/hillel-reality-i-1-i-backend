@@ -19,5 +19,9 @@ class UserProfile(models.Model):
     twilio_phone_verified = models.BooleanField(default=False)
     twilio_verification_sid = models.CharField(max_length=255, null=True, blank=True)
 
+    # Fields for Vonage(nexmo) verification
+    phone_verified = models.BooleanField(default=False)
+    phone_verified_request_id = models.CharField(max_length=255, null=True, blank=True)
+
     def __str__(self):
         return f"{self.user.username}'s user profile"

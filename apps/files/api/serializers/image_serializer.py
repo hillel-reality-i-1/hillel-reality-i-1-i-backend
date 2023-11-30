@@ -41,6 +41,10 @@ class ImageSerializer(serializers.ModelSerializer):
         return created_image
 
     def image_handle(self, image_data):
+        max_size_bytes = 5 * 1024 * 1024
+        if image_data.size > max_size_bytes:
+            raise serializers.ValidationError("Image size exceeds the maximum allowed size (5 MB).")
+
         image = PilImg.open(image_data)
         if image.format.lower() not in ["jpeg", "png"]:
             raise serializers.ValidationError("Invalid image format. Supported formats: JPEG, PNG.")

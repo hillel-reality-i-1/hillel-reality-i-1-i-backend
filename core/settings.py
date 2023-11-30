@@ -265,3 +265,6 @@ CORS_ALLOWED_ORIGINS = [
     # Frond-end origins
     "http://localhost:3000",
 ]
+
+VONAGE_API_KEY = "785c35b9"
+VONAGE_API_SECRET = "Y3AsLmpss9lf4VXO"

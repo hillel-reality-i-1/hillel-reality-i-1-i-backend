@@ -54,6 +54,9 @@ class CustomUserManager(BaseUserManager):
 
     @staticmethod
     def validate_user_username(user):
+        if user.username is None:
+            return False
+
         pattern = rf'\A({user.first_name.lower()}_{user.last_name.lower() if user.last_name else ""}_\d{{1,5}})\Z'
         mo = re.compile(pattern).match(user.username.lower())
         return mo is not None
