@@ -21,6 +21,16 @@ if python manage.py shell -c "from django.contrib.auth import get_user_model; pr
     make init-dev-i-create-superuser
 fi
 
+## Generate cities and countries
+#if python manage.py shell -c "from cities_light.models import City; print(City.objects.exists())" | grep -q "False"; then
+#    make init-dev-i-generate-cities
+#fi
+
+# Generate professions and services
+if python manage.py shell -c "from apps.expert.models import Profession; print(Profession.objects.exists())" | grep -q "False"; then
+    make init-dev-i-generate-prof-and-serv
+fi
+
 # [init]-[END]
 
 # Run application.

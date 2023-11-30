@@ -83,3 +83,14 @@ migrate:
 init-dev-i-create-superuser:
 	@python manage.py createsuperuser --no-input
 
+
+.PHONY: init-dev-i-generate-prof-and-serv
+# Create superuser only for development
+init-dev-i-generate-prof-and-serv:
+	@python manage.py generate_prof_and_serv
+
+
+.PHONY: init-dev-i-generate-cities
+# Create superuser only for development
+init-dev-i-generate-cities:
+	@python manage.py cities_light

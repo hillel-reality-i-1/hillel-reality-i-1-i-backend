@@ -1,3 +1,4 @@
+from dj_rest_auth.views import PasswordResetConfirmView, PasswordResetView
 from django.views.generic import TemplateView
 
 from apps.users.views.city_view import CityListView
@@ -52,6 +53,13 @@ urlpatterns = [
         TemplateView.as_view(),
         name="front_account_confirm_email",
     ),
+    path('auth/password/reset/',
+         PasswordResetView.as_view(),
+         name='rest_password_reset'
+         ),
+    path('auth/password/reset/confirm/<uidb64>/<token>/',
+         PasswordResetConfirmView.as_view(),
+         name='password_reset_confirm'),
     path("users/", include(router.urls)),
 ]
 
