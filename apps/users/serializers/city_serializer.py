@@ -5,4 +5,4 @@ from cities_light.models import City
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
-        fields = ["name"]
+        fields = ["id", "name", "country"]
