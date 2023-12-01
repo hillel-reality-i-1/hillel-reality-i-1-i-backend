@@ -22,9 +22,12 @@ class CustomAdapter(DefaultAccountAdapter):
         confirmations are sent outside of the request context `request`
         can be `None` here.
         """
-        url = reverse("front_account_confirm_email", args=[emailconfirmation.key])
-        ret = build_absolute_uri(request, url)
-        return ret
+        url = f"http://127.0.0.1:3000/createUnAccount/{emailconfirmation.key}/"
+        print(url)
+        # url = reverse("front_account_confirm_email", args=[emailconfirmation.key])
+        # ret = build_absolute_uri(request, url)
+        # print(ret)
+        return url
 
     def send_mail(self, template_prefix, email, context):
         if getattr(settings, 'CUSTOM_SETTINGS_ACCOUNT_EMAIL_CELERY_SEND', False):
