@@ -27,7 +27,7 @@ class SendVonageVerificationCode(APIView):
             user_profile.phone_verified_request_id = REQUEST_ID
             user_profile.save()
             return Response(
-                {"detail": "Started verification request_id is %s" % REQUEST_ID},
+                {"detail": "Started phone_number %s verification" % phone_number},
             )
         else:
             return Response({"Error": "Failed to send verified code"}, status=status.HTTP_400_BAD_REQUEST)
@@ -50,7 +50,7 @@ class CheckVonageVerificationCode(APIView):
         if response["status"] == "0":
             user_profile.phone_verified = True
             user_profile.save()
-            return Response({"status": "Verification successful, event_id is %s" % (response["event_id"])})
+            return Response({"status": "Verification successful"})
         else:
             return Response({"status": "Error: %s" % response["error_text"]})
 
