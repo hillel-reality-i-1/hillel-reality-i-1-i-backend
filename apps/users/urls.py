@@ -43,7 +43,7 @@ urlpatterns = [
         name="check-verification-code-vonage",
     ),
     path("auth/registration/", CustomRegisterView.as_view(), name="rest_register"),
-    path("auth/upload_img/", UploadImageView.as_view(), name="upload_img"),
+    path("users/upload_img/", UploadImageView.as_view(), name="upload_img"),
     path("auth/registration_user_profile/", RegisterProfileView.as_view(), name="registration_user_profile"),
     path("auth/registration_user_profile_ext/", RegisterProfileExtView.as_view(), name="registration_user_profile_ext"),
     path("accounts/resend-email/", ResendEmailVerificationView.as_view(), name="rest_resend_email"),
@@ -53,13 +53,12 @@ urlpatterns = [
         TemplateView.as_view(),
         name="front_account_confirm_email",
     ),
-    path('auth/password/reset/',
-         PasswordResetView.as_view(),
-         name='rest_password_reset'
-         ),
-    path('auth/password/reset/confirm/<uidb64>/<token>/',
-         PasswordResetConfirmView.as_view(),
-         name='password_reset_confirm'),
+    path("auth/password/reset/", PasswordResetView.as_view(), name="rest_password_reset"),
+    path(
+        "auth/password/reset/confirm/<uidb64>/<token>/",
+        PasswordResetConfirmView.as_view(),
+        name="password_reset_confirm",
+    ),
     path("users/", include(router.urls)),
 ]
 
