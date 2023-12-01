@@ -9,21 +9,23 @@ class CustomRegistrationSerializer(RegisterSerializer):
     declared_fields.pop("username")
 
     def validate(self, data):
-        return data
+        self.validate_passwords(data)
+        return super().validate(data)
 
-    def get_cleaned_data(self):
-        return {
-            "email": self.validated_data.get("email", ""),
-        }
-
-    def save(self, request):
-        cleaned_data = self.get_cleaned_data()
-        if not User.objects.filter(email=cleaned_data["email"]).exists():
-            user = super().save(request)
-        else:
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
             raise serializers.ValidationError("This email is already in use. Please, use another or sign in")
 
-        user.first_name = "Anonim"
+        return value
 
+    def validate_passwords(self, data):
+        password1 = data.get("password1")
+        password2 = data.get("password2")
+
+        if password1 and password2 and password1 != password2:
+            raise serializers.ValidationError("Passwords do not match")
+
+    def save(self, request):
+        user = super().save(request)
         user.save()
         return user
