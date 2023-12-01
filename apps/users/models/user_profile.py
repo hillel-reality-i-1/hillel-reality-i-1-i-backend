@@ -13,7 +13,7 @@ class UserProfile(models.Model):
     country = models.ForeignKey(Country, on_delete=models.PROTECT)
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True)
     # profile_picture = models.ImageField(upload_to="files/")
-    profile_picture = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True)
+    profile_picture = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
 
     # Fields for Twilio verification
     twilio_phone_verified = models.BooleanField(default=False)
