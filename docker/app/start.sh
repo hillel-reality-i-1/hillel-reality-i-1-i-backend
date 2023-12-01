@@ -16,22 +16,35 @@ set -o xtrace
 # Apply database migrations.
 make migrate
 
-# Create default superuser if not exist
-if python manage.py shell -c "from django.contrib.auth import get_user_model; print(get_user_model().objects.exists())" | grep -q "False"; then
-    make init-dev-i-create-superuser
-fi
-
-## Generate cities and countries
-#if python manage.py shell -c "from cities_light.models import City; print(City.objects.exists())" | grep -q "False"; then
-#    make init-dev-i-generate-cities
-#fi
-
-# Generate professions and services
-if python manage.py shell -c "from apps.expert.models import Profession; print(Profession.objects.exists())" | grep -q "False"; then
-    make init-dev-i-generate-prof-and-serv
-fi
-
 # [init]-[END]
+
+export RABBITMQ_URL="amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/"
+
+rabbitmq_ready() {
+python <<END
+import sys
+
+import pika
+
+try:
+    connection = pika.BlockingConnection(
+        pika.URLParameters('${RABBITMQ_URL}')
+    )
+except pika.exceptions.AMQPConnectionError:
+    sys.exit(-1)
+sys.exit(0)
+
+END
+}
+
+until rabbitmq_ready; do
+  echo >&2 'RabbitMQ is unavailable (sleeping)...'
+  sleep 1
+done
+
+echo >&2 'RabbitMQ is up - continuing...'
+
+python manage.py shell -c "from apps.base.tasks import run_start_tasks; run_start_tasks()"
 
 # Run application.
 python manage.py runserver 0.0.0.0:8000
