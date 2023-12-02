@@ -17,6 +17,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only_fields = (
             "twilio_phone_verified",
             "twilio_verification_sid",
+            "phone_verified",
+            "phone_verified_request_id",
         )
 
     def get_first_name(self, obj):
