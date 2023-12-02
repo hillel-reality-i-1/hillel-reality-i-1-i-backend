@@ -1,8 +1,8 @@
 from dj_rest_auth.views import PasswordResetConfirmView, PasswordResetView
 from django.views.generic import TemplateView
 
-from apps.users.views.city_view import CityListView
-from apps.users.views.country_view import CountryListView
+from apps.location.views.city_view import CityListView
+from apps.location.views.country_view import CountryListView
 from apps.users.views.custom_register_view import CustomRegisterView
 from dj_rest_auth.registration.views import (
     VerifyEmailView,
@@ -25,8 +25,6 @@ router = DefaultRouter()
 router.register(r"user_list", UserListView, basename="user_list")
 router.register(r"user_profile", UserProfileListView, basename="user_profile")
 router.register(r"user_profile_extended", UserProfileExtendedListView, basename="user_profile_extended")
-router.register(r"country_list", CountryListView, basename="country_list")
-router.register(r"city_list", CityListView, basename="city_list")
 
 urlpatterns = [
     path("auth/", include("dj_rest_auth.urls")),
@@ -60,6 +58,8 @@ urlpatterns = [
         name="password_reset_confirm",
     ),
     path("users/", include(router.urls)),
+    path("location/country_list/", CountryListView.as_view({"get": "list"}), name="country_list"),
+    path("location/city_list/", CityListView.as_view({"get": "list"}), name="city_list"),
 ]
 
 allauth_views_urlpatterns = [
