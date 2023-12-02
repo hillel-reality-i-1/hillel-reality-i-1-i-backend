@@ -18,7 +18,8 @@ class CustomRegistrationSerializer(RegisterSerializer):
 
         return value
 
-    def validate_passwords(self, data):
+    @staticmethod
+    def validate_passwords(data):
         password1 = data.get("password1")
         password2 = data.get("password2")
 
@@ -27,5 +28,6 @@ class CustomRegistrationSerializer(RegisterSerializer):
 
     def save(self, request):
         user = super().save(request)
+        user.first_name = "Anonim_user"
         user.save()
         return user
