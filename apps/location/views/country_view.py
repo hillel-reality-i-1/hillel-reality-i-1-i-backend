@@ -3,7 +3,7 @@ from rest_framework import viewsets
 # from rest_framework.views import APIView
 # from rest_framework.response import Response
 from cities_light.models import Country
-from apps.users.serializers.country_serializer import CountrySerializer
+from apps.location.serializers.country_serializer import CountrySerializer
 
 
 # class CountryListView(APIView):

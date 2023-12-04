@@ -6,7 +6,7 @@ from cities_light.models import City
 
 # from apps.content.api.paginations import ThreeHundredPagination
 from apps.content.api.paginations.three_hundred_pagination import CityPagination
-from apps.users.serializers.city_serializer import CitySerializer
+from apps.location.serializers.city_serializer import CitySerializer
 
 
 # class CityListView(APIView):
