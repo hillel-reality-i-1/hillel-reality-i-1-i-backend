@@ -266,5 +266,11 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
 
+# API settings for phone_number verification
+# twilio https://www.twilio.com/en-us
 VONAGE_API_KEY = "785c35b9"
 VONAGE_API_SECRET = "Y3AsLmpss9lf4VXO"
+# vonage https://www.vonage.com/
+TWILIO_ACCOUT_SID = "ACc23fd207ba2533bb2eb9ea20698df50b"
+TWILIO_AUTH_TOKEN = "d0e3955b7f5f1e860b1dde19b3f322af"
+TWILIO_VERIFY_SID = "VAbd62216f012ec5791a63e3c85a587e44"

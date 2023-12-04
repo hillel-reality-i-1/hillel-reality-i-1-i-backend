@@ -15,7 +15,8 @@ from apps.users.views.upload_image_view import UploadImageView
 from apps.users.views.user_profile_extended_view import UserProfileExtendedListView
 from apps.users.views.user_profile_view import UserProfileListView
 from apps.users.views.user_view import UserListView
-from apps.users.views.twilio_views import SendTwilioVerificationCode, CheckTwilioVerificationCode
+from apps.users.views.twilio_send_verification_code_view import SendTwilioVerificationCode
+from apps.users.views.twilio_check_verification_code_view import CheckTwilioVerificationCode
 from apps.users.views.vonage_views import SendVonageVerificationCode, CheckVonageVerificationCode
 from rest_framework.routers import DefaultRouter
 from allauth.account import views as allauth_views
@@ -53,13 +54,12 @@ urlpatterns = [
         TemplateView.as_view(),
         name="front_account_confirm_email",
     ),
-    path('auth/password/reset/',
-         PasswordResetView.as_view(),
-         name='rest_password_reset'
-         ),
-    path('auth/password/reset/confirm/<uidb64>/<token>/',
-         PasswordResetConfirmView.as_view(),
-         name='password_reset_confirm'),
+    path("auth/password/reset/", PasswordResetView.as_view(), name="rest_password_reset"),
+    path(
+        "auth/password/reset/confirm/<uidb64>/<token>/",
+        PasswordResetConfirmView.as_view(),
+        name="password_reset_confirm",
+    ),
     path("users/", include(router.urls)),
 ]
 

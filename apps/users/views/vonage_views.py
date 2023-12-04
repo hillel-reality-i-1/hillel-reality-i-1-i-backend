@@ -20,11 +20,10 @@ class SendVonageVerificationCode(APIView):
         verify = vonage.Verify(client)
 
         phone_number = user_profile.phone_number
-        print(phone_number)
         response = verify.start_verification(number=str(phone_number), brand="U-Help")
+
         if response["status"] == "0":
-            REQUEST_ID = response["request_id"]
-            user_profile.phone_verified_request_id = REQUEST_ID
+            user_profile.phone_verified_request_id = response["request_id"]
             user_profile.save()
             return Response(
                 {"detail": "Started phone_number %s verification" % phone_number},
@@ -53,24 +52,3 @@ class CheckVonageVerificationCode(APIView):
             return Response({"status": "Verification successful"})
         else:
             return Response({"status": "Error: %s" % response["error_text"]})
-
-
-#
-# client = vonage.Client(key="785c35b9", secret="Y3AsLmpss9lf4VXO")
-# verify = vonage.Verify(client)
-#
-# response = verify.start_verification(number="+380631221640", brand="U-Help")
-#
-# if response["status"] == "0":
-#     REQUEST_ID = response["request_id"]
-#     print("Started verification request_id is %s" % (response["request_id"]))
-# else:
-#     print("Error: %s" % response["error_text"])
-
-# my_code = input("Input code pls: ")
-# response = verify.check(REQUEST_ID, code=my_code)
-
-# if response["status"] == "0":
-#     print("Verification successful, event_id is %s" % (response["event_id"]))
-# else:
-#     print("Error: %s" % response["error_text"])
