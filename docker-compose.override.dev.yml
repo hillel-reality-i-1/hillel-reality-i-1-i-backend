@@ -2,10 +2,10 @@ version: '3.9'
 
 services:
   app:
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     user: "${UID}"
 
   postgres:
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"

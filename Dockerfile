@@ -33,7 +33,7 @@ EXPOSE 8000
 ENTRYPOINT ["/entrypoint.sh"]
 
 USER root
-RUN chmod -R a+w /usr/local/lib/python3.12/site-packages/cities_light
+RUN chmod --recursive a+w /usr/local/lib/python3.12/site-packages/cities_light
 USER ${USER}
 
 CMD ["/start.sh"]

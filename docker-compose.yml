@@ -19,8 +19,7 @@ services:
     profiles:
       - full_dev
     command: /start.sh
-    stdin_open: true
-    tty: true
+    container_name: app
 
   postgres:
     image: postgres:15.4
@@ -33,6 +32,7 @@ services:
     profiles:
       - full_dev
       - local_dev
+    container_name: postgres
 
   rabbitmq:
     image: "rabbitmq:3.9"
@@ -42,6 +42,7 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    container_name: rabbitmq
 
   celery:
     build: .
@@ -56,7 +57,8 @@ services:
       - rabbitmq
     profiles:
       - full_dev
-    command: celery -A core.celery_app worker -l info
+    command: celery --app core.celery_app worker --loglevel info
+    container_name: celery
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -65,7 +67,7 @@ services:
     depends_on:
       - postgres
     ports:
-      - "5050:80"
+      - "5050:5050"
     volumes:
       - pgadmin-data:/var/lib/pgadmin/data
 
@@ -78,11 +80,19 @@ services:
       - POSTGRES_PORT=5432
     command: celery --broker=amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672// flower
     container_name: flower
-    stdin_open: true
-    tty: true
     depends_on:
       - rabbitmq
       - postgres
       - celery
     ports:
       - '5555:5555'
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+    volumes:
+      - "./default.conf:/etc/nginx/conf.d/default.conf:ro"
