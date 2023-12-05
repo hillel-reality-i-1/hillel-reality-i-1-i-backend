@@ -20,6 +20,8 @@ services:
       - full_dev
     command: /start.sh
     container_name: app
+    stdin_open: true
+    tty: true
 
   postgres:
     image: postgres:15.4
@@ -44,6 +46,7 @@ services:
       - "15672:15672"
     container_name: rabbitmq
 
+
   celery:
     build: .
     environment:
@@ -57,8 +60,10 @@ services:
       - rabbitmq
     profiles:
       - full_dev
-    command: celery --app core.celery_app worker --loglevel info
+    command: celery --app core.celery_app worker --loglevel info --concurrency 4
     container_name: celery
+    stdin_open: true
+    tty: true
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -86,6 +91,8 @@ services:
       - celery
     ports:
       - '5555:5555'
+    stdin_open: true
+    tty: true
 
   nginx:
     image: nginx

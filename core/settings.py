@@ -183,7 +183,7 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Superuser
-DJANGO_SUPERUSER_PASSWORD = env.str("SOCIAL_APP_CLIENT_ID", "django@pass123")
+DJANGO_SUPERUSER_PASSWORD = env.str("DJANGO_SUPERUSER_PASSWORD", "django@pass123")
 DJANGO_SUPERUSER_USERNAME = env.str("DJANGO_SUPERUSER_USERNAME", "django_super")
 DJANGO_SUPERUSER_EMAIL = env.str("DJANGO_SUPERUSER_EMAIL", "django@gjan.go")
 DJANGO_SUPERUSER_FIRST_NAME = env.str("DJANGO_SUPERUSER_FIRST_NAME", "Firstname")
@@ -242,6 +242,11 @@ SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+REST_AUTH_SERIALIZERS = {
+    'PASSWORD_RESET_SERIALIZER':
+        'apps.users.serializers.password_reset_serializer.CustomPasswordResetSerializer',
+}
 
 ACCOUNT_EXTRA_REQUIRED_FIELDS = ["first_name"]
 

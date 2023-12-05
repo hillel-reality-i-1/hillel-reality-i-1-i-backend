@@ -1,8 +1,9 @@
-from dj_rest_auth.views import PasswordResetConfirmView, PasswordResetView
+from dj_rest_auth.views import PasswordResetConfirmView
 from django.views.generic import TemplateView
 
 from apps.location.views.city_view import CityListView
 from apps.location.views.country_view import CountryListView
+from apps.users.views.custom_password_reset_view import PasswordResetView
 from apps.users.views.custom_register_view import CustomRegisterView
 from dj_rest_auth.registration.views import (
     VerifyEmailView,
@@ -28,7 +29,6 @@ router.register(r"user_profile", UserProfileListView, basename="user_profile")
 router.register(r"user_profile_extended", UserProfileExtendedListView, basename="user_profile_extended")
 
 urlpatterns = [
-    path("auth/", include("dj_rest_auth.urls")),
     path("auth/send-verification-code/", SendTwilioVerificationCode.as_view(), name="send-verification-code"),
     path(
         "auth/send-verification-code-vonage/",
@@ -61,6 +61,7 @@ urlpatterns = [
     path("users/", include(router.urls)),
     path("location/country_list/", CountryListView.as_view({"get": "list"}), name="country_list"),
     path("location/city_list/", CityListView.as_view({"get": "list"}), name="city_list"),
+    path("auth/", include("dj_rest_auth.urls")),
 ]
 
 allauth_views_urlpatterns = [
