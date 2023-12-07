@@ -7,10 +7,6 @@ from rest_framework import status
 
 class VerifyEmailView(_VerifyEmailView):
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.kwargs['key'] = serializer.validated_data['key']
-        print(self.kwargs['key'])
         resp = super().post(request, *args, **kwargs)
         if resp.data == {'detail': 'ok'}:
             email_address = self.get_object().email_address
