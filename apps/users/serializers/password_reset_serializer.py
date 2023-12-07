@@ -26,7 +26,7 @@ class CustomResetForm(AllAuthPasswordResetForm):
 
             # send the password reset email
             # url_generator = kwargs.get('url_generator', default_url_generator)
-            url = f'http://localhost:3000/createNewPasswordForm/{temp_key}/'
+            url = f'http://localhost:3000/createNewPasswordForm/{user.id}/{temp_key}/'
 
             context = {
                 'current_site': current_site,
