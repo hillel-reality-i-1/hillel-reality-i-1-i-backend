@@ -6,8 +6,8 @@ from rest_framework import status
 
 
 class VerifyEmailView(_VerifyEmailView):
-    def create(self, request, *args, **kwargs):
-        resp = super().create(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        resp = super().post(request, *args, **kwargs)
         if resp.data == {'detail': 'ok'}:
             email_address = self.get_object().email_address
             user = get_user_model().objects.filter(email=email_address).first()
