@@ -3,6 +3,7 @@ from django.views.generic import TemplateView
 
 from apps.location.views.city_view import CityListView
 from apps.location.views.country_view import CountryListView
+from apps.users.views.change_email_request_view import ChangeEmailRequestView, ChangeEmailConfirmView
 from apps.users.views.custom_password_reset_view import PasswordResetView
 from apps.users.views.custom_register_view import CustomRegisterView
 from dj_rest_auth.registration.views import (
@@ -74,4 +75,12 @@ allauth_views_urlpatterns = [
     path("allauth_account/", include("allauth.urls")),
 ]
 
+change_email_urlpatterns = [
+    path("change-email/request/", ChangeEmailRequestView.as_view(), name="change-email-request"),
+    path(
+        "change-email/confirm/<str:uidb64>/<str:token>/", ChangeEmailConfirmView.as_view(), name="change-email-confirm"
+    ),
+]
+
 urlpatterns += allauth_views_urlpatterns
+urlpatterns += change_email_urlpatterns
