@@ -6,7 +6,6 @@ from apps.location.views.country_view import CountryListView
 from apps.users.views.custom_password_reset_view import PasswordResetView
 from apps.users.views.custom_register_view import CustomRegisterView
 from dj_rest_auth.registration.views import (
-    VerifyEmailView,
     ResendEmailVerificationView,
 )
 from django.urls import path, include
@@ -18,6 +17,7 @@ from apps.users.views.user_profile_view import UserProfileListView
 from apps.users.views.user_view import UserListView
 from apps.users.views.twilio_send_verification_code_view import SendTwilioVerificationCode
 from apps.users.views.twilio_check_verification_code_view import CheckTwilioVerificationCode
+from apps.users.views.verify_email_view import VerifyEmailView
 from apps.users.views.vonage_views import SendVonageVerificationCode, CheckVonageVerificationCode
 from rest_framework.routers import DefaultRouter
 from allauth.account import views as allauth_views
