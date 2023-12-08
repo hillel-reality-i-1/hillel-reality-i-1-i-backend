@@ -33,8 +33,8 @@ def profile_data():
     profile_user_data = {
         "phone_number": "+380979998877",
         "about_my_self": "About my Self",
-        "country": country.id,
-        "city": city.id,
+        "country_id": country.id,
+        "city_id": city.id,
     }
 
     return profile_user_data
@@ -95,16 +95,17 @@ class TestUserActions:
 
     def test_create_user_profile(self, api_client, user_data, default_verified_user):
         profile_user_data = profile_data()
+        print(profile_user_data)
         put_credentials_into_apiclient(api_client, user_data)
         response_login = api_client.post(REG_USER_PROFILE, data=profile_user_data)
 
         db_data = response_login.json()
-
+        print(db_data)
         assert response_login.status_code == 201
         assert db_data["phone_number"] == profile_user_data["phone_number"]
         assert db_data["about_my_self"] == profile_user_data["about_my_self"]
-        assert db_data["country"] == profile_user_data["country"]
-        assert db_data["city"] == profile_user_data["city"]
+        assert db_data["country"]["id"] == profile_user_data["country_id"]
+        assert db_data["city"]["id"] == profile_user_data["city_id"]
 
     def test_error_create_user_profile(self, api_client, user_data, default_user_profile):
         profile_user_data = profile_data()
@@ -124,5 +125,5 @@ class TestUserActions:
         user = User.objects.get(email=user_data["email"])
         assert user.userprofile.phone_number == profile_user_data["phone_number"]
         assert user.userprofile.about_my_self == profile_user_data["about_my_self"]
-        assert user.userprofile.country.id == profile_user_data["country"]
-        assert user.userprofile.city.id == profile_user_data["city"]
+        assert user.userprofile.country.id == profile_user_data["country_id"]
+        assert user.userprofile.city.id == profile_user_data["city_id"]
