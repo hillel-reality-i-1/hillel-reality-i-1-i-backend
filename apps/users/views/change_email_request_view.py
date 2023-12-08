@@ -30,20 +30,22 @@ class ChangeEmailRequestView(APIView):
         user = request.user
 
         if not check_password(password, user.password):
-            raise ValidationError("Неверный пароль.")
+            raise ValidationError("Wrong password.")
 
         # Создание и отправка письма с токеном
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
 
-        email_subject = "Смена email"
+        email_subject = "Change email"
         email_message = (
-            f"Для смены email перейдите по ссылке: "
+            f"To change your email, please use this link: "
             f"{frontend_url}/api/v1/change-email/confirm/{uid}/{token}/?new_email={new_email}"
         )
         send_mail(email_subject, email_message, "from@example.com", [new_email])
 
-        return Response({"detail": "Письмо с инструкциями отправлено на новый email."}, status=status.HTTP_200_OK)
+        return Response(
+            {"detail": "An email with instructions has been sent to a new email address."}, status=status.HTTP_200_OK
+        )
 
 
 class ChangeEmailConfirmView(APIView):
@@ -54,11 +56,11 @@ class ChangeEmailConfirmView(APIView):
             uid = urlsafe_base64_decode(uidb64).decode()
             user = get_user_model().objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
-            raise NotFound("Пользователь не найден.")
+            raise NotFound("User is not found.")
 
         if default_token_generator.check_token(user, token):
             user.email = new_email
             user.save()
-            return Response({"detail": "Email успешно изменен."}, status=status.HTTP_200_OK)
+            return Response({"detail": "Email successfully changed."}, status=status.HTTP_200_OK)
         else:
-            return Response({"detail": "Неверный токен."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "Wrong token."}, status=status.HTTP_400_BAD_REQUEST)
