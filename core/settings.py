@@ -119,7 +119,6 @@ REST_FRAMEWORK = {
     #     'post.permissions.IsAdminOrReadOnly'
     # ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ],
 }
