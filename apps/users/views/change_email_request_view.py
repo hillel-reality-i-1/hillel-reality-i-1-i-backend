@@ -1,3 +1,4 @@
+from datetime import datetime
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -11,14 +12,24 @@ from django.utils.http import urlsafe_base64_decode
 from rest_framework.exceptions import NotFound, ValidationError
 from apps.users.serializers.change_email_serializer import ChangeEmailSerializer
 from django.contrib.auth.hashers import check_password
+from core.settings import env, ALLOWED_HOSTS, DEBUG
 
-frontend_url = "http://127.0.0.1:8000"
+
+PORT = "8000"
+
+if DEBUG:
+    HOST = f"http://{ALLOWED_HOSTS[1]}:{PORT}"
+else:
+    HOST = ALLOWED_HOSTS[0]
+
+EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
 
 
 class ChangeEmailRequestView(APIView):
     permission_classes = [
         IsAuthenticated,
     ]
+    serializer_class = ChangeEmailSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = ChangeEmailSerializer(data=request.data)
@@ -36,12 +47,14 @@ class ChangeEmailRequestView(APIView):
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
 
+        start_time = urlsafe_base64_encode(force_bytes(datetime.now()))
+
         email_subject = "Change email"
         email_message = (
             f"To change your email, please use this link: "
-            f"{frontend_url}/api/v1/change-email/confirm/{uid}/{token}/?new_email={new_email}"
+            f"{HOST}/api/v1/change-email/confirm/{uid}/{token}/?new_email={new_email}&start_time={start_time}"
         )
-        send_mail(email_subject, email_message, "from@example.com", [new_email])
+        send_mail(email_subject, email_message, EMAIL_HOST_USER, [new_email])
 
         return Response(
             {"detail": "An email with instructions has been sent to a new email address."}, status=status.HTTP_200_OK
@@ -51,7 +64,20 @@ class ChangeEmailRequestView(APIView):
 class ChangeEmailConfirmView(APIView):
     def get(self, request, uidb64, token, *args, **kwargs):
         new_email = request.query_params.get("new_email")
-        print(new_email)
+        start_time = request.query_params.get("start_time")
+        start_time = urlsafe_base64_decode(start_time).decode()
+        start_time = datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S.%f")
+        current_time = datetime.now()
+        print(start_time)
+        print(current_time)
+        diff = current_time - start_time
+        print(diff)
+        if (diff.total_seconds() / 60) > 60:
+            return Response(
+                {"detail": "Sorry. The time allotted for using the link has expired."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
             user = get_user_model().objects.get(pk=uid)
