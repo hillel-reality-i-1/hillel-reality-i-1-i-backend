@@ -1,11 +1,12 @@
-from dj_rest_auth.views import PasswordResetConfirmView, PasswordResetView
+from dj_rest_auth.views import PasswordResetConfirmView
 from django.views.generic import TemplateView
 
 from apps.location.views.city_view import CityListView
 from apps.location.views.country_view import CountryListView
+from apps.users.views.change_email_request_view import ChangeEmailRequestView, ChangeEmailConfirmView
+from apps.users.views.custom_password_reset_view import PasswordResetView
 from apps.users.views.custom_register_view import CustomRegisterView
 from dj_rest_auth.registration.views import (
-    VerifyEmailView,
     ResendEmailVerificationView,
 )
 from django.urls import path, include
@@ -17,6 +18,7 @@ from apps.users.views.user_profile_view import UserProfileListView
 from apps.users.views.user_view import UserListView
 from apps.users.views.twilio_send_verification_code_view import SendTwilioVerificationCode
 from apps.users.views.twilio_check_verification_code_view import CheckTwilioVerificationCode
+from apps.users.views.verify_email_view import VerifyEmailView
 from apps.users.views.vonage_views import SendVonageVerificationCode, CheckVonageVerificationCode
 from rest_framework.routers import DefaultRouter
 from allauth.account import views as allauth_views
@@ -28,7 +30,6 @@ router.register(r"user_profile", UserProfileListView, basename="user_profile")
 router.register(r"user_profile_extended", UserProfileExtendedListView, basename="user_profile_extended")
 
 urlpatterns = [
-    path("auth/", include("dj_rest_auth.urls")),
     path("auth/send-verification-code/", SendTwilioVerificationCode.as_view(), name="send-verification-code"),
     path(
         "auth/send-verification-code-vonage/",
@@ -61,6 +62,7 @@ urlpatterns = [
     path("users/", include(router.urls)),
     path("location/country_list/", CountryListView.as_view({"get": "list"}), name="country_list"),
     path("location/city_list/", CityListView.as_view({"get": "list"}), name="city_list"),
+    path("auth/", include("dj_rest_auth.urls")),
 ]
 
 allauth_views_urlpatterns = [
@@ -73,4 +75,12 @@ allauth_views_urlpatterns = [
     path("allauth_account/", include("allauth.urls")),
 ]
 
+change_email_urlpatterns = [
+    path("change-email/request/", ChangeEmailRequestView.as_view(), name="change-email-request"),
+    path(
+        "change-email/confirm/<str:uidb64>/<str:token>/", ChangeEmailConfirmView.as_view(), name="change-email-confirm"
+    ),
+]
+
 urlpatterns += allauth_views_urlpatterns
+urlpatterns += change_email_urlpatterns

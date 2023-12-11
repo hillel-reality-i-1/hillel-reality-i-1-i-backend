@@ -7,7 +7,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = "__all__"
         read_only_fields = (
-            "email",
             "password",
             "last_login",
             "is_active",

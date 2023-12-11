@@ -12,10 +12,9 @@ class CustomRegisterView(RegisterView):
     serializer_class = CustomRegistrationSerializer
     permission_classes = [AllowAny]
     queryset = User.objects.all()
-    
+
     def get_response_data(self, user):
-        if allauth_account_settings.EMAIL_VERIFICATION == \
-                allauth_account_settings.EmailVerificationMethod.MANDATORY:
-            return {'email': _(f'{user.email}')}
+        if allauth_account_settings.EMAIL_VERIFICATION == allauth_account_settings.EmailVerificationMethod.MANDATORY:
+            return {"email": _(f"{user.email}"), "id": user.pk}
 
         super().get_response_data(user)

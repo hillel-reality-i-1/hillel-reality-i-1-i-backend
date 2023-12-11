@@ -1,7 +1,3 @@
-from django.urls import reverse
-from allauth.utils import (
-    build_absolute_uri,
-)
 from allauth.account.adapter import DefaultAccountAdapter
 from rest_framework import status
 from rest_framework.response import Response
@@ -22,8 +18,7 @@ class CustomAdapter(DefaultAccountAdapter):
         confirmations are sent outside of the request context `request`
         can be `None` here.
         """
-        url = f"http://127.0.0.1:3000/createUnAccount/{emailconfirmation.key}/"
-        print(url)
+        url = f"http://localhost:3000/createUnAccount/{emailconfirmation.key}/"
         # url = reverse("front_account_confirm_email", args=[emailconfirmation.key])
         # ret = build_absolute_uri(request, url)
         # print(ret)
