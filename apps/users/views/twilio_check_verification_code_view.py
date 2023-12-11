@@ -8,14 +8,14 @@ from twilio.rest import Client
 
 
 def check_twilio_verification_code(user_profile, verification_code):
-    client = Client(settings.TWILIO_ACCOUT_SID, settings.TWILIO_AUTH_TOKEN)
+    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
     verification_check = client.verify.v2.services(settings.TWILIO_VERIFY_SID).verification_checks.create(
         to=str(user_profile.phone_number), code=verification_code
     )
 
     if verification_check.status == "approved":
-        user_profile.twilio_phone_verified = True
+        user_profile.phone_verified = True
         user_profile.save()
         return "approved"
     else:
@@ -28,7 +28,7 @@ class CheckTwilioVerificationCode(APIView):
         user_profile = request.user.userprofile
         verification_code = request.data.get("verification_code")
 
-        if user_profile.twilio_phone_verified:
+        if user_profile.phone_verified:
             return Response({"status": "already_verified"}, status=status.HTTP_200_OK)
 
         verification_status = check_twilio_verification_code(user_profile, verification_code)
