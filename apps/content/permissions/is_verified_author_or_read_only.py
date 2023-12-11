@@ -1,7 +1,7 @@
 from rest_framework.permissions import BasePermission
 
 
-class IsAuthorOrReadOnly(BasePermission):
+class IsVerifiedAuthorOrReadOnly(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if request.method in ['GET', 'HEAD', 'OPTIONS']:
@@ -11,7 +11,7 @@ class IsAuthorOrReadOnly(BasePermission):
 
     def has_permission(self, request, view):
         return (
-            request.method == 'POST' and request.user.is_authenticated
+            request.method == 'POST' and request.user.is_authenticated and request.user.is_verified()
             or
             request.method in ['GET', 'HEAD', 'OPTIONS']
         )

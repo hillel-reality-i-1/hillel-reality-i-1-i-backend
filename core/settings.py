@@ -270,8 +270,8 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # API settings for phone_number verification
-TWILIO_ACCOUNT_SID = env.str("TWILIO_ACCOUNT_SID", "")
-TWILIO_AUTH_TOKEN = env.str("TWILIO_AUTH_TOKEN", "")
+TWILIO_ACCOUNT_SID = env.str("TWILIO_ACCOUNT_SID", "twilio_account")
+TWILIO_AUTH_TOKEN = env.str("TWILIO_AUTH_TOKEN", "twilio_token")
 TWILIO_VERIFY_SID = env.str("TWILIO_VERIFY_SID", "")
 
 VONAGE_API_KEY = env.str("VONAGE_API_KEY", "")

@@ -1,11 +1,11 @@
 import django_filters
-from ..models import Article
+from ..models import Post
 
 
-class ArticleFilter(django_filters.FilterSet):
+class PostFilter(django_filters.FilterSet):
 
     class Meta:
-        model = Article
+        model = Post
         fields = {
             'author': ['exact'],
             'creation_date': ['gte', 'lte'],

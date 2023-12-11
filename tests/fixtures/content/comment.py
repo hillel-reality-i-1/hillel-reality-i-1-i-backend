@@ -1,10 +1,10 @@
 import pytest
 from apps.content.models import Comment
-from .article import get_default_article
+from .post import get_default_post
 
 
-def _create_comment(author, article, text):
-    return Comment.objects.create(author=author, article=article, text=text)
+def _create_comment(author, post, text):
+    return Comment.objects.create(author=author, post=post, text=text)
 
 
 def _comment_data():
@@ -14,9 +14,9 @@ def _comment_data():
 
 
 def get_default_comment():
-    article = get_default_article()
-    author = article.author
-    return _create_comment(author=author, article=article, **_comment_data())
+    post = get_default_post()
+    author = post.author
+    return _create_comment(author=author, post=post, **_comment_data())
 
 
 @pytest.fixture

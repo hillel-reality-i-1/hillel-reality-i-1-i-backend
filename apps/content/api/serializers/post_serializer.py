@@ -2,12 +2,12 @@ from rest_framework import serializers
 from apps.files.api.serializers import ImageSerializer
 from apps.expert.serializers import ProfessionSerializer
 from django.contrib.auth import get_user_model
-from ...models import Article
+from ...models import Post
 
 User = get_user_model()
 
 
-class ArticleSerializer(serializers.ModelSerializer):
+class PostSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.username', read_only=True)
     likes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     dislikes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
@@ -15,7 +15,7 @@ class ArticleSerializer(serializers.ModelSerializer):
     professional_tags = ProfessionSerializer(many=True, read_only=True)
 
     class Meta:
-        model = Article
+        model = Post
         fields = (
             'id', 'author', 'title', 'content', 'likes', 'dislikes', 'images', 'professional_tags', 'creation_date'
         )
