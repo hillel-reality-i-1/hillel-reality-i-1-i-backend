@@ -1,3 +1,3 @@
-from .article_serializer import ArticleSerializer
+from .post_serializer import PostSerializer
 from .comment_serializer import CommentSerializer
 from .contribution_serializer import ContributionSerializer

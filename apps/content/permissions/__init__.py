@@ -1,1 +1,1 @@
-from .is_author_or_read_only import IsAuthorOrReadOnly
+from .is_verified_author_or_read_only import IsVerifiedAuthorOrReadOnly

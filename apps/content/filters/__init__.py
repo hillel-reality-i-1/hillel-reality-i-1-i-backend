@@ -1,2 +1,2 @@
 from .comment_filter import CommentFilter
-from .article_filter import ArticleFilter
+from .post_filter import PostFilter
