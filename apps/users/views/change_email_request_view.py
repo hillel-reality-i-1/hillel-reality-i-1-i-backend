@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -26,13 +28,14 @@ EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
 
 
 class ChangeEmailRequestView(APIView):
+    serializer_class = ChangeEmailSerializer
     permission_classes = [
         IsAuthenticated,
     ]
-    serializer_class = ChangeEmailSerializer
 
+    @swagger_auto_schema(request_body=ChangeEmailSerializer)
     def post(self, request, *args, **kwargs):
-        serializer = ChangeEmailSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         new_email = serializer.validated_data["new_email"]
