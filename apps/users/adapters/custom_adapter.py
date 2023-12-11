@@ -18,7 +18,7 @@ class CustomAdapter(DefaultAccountAdapter):
         confirmations are sent outside of the request context `request`
         can be `None` here.
         """
-        url = f"http://127.0.0.1:3000/createUnAccount/{emailconfirmation.key}/"
+        url = f"http://localhost:3000/createUnAccount/{emailconfirmation.key}/"
         # url = reverse("front_account_confirm_email", args=[emailconfirmation.key])
         # ret = build_absolute_uri(request, url)
         # print(ret)
