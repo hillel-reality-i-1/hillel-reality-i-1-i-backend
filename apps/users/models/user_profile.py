@@ -20,13 +20,5 @@ class UserProfile(models.Model):
     # Fields for Vonage(nexmo) verification
     phone_verified_request_id = models.CharField(max_length=255, null=True, blank=True)
 
-    def change_phone_number(self, new_phone_number):
-        # Изменяем номер телефона и сбрасываем статус верификации
-        self.phone_number = new_phone_number
-        self.phone_verified = False  # Добавьте эту строку для сброса статуса верификации
-        self.twilio_verification_sid = None  # Сбрасываем данные для Twilio, так как номер изменен
-        self.phone_verified_request_id = None  # Сбрасываем данные для Vonage (nexmo), так как номер изменен
-        self.save()
-
     def __str__(self):
         return f"{self.user.username}'s user profile"
