@@ -19,6 +19,7 @@ class ChangeEmailRequestView(APIView):
     permission_classes = [
         IsAuthenticated,
     ]
+    serializer_class = ChangeEmailSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = ChangeEmailSerializer(data=request.data)
