@@ -61,9 +61,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
         if new_phone_number:
             instance.phone_number = new_phone_number
-            instance.phone_verified = False  # Сброс статуса верификации
-            instance.twilio_verification_sid = None  # Сброс данных для Twilio, так как номер изменен
-            instance.phone_verified_request_id = None  # Сброс данных для Vonage (nexmo), так как номер изменен
+            instance.phone_verified = False
+            instance.twilio_verification_sid = None
+            instance.phone_verified_request_id = None
 
         instance.about_my_self = validated_data.get("about_my_self", instance.about_my_self)
         instance.country = validated_data.get("country", instance.country)
