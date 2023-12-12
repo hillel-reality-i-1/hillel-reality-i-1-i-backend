@@ -1,4 +1,6 @@
 from rest_framework import generics
+from rest_framework.parsers import MultiPartParser, FormParser
+
 from apps.files.api.serializers import ImageSerializer
 from apps.files.models import Image
 from rest_framework.permissions import IsAuthenticated
@@ -10,6 +12,7 @@ class UploadImageView(generics.CreateAPIView):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

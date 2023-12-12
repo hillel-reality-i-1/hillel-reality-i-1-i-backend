@@ -1,8 +1,11 @@
+from shutil import rmtree
+
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
+from apps.files.models import Image
 from apps.users.models import UserProfile
-from ...models import Image
+
 from io import BytesIO
 from PIL import Image as PilImg
 from django.core.files.base import ContentFile
@@ -28,10 +31,22 @@ class ImageSerializer(serializers.ModelSerializer):
             avatara = validated_data.pop("avatara")
         image_data = validated_data.pop("image")
         processed_image_data = self.image_handle(image_data)
-
-        created_image = super().create({**validated_data, "image": processed_image_data})
+        created_image = None
         if avatara:
             if UserProfile.objects.filter(user=validated_data.get("author")).exists():
+                images = Image.objects.filter(author=validated_data.get("author"))
+                if images:
+                    for img in images:
+                        path = str(img.image)
+                        folder_path = path[: path.rfind("/")]
+                        try:
+                            rmtree(folder_path)
+                        except Exception as e:
+                            print(f"Error while deleting file {folder_path}: {e}")
+
+                    Image.objects.filter(author=validated_data.get("author")).delete()
+
+                created_image = super().create({**validated_data, "image": processed_image_data})
                 user_profile = UserProfile.objects.get(user=validated_data.get("author"))
                 user_profile.profile_picture = created_image
                 user_profile.save()
