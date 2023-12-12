@@ -1,27 +1,27 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
-from ...models import Article
-from ..serializers import ArticleSerializer
+from ...models import Post
+from ..serializers import PostSerializer
 from ..paginations import TenHundredPagination
 
 from django_filters import rest_framework as filters
 from rest_framework import filters as rest_framework_filters
 
-from ...filters import ArticleFilter
-from ...permissions import IsAuthorOrReadOnly
+from ...filters import PostFilter
+from ...permissions import IsVerifiedAuthorOrReadOnly
 
 
-class ArticleViewSet(viewsets.ModelViewSet):
-    queryset = Article.objects.all().order_by('-creation_date')
-    serializer_class = ArticleSerializer
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all().order_by('-creation_date')
+    serializer_class = PostSerializer
     pagination_class = TenHundredPagination
-    permission_classes = [IsAuthorOrReadOnly]
+    permission_classes = [IsVerifiedAuthorOrReadOnly]
     filter_backends = (
         filters.DjangoFilterBackend,
         rest_framework_filters.OrderingFilter,
     )
-    filterset_class = ArticleFilter
+    filterset_class = PostFilter
     ordering_fields = (
         'professional_tags',
         'creation_date',

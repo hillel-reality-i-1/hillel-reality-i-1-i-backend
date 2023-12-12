@@ -15,6 +15,12 @@ def test_create_user(user_data, create_user, user_model):
 
 
 def test_registration_user(user_data, api_client):
+    user_data.update(
+        {
+            "password1": user_data["password"],
+            "password2": user_data["password"],
+        }
+    )
     response = api_client.post(path=REGISTER_LINK, data=user_data)
     assert response.status_code == 201
 
@@ -76,6 +82,12 @@ def test_logout_user(user_data, create_user, api_client, email_model):
 
 
 def test_verification_email(user_data, api_client):
+    user_data.update(
+        {
+            "password1": user_data["password"],
+            "password2": user_data["password"],
+        }
+    )
     api_client.post(path=REGISTER_LINK, data=user_data)
     assert len(mail.outbox) == 1
 
@@ -86,7 +98,8 @@ def test_verification_email(user_data, api_client):
     data = {"key": key}
     response = api_client.post(CONFIRM_EMAIL_LINK, data=data)
     assert response.status_code == 200
-    assert response.data == {'detail': 'ok'}
+    assert 'refresh' in response.data
+    assert 'access' in response.data
 
     response = api_client.post(LOGIN_LINK, {
         'password': user_data['password'],

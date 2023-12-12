@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from .article import Article
+from .post import Post
 from apps.files.models import Image
 
 User = get_user_model()
@@ -9,7 +9,7 @@ User = get_user_model()
 class Comment(models.Model):
     text = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, related_name='comment_likes', blank=True)
     dislikes = models.ManyToManyField(User, related_name='comment_dislikes', blank=True)
     images = models.ManyToManyField(Image, related_name='comment_images', blank=True)

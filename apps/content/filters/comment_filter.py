@@ -9,5 +9,5 @@ class CommentFilter(django_filters.FilterSet):
         model = Comment
         fields = [
             'author',
-            'article',
+            'post',
         ]

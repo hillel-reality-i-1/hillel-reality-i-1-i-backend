@@ -1,2 +1,4 @@
 from .comment_view_set import CommentViewSet
-from .article_view_set import ArticleViewSet
+from .post_view_set import PostViewSet
+
+from .delete_users_content_view import DeleteUserContentView

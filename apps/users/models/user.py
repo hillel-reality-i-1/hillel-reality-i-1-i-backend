@@ -3,6 +3,7 @@ import re
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from allauth.account.models import EmailAddress
 from django.db import models
 from django.utils import timezone
 
@@ -84,6 +85,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "Users"
+
+    def is_verified(self):
+        return EmailAddress.objects.filter(email=self.email).first().verified
 
     def save(self, *args, **kwargs):
         user_manager = CustomUserManager()

@@ -6,7 +6,7 @@ from apps.expert.models import Profession
 User = get_user_model()
 
 
-class Article(models.Model):
+class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     content = models.TextField()
