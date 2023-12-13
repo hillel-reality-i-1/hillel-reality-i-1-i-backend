@@ -9,22 +9,22 @@ from django_filters import rest_framework as filters
 from rest_framework import filters as rest_framework_filters
 
 from ...filters import PostFilter
-from ...permissions import IsVerifiedAuthorOrReadOnly
+from ...permissions import IsVerifiedAuthorPhoneOrReadOnly
 
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all().order_by('-creation_date')
+    queryset = Post.objects.all().order_by("-creation_date")
     serializer_class = PostSerializer
     pagination_class = TenHundredPagination
-    permission_classes = [IsVerifiedAuthorOrReadOnly]
+    permission_classes = [IsVerifiedAuthorPhoneOrReadOnly]
     filter_backends = (
         filters.DjangoFilterBackend,
         rest_framework_filters.OrderingFilter,
     )
     filterset_class = PostFilter
     ordering_fields = (
-        'professional_tags',
-        'creation_date',
+        "professional_tags",
+        "creation_date",
     )
 
     def perform_create(self, serializer):
@@ -33,7 +33,6 @@ class PostViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return Response(
-                {'detail': 'Authentication credentials were not provided.'},
-                status=status.HTTP_401_UNAUTHORIZED
+                {"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED
             )
         return super().create(request, *args, **kwargs)
