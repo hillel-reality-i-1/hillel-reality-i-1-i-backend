@@ -7,6 +7,7 @@ REGISTER_LINK = reverse('rest_register')
 LOGIN_LINK = reverse('rest_login')
 LOGOUT_LINK = reverse('rest_logout')
 CONFIRM_EMAIL_LINK = reverse('account_confirm_email')
+POST_LIST_LINK = reverse('api-content:posts-list')
 
 
 def test_create_user(user_data, create_user, user_model):
@@ -98,11 +99,9 @@ def test_verification_email(user_data, api_client):
     data = {"key": key}
     response = api_client.post(CONFIRM_EMAIL_LINK, data=data)
     assert response.status_code == 200
-    assert 'refresh' in response.data
-    assert 'access' in response.data
 
-    response = api_client.post(LOGIN_LINK, {
-        'password': user_data['password'],
-        'email': user_data['email'],
-    })
+    token = response.json()['token']
+    api_client.credentials(HTTP_AUTHORIZATION=f'Token {token}')
+    response = api_client.get(POST_LIST_LINK)
+
     assert response.status_code == 200
