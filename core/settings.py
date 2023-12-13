@@ -37,6 +37,8 @@ if DEBUG:
             "localhost",
             "0.0.0.0",
             "127.0.0.1",
+            "51.20.204.164",
+            "ec2-51-20-204-164.eu-north-1.compute.amazonaws.com",
         ]
     )
 

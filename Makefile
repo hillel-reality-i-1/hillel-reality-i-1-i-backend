@@ -26,7 +26,7 @@ d-run:
 	@COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 \
 		COMPOSE_PROFILES=full_dev \
 		docker compose \
-			up --build
+			up -d --build
 
 
 .PHONY: d-run-i-local-dev
