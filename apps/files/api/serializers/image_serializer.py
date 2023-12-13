@@ -15,6 +15,7 @@ User = get_user_model()
 
 class ImageSerializer(serializers.ModelSerializer):
     author = serializers.PrimaryKeyRelatedField(read_only=True)
+    image = serializers.ImageField(required=True)
 
     class Meta:
         model = Image
@@ -29,6 +30,7 @@ class ImageSerializer(serializers.ModelSerializer):
         avatara = None
         if validated_data.get("avatara"):
             avatara = validated_data.pop("avatara")
+
         image_data = validated_data.pop("image")
         processed_image_data = self.image_handle(image_data)
         created_image = None

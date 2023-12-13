@@ -12,7 +12,7 @@ from dj_rest_auth.registration.views import (
 from django.urls import path, include
 from apps.users.views.register_user_profile_ext_view import RegisterProfileExtView
 from apps.users.views.register_user_profile_view import RegisterProfileView
-from apps.users.views.upload_image_view import UploadImageView
+from apps.files.api.views.upload_image_view import UploadImageView
 from apps.users.views.user_profile_extended_view import UserProfileExtendedListView
 from apps.users.views.user_profile_view import UserProfileListView
 from apps.users.views.user_view import UserListView
