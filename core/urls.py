@@ -43,6 +43,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 # )
 
 urlpatterns = [
+    path("", include("apps.base.urls")),
     path("admin/", admin.site.urls),
     path("api/v1/", include("apps.users.urls")),  # тут находится ендпоинт с регистрацией .../api/v1/auth/registration/
     path("api/v1/content/", include("apps.content.api.urls")),

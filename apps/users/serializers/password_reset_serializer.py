@@ -9,6 +9,8 @@ from allauth.account.utils import (
     user_username,
 )
 
+from apps.base.utils import get_frontend_url
+
 
 class CustomResetForm(AllAuthPasswordResetForm):
     def save(self, request, **kwargs):
@@ -26,7 +28,7 @@ class CustomResetForm(AllAuthPasswordResetForm):
 
             # send the password reset email
             # url_generator = kwargs.get('url_generator', default_url_generator)
-            url = f'http://localhost:3000/createNewPasswordForm/{user.id}/{temp_key}/'
+            url = get_frontend_url('front_reset_password', user.id, temp_key)
 
             context = {
                 'current_site': current_site,

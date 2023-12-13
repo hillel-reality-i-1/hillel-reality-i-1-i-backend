@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.conf import settings
 
+from apps.base.utils import get_frontend_url
 from apps.users.tasks import send_adapter_mail_task
 
 
@@ -18,7 +19,7 @@ class CustomAdapter(DefaultAccountAdapter):
         confirmations are sent outside of the request context `request`
         can be `None` here.
         """
-        url = f"http://localhost:3000/createUnAccount/{emailconfirmation.key}/"
+        url = get_frontend_url('front_account_confirm_email', emailconfirmation.key)
         # url = reverse("front_account_confirm_email", args=[emailconfirmation.key])
         # ret = build_absolute_uri(request, url)
         # print(ret)

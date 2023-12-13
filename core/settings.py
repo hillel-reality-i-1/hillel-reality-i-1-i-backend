@@ -258,6 +258,8 @@ SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
+FRONTEND_DOMAIN = env.str("FRONTEND_DOMAIN", None)
+
 REST_AUTH_SERIALIZERS = {
     "PASSWORD_RESET_SERIALIZER": "apps.users.serializers.password_reset_serializer.CustomPasswordResetSerializer",
 }
