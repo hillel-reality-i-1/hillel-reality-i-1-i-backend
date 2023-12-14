@@ -16,6 +16,7 @@ from django.urls import path, include
 from apps.users.views.register_user_profile_ext_view import RegisterProfileExtView
 from apps.users.views.register_user_profile_view import RegisterProfileView
 from apps.files.api.views.upload_image_view import UploadImageView
+from apps.users.views.user_delete_view import UserDeleteView
 from apps.users.views.user_profile_extended_view import UserProfileExtendedListView
 from apps.users.views.user_profile_view import UserProfileListView
 from apps.users.views.user_view import UserListView
@@ -62,6 +63,7 @@ urlpatterns = [
     path("location/country_list/", CountryListView.as_view({"get": "list"}), name="country_list"),
     path("location/city_list/", CityListView.as_view({"get": "list"}), name="city_list"),
     path("auth/", include("dj_rest_auth.urls")),
+    path('accounts/delete/', UserDeleteView.as_view(), name='account-delete'),
 ]
 
 allauth_views_urlpatterns = [

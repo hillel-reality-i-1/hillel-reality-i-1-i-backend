@@ -8,7 +8,7 @@ User = get_user_model()
 
 class Comment(models.Model):
     text = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, related_name='comment_likes', blank=True)
     dislikes = models.ManyToManyField(User, related_name='comment_dislikes', blank=True)
