@@ -12,7 +12,7 @@ class File(models.Model):
     file = models.ImageField(upload_to=universal_file_path_builder, null=True)
     creation_date = models.DateTimeField(auto_now_add=True)
 
-    def str(self):
+    def __str__(self):
         path = str(self.file)
         label = path.rfind("/")
         return path[label - 64 : label]

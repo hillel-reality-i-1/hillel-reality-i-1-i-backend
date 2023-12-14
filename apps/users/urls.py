@@ -1,5 +1,8 @@
 from dj_rest_auth.views import PasswordResetConfirmView
-from django.views.generic import TemplateView
+
+from apps.files.api.views.upload_portfolio_view import UploadPortfolioView
+
+# from django.views.generic import TemplateView
 
 from apps.location.views.city_view import CityListView
 from apps.location.views.country_view import CountryListView
@@ -44,6 +47,7 @@ urlpatterns = [
     ),
     path("auth/registration/", CustomRegisterView.as_view(), name="rest_register"),
     path("users/upload_img/", UploadImageView.as_view(), name="upload_img"),
+    path("users/upload_portfolio/", UploadPortfolioView.as_view(), name="upload_portfolio"),
     path("auth/registration_user_profile/", RegisterProfileView.as_view(), name="registration_user_profile"),
     path("auth/registration_user_profile_ext/", RegisterProfileExtView.as_view(), name="registration_user_profile_ext"),
     path("accounts/resend-email/", ResendEmailVerificationView.as_view(), name="rest_resend_email"),

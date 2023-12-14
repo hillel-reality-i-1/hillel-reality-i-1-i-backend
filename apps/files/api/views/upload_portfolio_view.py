@@ -1,15 +1,17 @@
 from rest_framework import generics
+from rest_framework.parsers import MultiPartParser, FormParser
+from apps.files.api.serializers.porfolio_serializer import PortfolioSerializer
+from apps.files.models import File
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from apps.users.models import UserProfileExtended
-from apps.users.serializers.user_profile_extended_serializer import UserProfileExtendedSerializer
 
 
-class RegisterProfileExtView(generics.CreateAPIView):
-    serializer_class = UserProfileExtendedSerializer
+class UploadPortfolioView(generics.CreateAPIView):
+    queryset = File.objects.all()
+    serializer_class = PortfolioSerializer
     permission_classes = [IsAuthenticated]
-    queryset = UserProfileExtended.objects.all()
+    parser_classes = [MultiPartParser, FormParser]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -20,4 +22,4 @@ class RegisterProfileExtView(generics.CreateAPIView):
         return Response(response_data, status=status.HTTP_201_CREATED)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(author=self.request.user)
