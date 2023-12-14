@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -13,6 +14,7 @@ class ProfessionListView(APIView):
         return Response(serializer.data)
 
 
+@extend_schema(request=ProfessionSerializer, responses={201: None})
 class ProfessionCreateView(APIView):
     def post(self, request):
         custom_profession_name = request.data.get("name")

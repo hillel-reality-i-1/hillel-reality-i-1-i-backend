@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -13,6 +14,7 @@ class ServiceListView(APIView):
         return Response(serializer.data)
 
 
+@extend_schema(request=ServiceSerializer, responses={201: None})
 class ServiceCreateView(APIView):
     def post(self, request):
         custom_service_name = request.data.get("name")
