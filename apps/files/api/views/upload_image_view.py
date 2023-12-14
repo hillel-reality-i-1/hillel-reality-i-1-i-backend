@@ -23,4 +23,4 @@ class UploadImageView(generics.CreateAPIView):
         return Response(response_data, status=status.HTTP_201_CREATED)
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user, avatara=True)
+        serializer.save(author=self.request.user)
