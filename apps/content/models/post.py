@@ -7,7 +7,7 @@ User = get_user_model()
 
 
 class Post(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     title = models.CharField(max_length=200)
     content = models.TextField()
     likes = models.ManyToManyField(User, related_name='article_likes', blank=True)

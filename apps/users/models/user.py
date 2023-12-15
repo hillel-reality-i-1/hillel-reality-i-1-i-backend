@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from allauth.account.models import EmailAddress
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
 
 
 class CustomUserManager(BaseUserManager):
@@ -62,6 +63,27 @@ class CustomUserManager(BaseUserManager):
         mo = re.compile(pattern).match(user.username.lower())
         return mo is not None
 
+    @staticmethod
+    def set_data_to_deleted_user(deleted_user):
+
+        deleted_user.email = getattr(settings, 'CUSTOM_SETTINGS_DELETED_USER_EMAIL', None)
+        deleted_user.first_name = getattr(settings, 'CUSTOM_SETTINGS_DELETED_USER_FIRST_NAME', None)
+        deleted_user.last_name = getattr(settings, 'CUSTOM_SETTINGS_DELETED_USER_LAST_NAME', None)
+        deleted_user.username = getattr(settings, 'CUSTOM_SETTINGS_DELETED_USER_USERNAME', None)
+
+        deleted_user.is_active = False
+        deleted_user.is_staff = False
+        deleted_user.is_superuser = False
+
+        deleted_user.is_deleted_user = True
+
+        return deleted_user
+
+    @staticmethod
+    def get_deleted_user():
+        deleted_user, _ = User.objects.get_or_create(is_deleted_user=True)
+        return deleted_user
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, max_length=50)
@@ -72,6 +94,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+
+    is_deleted_user = models.BooleanField(default=False)
+
     date_joined = models.DateTimeField(default=timezone.now, editable=False)
 
     objects = CustomUserManager()
@@ -87,10 +112,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = "Users"
 
     def is_verified(self):
-        return EmailAddress.objects.filter(email=self.email).first().verified
+        email_query_set = EmailAddress.objects.filter(email=self.email)
+        if not email_query_set.exists():
+            return False
+        return email_query_set.first().verified
 
     def save(self, *args, **kwargs):
         user_manager = CustomUserManager()
+
+        if self.is_deleted_user:
+            user_manager.set_data_to_deleted_user(self)
+            return super().save(*args, **kwargs)
 
         username_is_valid = user_manager.validate_user_username(self)
 
