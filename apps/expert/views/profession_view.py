@@ -16,6 +16,8 @@ class ProfessionListView(APIView):
 
 @extend_schema(request=ProfessionSerializer, responses={201: None})
 class ProfessionCreateView(APIView):
+    serializer_class = ProfessionSerializer
+
     def post(self, request):
         custom_profession_name = request.data.get("name")
 

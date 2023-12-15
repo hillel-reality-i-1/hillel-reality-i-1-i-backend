@@ -16,6 +16,8 @@ class ServiceListView(APIView):
 
 @extend_schema(request=ServiceSerializer, responses={201: None})
 class ServiceCreateView(APIView):
+    serializer_class = ServiceSerializer
+
     def post(self, request):
         custom_service_name = request.data.get("name")
 
