@@ -1,7 +1,7 @@
 from rest_framework import permissions
 
-from apps.files.models import Image
-from apps.users.models import UserProfile
+from apps.files.models import Image, File
+from apps.users.models import UserProfile, UserProfileExtended
 
 
 class IsVerifiedUser(permissions.BasePermission):
@@ -29,7 +29,18 @@ class IsAdminOrImageOwner(permissions.BasePermission):
 
 class IsAdminOrPortfolioOwner(permissions.BasePermission):
     def has_permission(self, request, view):
-        pass
+        user = request.user
+
+        if user.is_staff:
+            return True
+
+        is_portfolio_ext = File.objects.filter(author=user).exists()
+
+        if is_portfolio_ext:
+            portfolio_ext = File.objects.filter(author=user, pk=view.kwargs.get("pk")).first()
+            return bool(portfolio_ext)
+        else:
+            return False
 
 
 class IsAdminOrProfileOwner(permissions.BasePermission):
@@ -46,6 +57,20 @@ class IsAdminOrProfileOwner(permissions.BasePermission):
             return view.kwargs.get("pk") == str(userprofile.id)
         else:
             return False
+
+
+class IsAdminOrProfileExtendedOwner(permissions.BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+
+        if user.is_staff:
+            return True
+
+        is_userprofile_ext = UserProfileExtended.objects.filter(user=user).exists()
+
+        if is_userprofile_ext:
+            userprofile_ext = UserProfileExtended.objects.get(user=user)
+            return view.kwargs.get("pk") == str(userprofile_ext.id)
 
 
 class IsAdminOrSelf(permissions.BasePermission):
