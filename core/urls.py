@@ -46,6 +46,7 @@ urlpatterns = [
     path("", include("apps.base.urls")),
     path("admin/", admin.site.urls),
     path("api/v1/", include("apps.users.urls")),  # тут находится ендпоинт с регистрацией .../api/v1/auth/registration/
+    path("api/v1/files/", include("apps.files.urls")),
     path("api/v1/content/", include("apps.content.api.urls")),
     path("api/v1/prof_service/", include("apps.expert.urls")),
     # path("", TemplateView.as_view(template_name="index.html")),
