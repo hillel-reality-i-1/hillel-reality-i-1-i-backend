@@ -1,6 +1,6 @@
 from random import randint
 import re
-
+from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from allauth.account.models import EmailAddress
@@ -59,6 +59,18 @@ class CustomUserManager(BaseUserManager):
         if user.username is None:
             return False
 
+        # Length validation
+        if len(user.username) > 32:
+            raise serializers.ValidationError("Username can be up to 32 characters long")
+
+        # Characters validation
+        pattern = re.compile(r"^[a-zA-Z][a-zA-Z0-9_]{0,30}[a-zA-Z0-9]$")
+        if not pattern.match(user.username):
+            raise serializers.ValidationError(
+                "Username can contain Latin letters, numbers, and underscores. "
+                "Username must start with a letter and can't end with an underscore."
+            )
+
         pattern = rf'\A({user.first_name.lower()}_{user.last_name.lower() if user.last_name else ""}_\d{{1,5}})\Z'
         mo = re.compile(pattern).match(user.username.lower())
         return mo is not None
@@ -100,11 +112,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = "email"
+    USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["first_name", "last_name"]
 
     def __str__(self):
-        return self.email
+        return self.username
 
     class Meta:
         verbose_name = "User"
@@ -126,9 +138,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         username_is_valid = user_manager.validate_user_username(self)
 
         if not username_is_valid:
-            if self.first_name == "Anonim_0" and self.last_name == "User_1":
+            if self.first_name == "Anonim" and self.last_name == "User":
                 self.username = user_manager.generate_unique_username(
                     self.first_name,
                     self.last_name,
                 )
+
         return super().save(*args, **kwargs)

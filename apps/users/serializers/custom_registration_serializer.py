@@ -28,7 +28,7 @@ class CustomRegistrationSerializer(RegisterSerializer):
 
     def save(self, request):
         user = super().save(request)
-        user.first_name = "Anonim_0"
-        user.last_name = "User_1"
+        user.first_name = "Anonim"
+        user.last_name = "User"
         user.save()
         return user
