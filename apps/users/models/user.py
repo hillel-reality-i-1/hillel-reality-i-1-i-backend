@@ -65,11 +65,10 @@ class CustomUserManager(BaseUserManager):
 
     @staticmethod
     def set_data_to_deleted_user(deleted_user):
-
-        deleted_user.email = getattr(settings, 'CUSTOM_SETTINGS_DELETED_USER_EMAIL', None)
-        deleted_user.first_name = getattr(settings, 'CUSTOM_SETTINGS_DELETED_USER_FIRST_NAME', None)
-        deleted_user.last_name = getattr(settings, 'CUSTOM_SETTINGS_DELETED_USER_LAST_NAME', None)
-        deleted_user.username = getattr(settings, 'CUSTOM_SETTINGS_DELETED_USER_USERNAME', None)
+        deleted_user.email = getattr(settings, "CUSTOM_SETTINGS_DELETED_USER_EMAIL", None)
+        deleted_user.first_name = getattr(settings, "CUSTOM_SETTINGS_DELETED_USER_FIRST_NAME", None)
+        deleted_user.last_name = getattr(settings, "CUSTOM_SETTINGS_DELETED_USER_LAST_NAME", None)
+        deleted_user.username = getattr(settings, "CUSTOM_SETTINGS_DELETED_USER_USERNAME", None)
 
         deleted_user.is_active = False
         deleted_user.is_staff = False
@@ -127,8 +126,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         username_is_valid = user_manager.validate_user_username(self)
 
         if not username_is_valid:
-            self.username = user_manager.generate_unique_username(
-                self.first_name,
-                self.last_name,
-            )
+            if self.first_name == "Anonim_0" and self.last_name == "User_1":
+                self.username = user_manager.generate_unique_username(
+                    self.first_name,
+                    self.last_name,
+                )
         return super().save(*args, **kwargs)
