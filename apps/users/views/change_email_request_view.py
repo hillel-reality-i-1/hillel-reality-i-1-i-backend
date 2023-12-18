@@ -1,5 +1,6 @@
 from datetime import datetime
-
+from django.db import transaction
+from allauth.account.models import EmailAddress
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -71,10 +72,8 @@ class ChangeEmailConfirmView(APIView):
         start_time = urlsafe_base64_decode(start_time).decode()
         start_time = datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S.%f")
         current_time = datetime.now()
-        print(start_time)
-        print(current_time)
         diff = current_time - start_time
-        print(diff)
+
         if (diff.total_seconds() / 60) > 60:
             return Response(
                 {"detail": "Sorry. The time allotted for using the link has expired."},
@@ -88,8 +87,13 @@ class ChangeEmailConfirmView(APIView):
             raise NotFound("User is not found.")
 
         if default_token_generator.check_token(user, token):
-            user.email = new_email
-            user.save()
+            with transaction.atomic():
+                user.email = new_email
+                user.save()
+
+                email_address = EmailAddress.objects.get(user=user)
+                email_address.email = new_email
+                email_address.save()
             return Response({"detail": "Email successfully changed."}, status=status.HTTP_200_OK)
         else:
             return Response({"detail": "Wrong token."}, status=status.HTTP_400_BAD_REQUEST)
