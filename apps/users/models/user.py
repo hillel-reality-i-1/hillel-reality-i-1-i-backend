@@ -19,9 +19,8 @@ class CustomUserManager(BaseUserManager):
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.date_joined = timezone.now()
-        first_name = extra_fields.get("first_name", "")
-        last_name = extra_fields.get("last_name", "")
-        username = self.generate_unique_username(first_name, last_name)
+        full_name = extra_fields.get("full_name", "")
+        username = self.generate_unique_username(full_name)
         user.username = username
         user.save(using=self._db)
         return user
@@ -41,16 +40,15 @@ class CustomUserManager(BaseUserManager):
     def is_username_unique(username):
         return not get_user_model().objects.filter(username=username).exists()
 
-    def generate_unique_username(self, first_name, last_name):
-        last_name = last_name if last_name else ""
-
-        username = f"{first_name.lower()}_{last_name.lower()}_{randint(1, 99999)}"
+    def generate_unique_username(self, full_name):
+        full_name = full_name.replace(" ", "_")
+        username = f"{full_name.lower()}_{randint(1, 99999)}"
 
         if not User.objects.count():
-            return f"{first_name.lower()}_{last_name.lower()}_{randint(1, 99999)}"
+            return f"{full_name.lower()}_{randint(1, 99999)}"
 
         while not self.is_username_unique(username):
-            username = f"{first_name.lower()}_{last_name.lower()}_{randint(1, 99999)}"
+            username = f"{full_name.lower()}_{randint(1, 99999)}"
 
         return username
 
@@ -64,22 +62,39 @@ class CustomUserManager(BaseUserManager):
             raise serializers.ValidationError("Username can be up to 32 characters long")
 
         # Characters validation
-        pattern = re.compile(r"^[a-zA-Z][a-zA-Z0-9_]{0,30}[a-zA-Z0-9]$")
+        pattern = re.compile(r"^[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]$")
         if not pattern.match(user.username):
             raise serializers.ValidationError(
-                "Username can contain Latin letters, numbers, and underscores. "
+                "Username can contain Latin letters, numbers, and underscores. Username cannot contain spaces."
                 "Username must start with a letter and can't end with an underscore."
             )
 
-        pattern = rf'\A({user.first_name.lower()}_{user.last_name.lower() if user.last_name else ""}_\d{{1,5}})\Z'
+        # pattern = rf'\A({user.first_name.lower()}_{user.last_name.lower() if user.last_name else ""}_\d{{1,5}})\Z'
+        pattern = rf"\A({user.full_name.lower()}_\d{{1,5}})\Z"
         mo = re.compile(pattern).match(user.username.lower())
         return mo is not None
 
     @staticmethod
+    def validate_user_fullname(user):
+        # Length validation
+        if len(user.full_name) > 50:
+            raise serializers.ValidationError("Full name can be up to 50 characters long")
+
+        pattern = re.compile(
+            r"^[a-zA-Zа-яА-ЯёЁґҐєЄіІїЇ]+[a-zA-Z0-9_а-яА-ЯёЁґҐєЄіІїЇ\s'-]*[a-zA-Zа-яА-ЯёЁґҐєЄіІїЇ]+$", re.UNICODE
+        )
+        if not bool(pattern.match(user.full_name)):
+            raise serializers.ValidationError(
+                "The full name can consist of characters from the Latin alphabet or "
+                "Cyrillic alphabet. Acceptable special characters: space, hyphen, "
+                "apostrophe. The text cannot begin or end with special "
+                "characters."
+            )
+
+    @staticmethod
     def set_data_to_deleted_user(deleted_user):
         deleted_user.email = getattr(settings, "CUSTOM_SETTINGS_DELETED_USER_EMAIL", None)
-        deleted_user.first_name = getattr(settings, "CUSTOM_SETTINGS_DELETED_USER_FIRST_NAME", None)
-        deleted_user.last_name = getattr(settings, "CUSTOM_SETTINGS_DELETED_USER_LAST_NAME", None)
+        deleted_user.full_name = getattr(settings, "CUSTOM_SETTINGS_DELETED_USER_FULL_NAME", None)
         deleted_user.username = getattr(settings, "CUSTOM_SETTINGS_DELETED_USER_USERNAME", None)
 
         deleted_user.is_active = False
@@ -98,8 +113,7 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, max_length=50)
-    first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=20, null=True)
+    full_name = models.CharField(max_length=50, default="Anonim User")
     username = models.CharField(unique=True, max_length=100, null=True, blank=True)
 
     is_active = models.BooleanField(default=True)
@@ -112,11 +126,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = "username"
-    REQUIRED_FIELDS = ["first_name", "last_name"]
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["full_name"]
 
     def __str__(self):
-        return self.username
+        return self.email
 
     class Meta:
         verbose_name = "User"
@@ -135,13 +149,14 @@ class User(AbstractBaseUser, PermissionsMixin):
             user_manager.set_data_to_deleted_user(self)
             return super().save(*args, **kwargs)
 
+        user_manager.validate_user_fullname(self)
+
         username_is_valid = user_manager.validate_user_username(self)
 
         if not username_is_valid:
-            if self.first_name == "Anonim" and self.last_name == "User":
+            if self.full_name == "Anonim User":
                 self.username = user_manager.generate_unique_username(
-                    self.first_name,
-                    self.last_name,
+                    self.full_name,
                 )
 
         return super().save(*args, **kwargs)

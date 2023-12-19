@@ -10,8 +10,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
     user = serializers.SerializerMethodField(read_only=True)
     profile_picture = ImageSerializer(read_only=True)
-    first_name = serializers.SerializerMethodField(read_only=True)
-    last_name = serializers.SerializerMethodField(read_only=True)
+    full_name = serializers.SerializerMethodField(read_only=True)
     username = serializers.SerializerMethodField(read_only=True)
     country = CountrySerializer(read_only=True)
     city = CitySerializer(read_only=True)
@@ -32,11 +31,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "phone_verified_request_id",
         )
 
-    def get_first_name(self, obj):
-        return obj.user.first_name
-
-    def get_last_name(self, obj):
-        return obj.user.last_name
+    def get_full_name(self, obj):
+        return obj.user.full_name
 
     def get_username(self, obj):
         return obj.user.username
