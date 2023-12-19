@@ -15,6 +15,9 @@ flake8==6.1.0
 autoflake==2.2.1
 # [code_style]-[END]
 
+# work with data
+pandas==2.1.4
+openpyxl==3.1.2
 
 # Requests
 requests==2.31.0
