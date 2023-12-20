@@ -8,6 +8,8 @@ from allauth.account.forms import default_token_generator
 from allauth.account.utils import (
     user_username,
 )
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 
 from apps.base.utils import get_frontend_url
 
@@ -28,7 +30,8 @@ class CustomResetForm(AllAuthPasswordResetForm):
 
             # send the password reset email
             # url_generator = kwargs.get('url_generator', default_url_generator)
-            url = get_frontend_url('front_reset_password', user.id, temp_key)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            url = get_frontend_url('front_reset_password', uid, temp_key)
 
             context = {
                 'current_site': current_site,
