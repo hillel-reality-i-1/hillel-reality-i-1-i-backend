@@ -18,9 +18,18 @@ from rest_framework.response import Response
 class UserListView(
     mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, mixins.ListModelMixin, GenericViewSet
 ):
-    queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, IsAdminOrSelf]
+
+    def get_queryset(self):
+        default_exclude_email = "delet@ed.user"
+        queryset = User.objects.exclude(email=default_exclude_email)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
