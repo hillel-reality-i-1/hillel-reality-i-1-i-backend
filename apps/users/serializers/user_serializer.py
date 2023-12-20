@@ -13,6 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
             "is_active",
             "is_staff",
             "is_superuser",
+            "username_changed",
             "is_deleted_user",
             "date_joined",
             "groups",

@@ -123,6 +123,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_deleted_user = models.BooleanField(default=False)
 
     date_joined = models.DateTimeField(default=timezone.now, editable=False)
+    username_changed = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 
@@ -150,13 +151,12 @@ class User(AbstractBaseUser, PermissionsMixin):
             return super().save(*args, **kwargs)
 
         user_manager.validate_user_fullname(self)
+        # username_is_valid = user_manager.validate_user_username(self)
+        # if not username_is_valid:
+        if self.full_name == "Anonim User":
+            self.username = user_manager.generate_unique_username(
+                self.full_name,
+            )
 
-        username_is_valid = user_manager.validate_user_username(self)
-
-        if not username_is_valid:
-            if self.full_name == "Anonim User":
-                self.username = user_manager.generate_unique_username(
-                    self.full_name,
-                )
-
+        user_manager.validate_user_username(self)
         return super().save(*args, **kwargs)
