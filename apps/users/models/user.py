@@ -25,10 +25,12 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email=None, password=None, **extra_fields):
+    def create_superuser(self, email=None, password=None, full_name=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 
+        if full_name is None:
+            full_name = getattr(settings, "DJANGO_SUPERUSER_FULLNAME", "Super User")
         if email is None:
             email = getattr(settings, "DJANGO_SUPERUSER_EMAIL", "django@gjan.go")
 
@@ -37,7 +39,7 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
 
-        return self.create_user(email, password, **extra_fields)
+        return self.create_user(email, password, full_name=full_name, **extra_fields)
 
     @staticmethod
     def is_username_unique(username):

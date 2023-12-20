@@ -7,3 +7,5 @@ from django.core.management import call_command
 def populate_cities_if_table_is_empty():
     if not City.objects.exists():
         call_command('cities_light')
+        call_command('translate_city')
+        call_command('translate_country')
