@@ -204,8 +204,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DJANGO_SUPERUSER_PASSWORD = env.str("DJANGO_SUPERUSER_PASSWORD", "django@pass123")
 DJANGO_SUPERUSER_USERNAME = env.str("DJANGO_SUPERUSER_USERNAME", "django_super")
 DJANGO_SUPERUSER_EMAIL = env.str("DJANGO_SUPERUSER_EMAIL", "django@gjan.go")
-DJANGO_SUPERUSER_FIRST_NAME = env.str("DJANGO_SUPERUSER_FIRST_NAME", "Firstname")
-DJANGO_SUPERUSER_LAST_NAME = env.str("DJANGO_SUPERUSER_LAST_NAME", "Lastname")
+DJANGO_SUPERUSER_FULLNAME = env.str("DJANGO_SUPERUSER_FULLNAME", "Firstname Lastname")
+
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
@@ -290,6 +290,8 @@ JWT_AUTH_COOKIE = "access_token"
 CORS_ALLOWED_ORIGINS = [
     # Frond-end origins
     "http://localhost:3000",
+    "http://dmytromigirov.space:3000/",
+    "http://195.189.226.99:3000/",
 ]
 
 # API settings for phone_number verification
