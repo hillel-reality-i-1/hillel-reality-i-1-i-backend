@@ -80,6 +80,7 @@ THIRD_PARTY_APPS = [
     "dj_rest_auth.registration",
     # "drf_yasg",
     "corsheaders",
+    "django_filters",
     "drf_spectacular",
     "drf_spectacular_sidecar",
 ]
@@ -245,9 +246,6 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
 
 CUSTOM_SETTINGS_ACCOUNT_EMAIL_CELERY_SEND = True
-CUSTOM_SETTINGS_DELETED_USER_EMAIL = env.str("CUSTOM_SETTINGS_DELETED_USER_EMAIL", "delet@ed.user")
-CUSTOM_SETTINGS_DELETED_USER_FULL_NAME = env.str("CUSTOM_SETTINGS_DELETED_USER_FULL_NAME", "Deleted User")
-CUSTOM_SETTINGS_DELETED_USER_USERNAME = env.str("CUSTOM_SETTINGS_DELETED_USER_USERNAME", "deleted_user")
 
 SITE_ID = 1
 ACCOUNT_ADAPTER = "apps.users.adapters.CustomAdapter"
@@ -265,10 +263,9 @@ SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
-FRONTEND_DOMAIN = env.str("FRONTEND_DOMAIN", None)
-
 REST_AUTH_SERIALIZERS = {
-    "PASSWORD_RESET_SERIALIZER": "apps.users.serializers.password_reset_serializer.CustomPasswordResetSerializer",
+    'PASSWORD_RESET_SERIALIZER':
+        'apps.users.serializers.password_reset_serializer.CustomPasswordResetSerializer',
 }
 
 ACCOUNT_EXTRA_REQUIRED_FIELDS = ["first_name"]
@@ -291,8 +288,6 @@ JWT_AUTH_COOKIE = "access_token"
 CORS_ALLOWED_ORIGINS = [
     # Frond-end origins
     "http://localhost:3000",
-    "http://dmytromigirov.space:3000",
-    "http://195.189.226.99:3000",
 ]
 
 # API settings for phone_number verification
@@ -302,6 +297,3 @@ TWILIO_VERIFY_SID = env.str("TWILIO_VERIFY_SID", "")
 
 VONAGE_API_KEY = env.str("VONAGE_API_KEY", "")
 VONAGE_API_SECRET = env.str("VONAGE_API_SECRET", "")
-
-CITIES_LIGHT_TRANSLATION_LANGUAGES = ["en"]
-CITIES_LIGHT_INCLUDE_COUNTRIES = ["UA", "PL", "CZ", "DE", "GB"]
