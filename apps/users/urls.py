@@ -1,4 +1,3 @@
-from dj_rest_auth.views import PasswordResetConfirmView
 
 from apps.files.api.views.upload_portfolio_view import UploadPortfolioView
 
@@ -13,6 +12,8 @@ from dj_rest_auth.registration.views import (
     ResendEmailVerificationView,
 )
 from django.urls import path, include
+
+from apps.users.views.password_reset_confirm_view import PasswordResetConfirmView
 from apps.users.views.register_user_profile_ext_view import RegisterProfileExtView
 from apps.users.views.register_user_profile_view import RegisterProfileView
 from apps.files.api.views.upload_image_view import UploadImageView
@@ -55,7 +56,7 @@ urlpatterns = [
     path("accounts/confirm-email/", VerifyEmailView.as_view(), name="account_confirm_email"),
     path("auth/password/reset/", PasswordResetView.as_view(), name="rest_password_reset"),
     path(
-        "auth/password/reset/confirm/<uidb64>/<token>/",
+        "auth/password/reset/confirm/",
         PasswordResetConfirmView.as_view(),
         name="password_reset_confirm",
     ),

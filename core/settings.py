@@ -179,7 +179,7 @@ AUTH_PASSWORD_VALIDATORS = [
         },
     },
 ]
-AUTH_TOKEN_VALIDITY = 900
+
 PASSWORD_RESET_TIMEOUT = 900
 
 # Internationalization
