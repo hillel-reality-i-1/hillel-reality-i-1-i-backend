@@ -1,5 +1,7 @@
 from random import randint
 import re
+
+from django.core.validators import MinLengthValidator, MaxLengthValidator
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
@@ -63,8 +65,8 @@ class CustomUserManager(BaseUserManager):
             return False
 
         # Length validation
-        if len(user.username) > 32:
-            raise serializers.ValidationError("Username can be up to 32 characters long")
+        # if len(user.username) > 32:
+        #     raise serializers.ValidationError("Username can be up to 32 characters long")
 
         # Characters validation
         pattern = re.compile(r"^[a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9]$")
@@ -82,8 +84,8 @@ class CustomUserManager(BaseUserManager):
     @staticmethod
     def validate_user_fullname(user):
         # Length validation
-        if len(user.full_name) > 50:
-            raise serializers.ValidationError("Full name can be up to 50 characters long")
+        # if len(user.full_name) > 50:
+        #     raise serializers.ValidationError("Full name can be up to 50 characters long")
 
         pattern = re.compile(
             r"^[a-zA-Zа-яА-ЯёЁґҐєЄіІїЇ]+[a-zA-Z0-9_а-яА-ЯёЁґҐєЄіІїЇ\s'-]*[a-zA-Zа-яА-ЯёЁґҐєЄіІїЇ]+$", re.UNICODE
@@ -118,8 +120,17 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, max_length=50)
-    full_name = models.CharField(max_length=50, default="Anonim User")
-    username = models.CharField(unique=True, max_length=100, null=True, blank=True)
+    full_name = models.CharField(
+        validators=[MinLengthValidator(limit_value=2), MaxLengthValidator(limit_value=50)],
+        max_length=50,
+        default="Anonim User",
+    )
+
+    username = models.CharField(
+        validators=[MinLengthValidator(limit_value=2), MaxLengthValidator(limit_value=32)],
+        max_length=32,
+        default="anonim_user_1",
+    )
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -129,6 +140,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     date_joined = models.DateTimeField(default=timezone.now, editable=False)
     username_changed = models.BooleanField(default=False)
+    last_full_name_change = models.DateTimeField(null=True, blank=True)
 
     objects = CustomUserManager()
 
@@ -164,4 +176,12 @@ class User(AbstractBaseUser, PermissionsMixin):
             )
 
         user_manager.validate_user_username(self)
+
+        if self.full_name != self._original_full_name:
+            self.last_full_name_change = timezone.now()
+
         return super().save(*args, **kwargs)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._original_full_name = self.full_name

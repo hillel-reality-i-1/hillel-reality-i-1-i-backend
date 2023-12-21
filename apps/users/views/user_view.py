@@ -1,12 +1,13 @@
 # from rest_framework import status
 # from rest_framework.permissions import IsAdminUser
+from django.utils import timezone
 
 # from rest_framework.views import APIView
 # from rest_framework.response import Response
 # from rest_framework.generics import RetrieveUpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
-
+from datetime import timedelta
 from apps.users.models import User
 from apps.users.permissions import IsAdminOrSelf
 from apps.users.serializers.user_serializer import UserSerializer
@@ -37,7 +38,17 @@ class UserListView(
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
 
-        if "username" in request.data:
+        if (
+            "full_name" in request.data
+            and request.data["full_name"] != instance.full_name
+            and instance.last_full_name_change
+            and (timezone.now() - instance.last_full_name_change) < timedelta(minutes=1)  # days=90
+        ):
+            return Response(
+                {"detail": "You can change full_name only once in 90 days."}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if "username" in request.data and request.data["username"] != instance.username:
             if instance.username_changed:
                 return Response({"detail": "You can not change the username"}, status=status.HTTP_400_BAD_REQUEST)
             else:

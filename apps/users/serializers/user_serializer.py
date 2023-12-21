@@ -18,4 +18,5 @@ class UserSerializer(serializers.ModelSerializer):
             "date_joined",
             "groups",
             "user_permissions",
+            "last_full_name_change",
         )
