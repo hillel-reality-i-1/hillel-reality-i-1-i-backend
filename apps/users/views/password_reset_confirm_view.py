@@ -1,0 +1,7 @@
+from dj_rest_auth.views import PasswordResetConfirmView as _PasswordResetConfirmView
+
+from apps.users.serializers.password_reset_confirm_serializer import PasswordResetConfirmSerializer
+
+
+class PasswordResetConfirmView(_PasswordResetConfirmView):
+    serializer_class = PasswordResetConfirmSerializer
