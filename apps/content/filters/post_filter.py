@@ -3,11 +3,12 @@ from ..models import Post
 
 
 class PostFilter(django_filters.FilterSet):
+    all_countries = django_filters.BooleanFilter(method="filter_all_countries", label="All counties")
 
     class Meta:
         model = Post
         fields = {
-            'author': ['exact'],
-            'creation_date': ['gte', 'lte'],
-            'professional_tags': ['exact'],
+            "country": ["exact"],
+            "creation_date": ["gte", "lte"],
+            "professional_tags": ["exact"],
         }
