@@ -35,7 +35,8 @@ class EmailChangeTokenGenerator(_PasswordResetTokenGenerator):
             return False
 
         # Check the timestamp is within limit.
-        if (self._num_seconds(self._now()) - ts) > settings.EMAIL_CHANGE_TIMEOUT:
+        change_email_timeout = getattr(settings, 'CHANGE_EMAIL_TIMEOUT', 3600)
+        if (self._num_seconds(self._now()) - ts) > change_email_timeout:
             return False
 
         return True
