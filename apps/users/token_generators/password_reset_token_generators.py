@@ -27,4 +27,3 @@ class PasswordResetTokenGenerator(_PasswordResetTokenGenerator):
             ::2
         ]  # Limit to shorten the URL.
         return "%s-%s" % (ts_b36, hash_string)
-

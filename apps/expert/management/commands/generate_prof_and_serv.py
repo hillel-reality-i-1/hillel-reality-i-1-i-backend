@@ -1,5 +1,3 @@
-import sys
-
 from django.core.management import BaseCommand
 import os
 import json
