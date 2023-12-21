@@ -6,7 +6,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.core.mail import send_mail
-from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth import get_user_model
@@ -14,6 +13,8 @@ from django.utils.http import urlsafe_base64_decode
 from rest_framework.exceptions import NotFound, ValidationError
 from apps.users.serializers.change_email_serializer import ChangeEmailSerializer
 from django.contrib.auth.hashers import check_password
+
+from apps.users.token_generators import EmailChangeTokenGenerator
 from core.settings import env, ALLOWED_HOSTS, DEBUG
 
 
@@ -25,6 +26,8 @@ else:
     HOST = ALLOWED_HOSTS[0]
 
 EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
+
+token_generator = EmailChangeTokenGenerator()
 
 
 class ChangeEmailRequestView(APIView):
@@ -47,7 +50,7 @@ class ChangeEmailRequestView(APIView):
             raise ValidationError("Wrong password.")
 
         # Создание и отправка письма с токеном
-        token = default_token_generator.make_token(user)
+        token = token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
 
         email_subject = "Change email"
@@ -72,7 +75,7 @@ class ChangeEmailConfirmView(APIView):
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
             raise NotFound("User is not found.")
 
-        if default_token_generator.check_token(user, token):
+        if token_generator.check_token(user, token):
             with transaction.atomic():
                 user.email = new_email
                 user.save()
