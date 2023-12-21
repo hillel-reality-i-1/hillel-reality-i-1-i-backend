@@ -4,7 +4,6 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from allauth.account import app_settings as allauth_account_settings
 from allauth.account.adapter import get_adapter
-from allauth.account.forms import default_token_generator
 from allauth.account.utils import (
     user_username,
 )
@@ -12,17 +11,17 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
 from apps.base.utils import get_frontend_url
+from apps.users.token_generators import PasswordResetTokenGenerator
 
 
 class CustomResetForm(AllAuthPasswordResetForm):
     def save(self, request, **kwargs):
         current_site = get_current_site(request)
         email = self.cleaned_data['email']
-        token_generator = kwargs.get('token_generator', default_token_generator)
 
         for user in self.users:
 
-            temp_key = token_generator.make_token(user)
+            temp_key = PasswordResetTokenGenerator().make_token(user)
 
             # save it to the password reset model
             # password_reset = PasswordReset(user=user, temp_key=temp_key)

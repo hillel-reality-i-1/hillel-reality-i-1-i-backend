@@ -19,8 +19,6 @@ class PasswordResetConfirmSerializer(_PasswordResetConfirmSerializer):
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
             raise ValidationError({'uid': ['Invalid value']})
 
-        print(default_token_generator)
-
         self.custom_validation(attrs)
         # Construct SetPasswordForm instance
         self.set_password_form = self.set_password_form_class(

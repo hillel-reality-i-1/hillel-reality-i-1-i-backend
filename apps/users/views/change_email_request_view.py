@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.db import transaction
 from allauth.account.models import EmailAddress
 from drf_yasg.utils import swagger_auto_schema
@@ -51,12 +50,10 @@ class ChangeEmailRequestView(APIView):
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
 
-        start_time = urlsafe_base64_encode(force_bytes(datetime.now()))
-
         email_subject = "Change email"
         email_message = (
             f"To change your email, please use this link: "
-            f"{HOST}/api/v1/change-email/confirm/{uid}/{token}/?new_email={new_email}&start_time={start_time}"
+            f"{HOST}/api/v1/change-email/confirm/{uid}/{token}/?new_email={new_email}"
         )
         send_mail(email_subject, email_message, EMAIL_HOST_USER, [new_email])
 
@@ -68,17 +65,6 @@ class ChangeEmailRequestView(APIView):
 class ChangeEmailConfirmView(APIView):
     def get(self, request, uidb64, token, *args, **kwargs):
         new_email = request.query_params.get("new_email")
-        start_time = request.query_params.get("start_time")
-        start_time = urlsafe_base64_decode(start_time).decode()
-        start_time = datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S.%f")
-        current_time = datetime.now()
-        diff = current_time - start_time
-
-        if (diff.total_seconds() / 60) > 60:
-            return Response(
-                {"detail": "Sorry. The time allotted for using the link has expired."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
 
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
