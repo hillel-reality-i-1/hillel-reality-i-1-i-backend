@@ -42,7 +42,7 @@ class UserListView(
             "full_name" in request.data
             and request.data["full_name"] != instance.full_name
             and instance.last_full_name_change
-            and (timezone.now() - instance.last_full_name_change) < timedelta(minutes=1)  # days=90
+            and (timezone.now() - instance.last_full_name_change) < timedelta(days=90)  # days=90
         ):
             return Response(
                 {"detail": "You can change full_name only once in 90 days."}, status=status.HTTP_400_BAD_REQUEST
