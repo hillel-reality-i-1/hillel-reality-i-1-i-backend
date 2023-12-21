@@ -1,1 +1,2 @@
-from .is_verified_author_or_read_only import IsVerifiedAuthorOrReadOnly
+from .is_user_phone_verif import IsUserPhoneVerif
+from .is_author_or_read_only import IsAuthorOrReadOnly
