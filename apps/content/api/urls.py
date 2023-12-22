@@ -16,5 +16,5 @@ urlpatterns = [
     path("posts/<int:pk>/comments/", CommentsListView.as_view(), name="comment-list"),
     path("comments/<int:pk>/", CommentModifiedDeleteView.as_view(), name="comment-modified-del"),
     path("comments/<int:pk>/replies/", NestedCommentsCreateView.as_view(), name="nested-comment-create"),
-    path("delete-content/", DeleteUserContentView.as_view(), name="delete_user_content"),
+    # path("delete-content/", DeleteUserContentView.as_view(), name="delete_user_content"),
 ]
