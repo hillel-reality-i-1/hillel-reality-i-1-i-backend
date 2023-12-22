@@ -16,6 +16,8 @@ set -o xtrace
 # Apply database migrations.
 make migrate
 
+python manage.py collectstatic --noinput --clear
+
 # [init]-[END]
 
 export RABBITMQ_URL="amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/"

@@ -26,6 +26,11 @@ COPY --chown=${USER} ./manage.py manage.py
 COPY --chown=${USER} ./core core
 COPY --chown=${USER} ./apps apps
 
+# Вставка команд для создания директории /var/www/static/
+USER root
+RUN mkdir -p /var/www/static/ \
+    &&  chmod -R 775 /var/www/static/
+
 USER ${USER}
 
 EXPOSE 8000
@@ -36,4 +41,5 @@ USER root
 RUN chmod --recursive a+w /usr/local/lib/python3.12/site-packages/cities_light
 USER ${USER}
 
+USER root
 CMD ["/start.sh"]

@@ -62,6 +62,7 @@ def test_create_post_not_login_user(api_client, default_verified_user, post_data
 
 def test_get_post_by_id(api_client, default_verified_user, post_data, user_data):
     user = default_verified_user
+    user.save()
     response = api_client.post(LOGIN_LINK, {
         'password': user_data['password'],
         'email': user_data['email'],
