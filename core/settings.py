@@ -264,8 +264,7 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 REST_AUTH_SERIALIZERS = {
-    'PASSWORD_RESET_SERIALIZER':
-        'apps.users.serializers.password_reset_serializer.CustomPasswordResetSerializer',
+    "PASSWORD_RESET_SERIALIZER": "apps.users.serializers.password_reset_serializer.CustomPasswordResetSerializer",
 }
 
 ACCOUNT_EXTRA_REQUIRED_FIELDS = ["first_name"]
@@ -297,3 +296,5 @@ TWILIO_VERIFY_SID = env.str("TWILIO_VERIFY_SID", "")
 
 VONAGE_API_KEY = env.str("VONAGE_API_KEY", "")
 VONAGE_API_SECRET = env.str("VONAGE_API_SECRET", "")
+
+CITIES_LIGHT_INCLUDE_COUNTRIES = ["UA", "PL", "CZ", "DE", "GB"]
