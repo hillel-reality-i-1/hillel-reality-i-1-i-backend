@@ -198,7 +198,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+STATIC_ROOT = "/var/www/static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -264,8 +265,7 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 REST_AUTH_SERIALIZERS = {
-    'PASSWORD_RESET_SERIALIZER':
-        'apps.users.serializers.password_reset_serializer.CustomPasswordResetSerializer',
+    "PASSWORD_RESET_SERIALIZER": "apps.users.serializers.password_reset_serializer.CustomPasswordResetSerializer",
 }
 
 ACCOUNT_EXTRA_REQUIRED_FIELDS = ["first_name"]
