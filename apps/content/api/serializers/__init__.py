@@ -2,3 +2,4 @@ from .post_serializer import PostSerializer
 from .comment_serializer import CommentSerializer
 from .contribution_serializer import ContributionSerializer
 from .reaction_serializer import ReactionSerializer
+from .combined_serializer import CombinedSerializer
