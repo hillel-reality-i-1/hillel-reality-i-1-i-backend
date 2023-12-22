@@ -1,4 +1,6 @@
 from rest_framework import generics
+
+from ..serializers import CombinedSerializer
 from ...models import Post, Comment, Contribution
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,6 +14,9 @@ class DeleteUserContentView(generics.DestroyAPIView):
             'comments': Comment.objects.filter(author=user),
             'contributions': Contribution.objects.filter(author=user),
         }
+
+    def get_serializer_class(self):
+        return CombinedSerializer()
 
     @staticmethod
     def perform_destroy(instance):
