@@ -194,7 +194,7 @@ LANGUAGES = [
     ("uk", _("Ukrainian")),
 ]
 
-LANGUAGE_CODE = "uk"
+LANGUAGE_CODE = "en"
 
 TIME_ZONE = "UTC"
 
