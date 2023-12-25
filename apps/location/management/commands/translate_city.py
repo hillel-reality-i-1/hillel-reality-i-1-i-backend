@@ -2,6 +2,8 @@ from cities_light.models import City
 from django.core.management import BaseCommand
 import pandas as pd
 
+from apps.location.models import TranslatedCity
+
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
@@ -16,3 +18,7 @@ class Command(BaseCommand):
             city.alternate_names = dct.get(city.name)
 
         City.objects.bulk_update(cities, ["alternate_names"])
+
+        translated_cities = [TranslatedCity(city=city) for city in cities]
+
+        TranslatedCity.objects.bulk_create(translated_cities)

@@ -1,8 +1,15 @@
+from django.utils.translation import get_language
 from rest_framework import serializers
 from cities_light.models import Country
 
 
 class CountrySerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Country
         fields = ["id", "name"]
+
+    def get_name(self, obj):
+        language = get_language()
+        return obj.alternate_names if language == "uk" else obj.name

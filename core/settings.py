@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 # noinspection PyPackageRequirements
 import environ
@@ -106,6 +107,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # 'django.middleware.locale.LocaleMiddleware',
     "allauth.account.middleware.AccountMiddleware",
     "corsheaders.middleware.CorsMiddleware",
 ]
@@ -187,7 +189,12 @@ CHANGE_EMAIL_TIMEOUT = 3600
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGES = [
+    ("en", _("English")),
+    ("uk", _("Ukrainian")),
+]
+
+LANGUAGE_CODE = "uk"
 
 TIME_ZONE = "UTC"
 

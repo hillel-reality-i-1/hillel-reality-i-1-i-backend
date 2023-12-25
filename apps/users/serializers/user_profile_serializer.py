@@ -1,6 +1,6 @@
-from cities_light.models import Country, City
 from rest_framework import serializers
 from apps.files.api.serializers import ImageSerializer
+from apps.location.models import TranslatedCountry, TranslatedCity
 from apps.location.serializers.city_serializer import CitySerializer
 from apps.location.serializers.country_serializer import CountrySerializer
 from apps.users.models import UserProfile
@@ -15,10 +15,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
     country = CountrySerializer(read_only=True)
     city = CitySerializer(read_only=True)
     country_id = serializers.PrimaryKeyRelatedField(
-        queryset=Country.objects.all(), source="country", write_only=True, required=False, allow_null=True
+        queryset=TranslatedCountry.objects.all(), write_only=True, required=False, allow_null=True
     )
     city_id = serializers.PrimaryKeyRelatedField(
-        queryset=City.objects.all(), source="city", write_only=True, required=False, allow_null=True
+        queryset=TranslatedCity.objects.all(), write_only=True, required=False, allow_null=True
     )
 
     class Meta:
@@ -46,6 +46,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = validated_data.get("user")
         if not UserProfile.objects.filter(user=user).exists():
+            country = validated_data.get("country_id")
+            city = validated_data.get("city_id")
+            if country:
+                validated_data["country_id"] = country.country_id
+            if city:
+                validated_data["city_id"] = city.city_id
             user_profile = UserProfile.objects.create(**validated_data)
         else:
             raise serializers.ValidationError("This user already has a profile")
@@ -53,6 +59,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return user_profile
 
     def update(self, instance, validated_data):
+        t_country = validated_data.get("country_id")
+        t_city = validated_data.get("city_id")
+        instance.country = t_country.country if t_country else None
+        instance.city = t_city.city if t_city else None
+
         new_phone_number = validated_data.get("phone_number")
 
         if new_phone_number:
@@ -67,12 +78,3 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
-
-    # def update(self, instance, validated_data):
-    #     instance.about_my_self = validated_data.get("about_my_self", instance.about_my_self)
-    #     instance.country = validated_data.get("country", instance.country)
-    #     instance.city = validated_data.get("city", instance.city)
-    #     instance.phone_number = validated_data.get("phone_number", instance.phone_number)
-    #
-    #     instance.save()
-    #     return instance
