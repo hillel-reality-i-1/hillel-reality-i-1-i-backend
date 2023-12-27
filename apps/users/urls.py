@@ -1,3 +1,5 @@
+# from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter, oauth2_callback
+# from allauth.socialaccount.providers.oauth2.views import OAuth2CallbackView
 
 from apps.files.api.views.upload_portfolio_view import UploadPortfolioView
 
@@ -64,7 +66,7 @@ urlpatterns = [
     path("location/country_list/", CountryListView.as_view({"get": "list"}), name="country_list"),
     path("location/city_list/", CityListView.as_view({"get": "list"}), name="city_list"),
     path("auth/", include("dj_rest_auth.urls")),
-    path('accounts/delete/', UserDeleteView.as_view(), name='account-delete'),
+    path("accounts/delete/", UserDeleteView.as_view(), name="account-delete"),
 ]
 
 allauth_views_urlpatterns = [
@@ -75,6 +77,10 @@ allauth_views_urlpatterns = [
     # Email
     path("accounts/email/", allauth_views.email, name="account_email"),
     path("allauth_account/", include("allauth.urls")),
+    # path('accounts/google/login/callback/',
+    #      oauth2_callback,
+    #      name='google_callback',
+    #      kwargs={'adapter_class': GoogleOAuth2Adapter}),
 ]
 
 change_email_urlpatterns = [
