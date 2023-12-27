@@ -24,6 +24,12 @@ class CustomPasswordValidator:
                 code="password_no_uppercase",
             )
 
+        if not any(char.isdigit() for char in password):
+            raise ValidationError(
+                _("Password must contain at least one digit."),
+                code="password_no_digit",
+            )
+
         special_characters = r"[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]"
         if not re.search(special_characters, password):
             raise ValidationError(
