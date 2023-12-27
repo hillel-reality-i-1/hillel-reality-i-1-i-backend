@@ -48,11 +48,11 @@ class VerifyEmailView(APIView, ConfirmEmailView):
 
     def get_object(self):
         key = self.kwargs["key"]
-        emailconfirmation = self.from_key(key)
+        emailconfirmation = self.custom_realization_of_emailconfirmationhmac_method_from_key(key)
         return emailconfirmation
 
     @staticmethod
-    def from_key(key):
+    def custom_realization_of_emailconfirmationhmac_method_from_key(key):
         try:
             max_age = 60 * 60 * 24 * app_settings.EMAIL_CONFIRMATION_EXPIRE_DAYS
             pk = signing.loads(key, max_age=max_age, salt=app_settings.SALT)
