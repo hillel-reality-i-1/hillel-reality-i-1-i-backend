@@ -6,7 +6,7 @@ from allauth.account.views import ConfirmEmailView
 from dj_rest_auth.registration.serializers import VerifyEmailSerializer
 from django.core import signing
 from rest_framework.permissions import AllowAny
-from rest_framework.exceptions import MethodNotAllowed
+from rest_framework.exceptions import MethodNotAllowed, ValidationError
 
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -31,14 +31,7 @@ class VerifyEmailView(APIView, ConfirmEmailView):
         serializer.is_valid(raise_exception=True)
 
         self.kwargs['key'] = serializer.validated_data['key']
-        obj = self.get_object()
-
-        if obj['status'] == 400:
-            return Response({'details': obj['details']}, status=status.HTTP_400_BAD_REQUEST)
-        if obj['status'] == 404:
-            return Response({'details': obj['details']}, status=status.HTTP_404_NOT_FOUND)
-
-        self.object = confirmation = obj['object']
+        self.object = confirmation = self.get_object()
 
         email_address = confirmation.confirm(self.request)
         user = get_user_model().objects.filter(email=email_address).first()
@@ -58,9 +51,9 @@ class VerifyEmailView(APIView, ConfirmEmailView):
             pk = signing.loads(key, max_age=max_age, salt=app_settings.SALT)
             ret = EmailConfirmationHMAC(EmailAddress.objects.get(pk=pk, verified=False))
         except signing.SignatureExpired:
-            return {'status': 400, 'details': 'signature expired'}
+            ValidationError({'details': 'signature expired'}, status=status.HTTP_400_BAD_REQUEST)
         except signing.BadSignature:
-            return {'status': 400, 'details': 'bad signature'}
+            ValidationError({'details': 'bad signature'}, status=status.HTTP_400_BAD_REQUEST)
         except EmailAddress.DoesNotExist:
-            return {'status': 400, 'details': 'email address does not exist'}
-        return {'status': 200, 'object': ret}
+            ValidationError({'details': 'email address does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        return ret
