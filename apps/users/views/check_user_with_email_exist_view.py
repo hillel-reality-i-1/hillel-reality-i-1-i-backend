@@ -8,7 +8,7 @@ from apps.users.serializers.check_email_serializer import UserCheckEmailSerializ
 
 class CheckEmailExists(APIView):
 
-    serializer_class = UserCheckEmailSerializer()
+    serializer_class = UserCheckEmailSerializer
 
     def post(self, request, *args, **kwargs):
         email = request.data.get('email', None)
