@@ -3,8 +3,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
 
+from apps.users.serializers.check_email_serializer import UserCheckEmailSerializer
+
 
 class CheckEmailExists(APIView):
+
+    serializer_class = UserCheckEmailSerializer()
+
     def post(self, request, *args, **kwargs):
         email = request.data.get('email', None)
 
