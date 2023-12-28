@@ -23,4 +23,4 @@ class NestedCommentsCreateView(CreateAPIView):
 
         user = self.request.user
 
-        serializer.save(author=user, post=parent_comment.post, parent=parent_comment)
+        serializer.save(author=user, post=parent_comment.post, parent=parent_comment, is_parent=False)
