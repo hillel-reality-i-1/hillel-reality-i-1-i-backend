@@ -39,7 +39,6 @@ class PostSerializer(serializers.ModelSerializer):
         return serializer.data
 
     def validate_professional_tags(self, value):
-        print(value)
         if len(value) > 3:
             raise serializers.ValidationError("Ви можете додати до 3 професийніх галузей")
         return value

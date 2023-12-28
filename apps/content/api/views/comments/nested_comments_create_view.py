@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 
@@ -12,7 +13,7 @@ class NestedCommentsCreateView(CreateAPIView):
 
     def perform_create(self, serializer):
         parent_id = self.kwargs["pk"]
-        parent_comment = Comment.objects.get(pk=parent_id)
+        parent_comment = get_object_or_404(Comment, pk=parent_id)
 
         if parent_comment.parent:
             """

@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
@@ -16,9 +17,9 @@ class CommentModifiedDeleteView(RetrieveUpdateDestroyAPIView):
         comment = self.get_object()
 
         if comment.usercommentvote_set.exists():
-            raise PermissionError("Ви не можете редагувати запис із реакціями")
+            raise serializers.ValidationError("Ви не можете редагувати запис із реакціями")
 
         if comment.replies.exists():
-            raise PermissionError("Ви не можете редагувати запис із коментарями")
+            raise serializers.ValidationError("Ви не можете редагувати запис із коментарями")
 
         serializer.save()
