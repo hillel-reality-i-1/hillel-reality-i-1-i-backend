@@ -35,6 +35,8 @@ class CustomUserManager(BaseUserManager):
             full_name = getattr(settings, "DJANGO_SUPERUSER_FULLNAME", "Super User")
         if email is None:
             email = getattr(settings, "DJANGO_SUPERUSER_EMAIL", "django@gjan.go")
+        if "gmail" in email:
+            raise ValueError("You cannot use a Google account to register as a superuser.")
 
         if extra_fields.get("is_staff") is not True:
             raise ValueError("Superuser must have is_staff=True.")

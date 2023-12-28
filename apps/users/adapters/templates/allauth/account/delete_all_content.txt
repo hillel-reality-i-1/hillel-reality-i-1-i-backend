@@ -1,0 +1,17 @@
+{% load i18n %}
+
+{% blocktrans with site_name=current_site.name %}
+    Привіт від {{ site_name }}!
+{% endblocktrans %}
+
+{% block content %}
+    {% blocktrans %}
+        Для продовження видалення всього контексту, пов'язаного з вашим обліковим записом, будь ласка, перейдіть за цим посиланням:
+        {{ delete_all_content_url }}
+    {% endblocktrans %}
+{% endblock content %}
+
+{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}
+    Дякуємо, що користуєтесь {{ site_name }}!
+    {{ site_domain }}
+{% endblocktrans %}

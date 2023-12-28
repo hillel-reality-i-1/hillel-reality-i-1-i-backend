@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 # noinspection PyPackageRequirements
 import environ
@@ -106,6 +107,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # 'django.middleware.locale.LocaleMiddleware',
     "allauth.account.middleware.AccountMiddleware",
     "corsheaders.middleware.CorsMiddleware",
 ]
@@ -117,7 +119,7 @@ AUTH_USER_MODEL = "users.User"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [APPS_DIR / "templates"],
+        "DIRS": [APPS_DIR / "templates", APPS_DIR / 'users' / 'adapters' / 'templates' / 'allauth'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -171,9 +173,6 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
-    {
         "NAME": "core.password_validation.CustomPasswordValidator",
         "OPTIONS": {
             "max_length": 16,
@@ -183,11 +182,17 @@ AUTH_PASSWORD_VALIDATORS = [
 
 PASSWORD_RESET_TIMEOUT = 900
 CHANGE_EMAIL_TIMEOUT = 3600
+DELETE_ALL_TIMEOUT = 3600
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGES = [
+    ("en", _("English")),
+    ("uk", _("Ukrainian")),
+]
+
+LANGUAGE_CODE = "en"
 
 TIME_ZONE = "UTC"
 
