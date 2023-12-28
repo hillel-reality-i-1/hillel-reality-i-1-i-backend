@@ -1,6 +1,3 @@
-# from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter, oauth2_callback
-# from allauth.socialaccount.providers.oauth2.views import OAuth2CallbackView
-
 from apps.files.api.views.upload_portfolio_view import UploadPortfolioView
 
 # from django.views.generic import TemplateView
@@ -8,6 +5,7 @@ from apps.files.api.views.upload_portfolio_view import UploadPortfolioView
 from apps.location.views.city_view import CityListView
 from apps.location.views.country_view import CountryListView
 from apps.users.views.change_email_request_view import ChangeEmailRequestView, ChangeEmailConfirmView
+from apps.users.views.custom_google_login_view import SocialLoginView
 from apps.users.views.custom_password_reset_view import PasswordResetView
 from apps.users.views.custom_register_view import CustomRegisterView
 from dj_rest_auth.registration.views import (
@@ -77,10 +75,7 @@ allauth_views_urlpatterns = [
     # Email
     path("accounts/email/", allauth_views.email, name="account_email"),
     path("allauth_account/", include("allauth.urls")),
-    # path('accounts/google/login/callback/',
-    #      oauth2_callback,
-    #      name='google_callback',
-    #      kwargs={'adapter_class': GoogleOAuth2Adapter}),
+    path("social-login/", SocialLoginView.as_view(), name="social_login"),
 ]
 
 change_email_urlpatterns = [
