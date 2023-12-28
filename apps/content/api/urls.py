@@ -1,6 +1,5 @@
 from django.urls import path
 
-from .views import DeleteUserContentView
 from apps.content.api.views.posts.post_reactions_create_view import PostReactionCreateView
 from .views.comments.vote_helpful_view import VoteHelpfulView, VoteNotHelpfulView
 from .views.contributions.contribution_list_view import ContributionListView
@@ -23,5 +22,4 @@ urlpatterns = [
     path("comment/<int:comment_id>/vote_not_helpful/", VoteNotHelpfulView.as_view(), name="vote_not_helpful"),
     path("post/<int:pk>/contributions/", ContributionListView.as_view(), name="contribution_list"),
     path("contribution/<int:pk>/vote_helpful/", VoteContributionView.as_view(), name="vote_contribution_helpful"),
-    path("delete-content/", DeleteUserContentView.as_view(), name="delete_user_content"),
 ]
