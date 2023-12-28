@@ -27,8 +27,8 @@ class PasswordResetConfirmSerializer(_PasswordResetConfirmSerializer):
         )
         if not self.set_password_form.is_valid():
             raise serializers.ValidationError(self.set_password_form.errors)
-        cheker = PasswordResetTokenGenerator().check_token(self.user, attrs['token'])
-        if not cheker['status']:
-            raise ValidationError({'token': cheker['details']})
+        checker = PasswordResetTokenGenerator().check_token(self.user, attrs['token'])
+        if not checker['status']:
+            raise ValidationError({'token': checker['details']})
 
         return attrs

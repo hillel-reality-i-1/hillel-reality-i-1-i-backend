@@ -1,6 +1,5 @@
 from django.urls import path
 
-from .views import DeleteUserContentView
 from apps.content.api.views.posts.post_reactions_create_view import PostReactionCreateView
 from .views.posts import PostListView, PostCreateView, PostModifiedDeleteView
 from .views.comments import CommentModifiedDeleteView, NestedCommentsCreateView, CommentsCreateView, CommentsListView
@@ -16,5 +15,4 @@ urlpatterns = [
     path("posts/<int:pk>/comments/", CommentsListView.as_view(), name="comment-list"),
     path("comments/<int:pk>/", CommentModifiedDeleteView.as_view(), name="comment-modified-del"),
     path("comments/<int:pk>/replies/", NestedCommentsCreateView.as_view(), name="nested-comment-create"),
-    path("delete-content/", DeleteUserContentView.as_view(), name="delete_user_content"),
 ]
