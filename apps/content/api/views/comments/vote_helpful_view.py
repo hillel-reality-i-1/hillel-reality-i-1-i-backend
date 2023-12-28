@@ -1,7 +1,7 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, serializers
 
 from apps.content.models import Comment
 from apps.content.models.comment import UserCommentVote
@@ -15,7 +15,7 @@ class VoteHelpfulView(APIView):
         comment = Comment.objects.get(pk=comment_id)
 
         if not comment.is_parent:
-            return Response({"detail": "You cannot vote on nested comments."}, status=status.HTTP_403_FORBIDDEN)
+            raise serializers.ValidationError("Ви не можете голосувати за вкладені коментарі.")
 
         user = request.user
 

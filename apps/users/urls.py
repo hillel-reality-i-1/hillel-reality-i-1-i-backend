@@ -6,6 +6,7 @@ from apps.files.api.views.upload_portfolio_view import UploadPortfolioView
 from apps.location.views.city_view import CityListView
 from apps.location.views.country_view import CountryListView
 from apps.users.views.change_email_request_view import ChangeEmailRequestView, ChangeEmailConfirmView
+from apps.users.views.custom_google_login_view import SocialLoginView
 from apps.users.views.check_user_with_email_exist_view import CheckEmailExists
 from apps.users.views.custom_password_reset_view import PasswordResetView
 from apps.users.views.custom_register_view import CustomRegisterView
@@ -86,6 +87,7 @@ allauth_views_urlpatterns = [
     # Email
     path("accounts/email/", allauth_views.email, name="account_email"),
     path("allauth_account/", include("allauth.urls")),
+    path("social-login/", SocialLoginView.as_view(), name="social_login"),
 ]
 
 change_email_urlpatterns = [

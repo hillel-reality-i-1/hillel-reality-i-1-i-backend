@@ -68,3 +68,6 @@ setuptools
 # work with data
 pandas==2.1.4
 openpyxl==3.1.2
+
+# google auth
+google-auth==2.25.2

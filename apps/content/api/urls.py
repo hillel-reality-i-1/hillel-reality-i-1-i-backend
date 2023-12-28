@@ -10,7 +10,7 @@ from .views.comments import CommentModifiedDeleteView, NestedCommentsCreateView,
 app_name = "api-content"
 
 urlpatterns = [
-    path("posts/create/", PostCreateView.as_view(), name="post-create"),
+    path("post/create/", PostCreateView.as_view(), name="post-create"),
     path("posts/", PostListView.as_view(), name="post-list"),
     path("post/<int:pk>/", PostModifiedDeleteView.as_view(), name="post-detail"),
     path("post/<int:post_id>/reactions/create/", PostReactionCreateView.as_view(), name="post-reaction-create"),
