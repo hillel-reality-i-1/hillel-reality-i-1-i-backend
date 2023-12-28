@@ -1,2 +1,3 @@
 from .email_change_token_generator import EmailChangeTokenGenerator
 from .password_reset_token_generators import PasswordResetTokenGenerator
+from .delete_all_content_token_genertor import DeleteAllContentTokenGenerator

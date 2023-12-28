@@ -13,6 +13,8 @@ from dj_rest_auth.registration.views import (
 )
 from django.urls import path, include
 
+from apps.users.views.delete_all_content_confirm_view import DeleteAllContentConfirmView
+from apps.users.views.delete_all_content_view import DeleteAllContentView
 from apps.users.views.password_reset_confirm_view import PasswordResetConfirmView
 from apps.users.views.register_user_profile_ext_view import RegisterProfileExtView
 from apps.users.views.register_user_profile_view import RegisterProfileView
@@ -65,6 +67,11 @@ urlpatterns = [
     path("location/city_list/", CityListView.as_view({"get": "list"}), name="city_list"),
     path("auth/", include("dj_rest_auth.urls")),
     path("accounts/delete/", UserDeleteView.as_view(), name="account-delete"),
+    path("accounts/delete/", UserDeleteView.as_view(), name="account-delete"),
+    path("accounts/delete/content/", DeleteAllContentView.as_view(), name="account-content-delete"),
+    path(
+        "accounts/delete/content/confirm/", DeleteAllContentConfirmView.as_view(), name="account-content-delete-confirm"
+    ),
 ]
 
 allauth_views_urlpatterns = [

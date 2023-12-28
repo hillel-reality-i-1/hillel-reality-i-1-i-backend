@@ -119,7 +119,7 @@ AUTH_USER_MODEL = "users.User"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [APPS_DIR / "templates"],
+        "DIRS": [APPS_DIR / "templates", APPS_DIR / 'users' / 'adapters' / 'templates' / 'allauth'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -180,8 +180,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-PASSWORD_RESET_TIMEOUT = 15
+PASSWORD_RESET_TIMEOUT = 900
 CHANGE_EMAIL_TIMEOUT = 3600
+DELETE_ALL_TIMEOUT = 3600
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

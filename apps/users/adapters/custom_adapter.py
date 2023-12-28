@@ -9,6 +9,18 @@ from apps.users.tasks import send_adapter_mail_task
 
 class CustomAdapter(DefaultAccountAdapter):
 
+    def send_delete_all_content_confirmation_email(self, user, key):
+        delete_all_content_url = self.get_delete_all_content_url(key)
+        ctx = {
+            "delete_all_content_url": delete_all_content_url,
+        }
+        email_template = "account/delete_all_content"
+        self.send_mail(email_template, user.email, ctx)
+
+    def get_delete_all_content_url(self, key):
+        url = get_frontend_url('front_account_delete_all_content', key)
+        return url
+
     def respond_email_verification_sent(self, request, user):
         return Response({"detail": "Verification e-mail sent."}, status=status.HTTP_201_CREATED)
 

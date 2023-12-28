@@ -15,6 +15,9 @@ class CommentModifiedDeleteView(RetrieveUpdateDestroyAPIView):
     def perform_update(self, serializer):
         comment = self.get_object()
 
+        if comment.usercommentvote_set.exists():
+            raise PermissionError("Ви не можете редагувати запис із реакціями")
+
         if comment.replies.exists():
             raise PermissionError("Ви не можете редагувати запис із коментарями")
 
