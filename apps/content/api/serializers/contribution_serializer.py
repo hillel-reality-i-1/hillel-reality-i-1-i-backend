@@ -1,8 +1,10 @@
 from rest_framework import serializers
-from ...models import Contribution
+
+from apps.content.models import Contribution
 
 
 class ContributionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contribution
-        fields = ('id', 'text', 'author', 'post', 'creation_date')
+        fields = "__all__"
+        read_only_fields = ["helpful_count"]
