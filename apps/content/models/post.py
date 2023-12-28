@@ -14,14 +14,10 @@ User = get_user_model()
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(validators=[MinLengthValidator(2)], max_length=100)
-    country = models.ManyToManyField(
-        Country,
-        related_name="post_countries",
-        blank=True,
-    )
+    country = models.ManyToManyField(Country, related_name="post_countries")
     content = models.CharField(validators=[MinLengthValidator(100)], max_length=10000)
     images = models.ManyToManyField(Image, related_name="post_images", blank=True)
-    professional_tags = models.ManyToManyField(Profession, related_name="professional_tags", blank=True)
+    professional_tags = models.ManyToManyField(Profession, related_name="professional_tags")
     creation_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 

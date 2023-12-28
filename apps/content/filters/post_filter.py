@@ -12,3 +12,9 @@ class PostFilter(django_filters.FilterSet):
             "creation_date": ["gte", "lte"],
             "professional_tags": ["exact"],
         }
+
+    def filter_all_countries(self, queryset, name, value):
+        if value:
+            return queryset
+        else:
+            return queryset.filter(country__isnull=False)
