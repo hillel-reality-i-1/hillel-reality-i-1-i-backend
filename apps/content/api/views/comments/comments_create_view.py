@@ -16,7 +16,7 @@ class CommentsCreateView(CreateAPIView):
 
         if parent_id:
             parent_comment = Comment.objects.get(pk=parent_id)
-            serializer.save(author=self.request.user, post_id=post_id, parent=parent_comment)
+            serializer.save(author=self.request.user, post_id=post_id, parent=parent_comment, is_parent=False)
         else:
             post = Post.objects.get(pk=post_id)
             serializer.save(author=self.request.user, post=post)

@@ -6,8 +6,9 @@ from apps.content.models import Comment
 
 
 class CommentsListView(ListAPIView):
-    serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    serializer_class = CommentSerializer
 
     def get_queryset(self):
         post_id = self.kwargs["pk"]
