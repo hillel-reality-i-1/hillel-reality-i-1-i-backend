@@ -16,8 +16,8 @@ class UserProfileListView(viewsets.ModelViewSet):
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated, IsAdminOrProfileOwner]
 
-    def get_object(self):
-        return self.request.user.userprofile
+    # def get_object(self):
+    #     return self.request.user.userprofile
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
