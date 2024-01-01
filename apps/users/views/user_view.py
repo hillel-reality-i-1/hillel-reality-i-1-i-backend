@@ -1,7 +1,8 @@
-from django.utils import timezone
+# from django.utils import timezone
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
-from datetime import timedelta
+
+# from datetime import timedelta
 from apps.users.models import User
 from apps.users.models.user import CustomUserManager
 from apps.users.permissions import IsAdminOrSelf
@@ -33,23 +34,25 @@ class UserListView(
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
 
-        if (
-            "full_name" in request.data
-            and request.data["full_name"] != instance.full_name
-            and instance.last_full_name_change
-            and (timezone.now() - instance.last_full_name_change) < timedelta(days=90)  # days=90
-        ):
-            return Response(
-                {"detail": "You can change full_name only once in 90 days."}, status=status.HTTP_400_BAD_REQUEST
-            )
+        # Раскомментировать для реализации ограничения по времени на обновление full_name
+        # if (
+        #     "full_name" in request.data
+        #     and request.data["full_name"] != instance.full_name
+        #     and instance.last_full_name_change
+        #     and (timezone.now() - instance.last_full_name_change) < timedelta(days=90)  # days=90
+        # ):
+        #     return Response(
+        #         {"detail": "You can change full_name only once in 90 days."}, status=status.HTTP_400_BAD_REQUEST
+        #     )
 
+        # Раскомментировать для реализации ограничения обновление username
         if "username" in request.data and request.data["username"] != instance.username:
-            if instance.username_changed:
-                return Response({"detail": "You can not change the username"}, status=status.HTTP_400_BAD_REQUEST)
+            # if instance.username_changed:
+            #     return Response({"detail": "You can not change the username"}, status=status.HTTP_400_BAD_REQUEST)
             if not CustomUserManager().is_username_unique(request.data["username"]):
                 return Response({"detail": "This username has already been used"}, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                instance.username_changed = True
+            # else:
+            #     instance.username_changed = True
 
         self.perform_update(serializer)
 

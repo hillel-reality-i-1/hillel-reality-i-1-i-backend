@@ -170,8 +170,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             return super().save(*args, **kwargs)
 
         user_manager.validate_user_fullname(self)
-        # username_is_valid = user_manager.validate_user_username(self)
-        # if not username_is_valid:
+
         if self.full_name == "Anonim User":
             self.username = user_manager.generate_unique_username(
                 self.full_name,
@@ -179,11 +178,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         user_manager.validate_user_username(self)
 
-        if self.full_name != self._original_full_name:
-            self.last_full_name_change = timezone.now()
+        # Раскомментировать для реализации ограничения по времени на обновление full_name
+        # if self.full_name != self._original_full_name:
+        #     self.last_full_name_change = timezone.now()
 
         return super().save(*args, **kwargs)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._original_full_name = self.full_name
+    # Раскомментировать для реализации ограничения по времени на обновление full_name
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self._original_full_name = self.full_name
