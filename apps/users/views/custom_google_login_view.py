@@ -1,12 +1,14 @@
+import json
+from django.http import JsonResponse
 import requests
 from allauth.account.models import EmailAddress
 from django.contrib.auth import login
-from django.http import HttpResponseRedirect
 from allauth.socialaccount.models import SocialAccount
+from django.http import HttpResponse
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-
+from rest_framework.authtoken.models import Token
 from apps.users.models import User
 
 
@@ -15,7 +17,7 @@ class SocialLoginView(View):
     def post(self, request, *args, **kwargs):
         access_token = request.POST.get("access_token")
 
-        # Распарсите данные из access token
+        # Data parsing from access token
         url = f"https://oauth2.googleapis.com/tokeninfo?access_token={access_token}"
         response = requests.get(url)
         user_data_token = response.json()
@@ -24,9 +26,11 @@ class SocialLoginView(View):
 
         user_data = response.json()
         user_data.update(user_data_token)
-        print(user_data)
 
-        # Создайте пользователя, если он еще не существует
+        if not user_data.get("email"):
+            return JsonResponse({"detail": "Email is missing in user_data"}, status=400)
+
+        # Create user
         users = User.objects.filter(email=user_data["email"])
         if not users:
             user = User.objects.create(
@@ -37,24 +41,33 @@ class SocialLoginView(View):
         else:
             user = users[0]
 
-        # Залогиньте пользователя
+        # Create/update SocialAccount
+        SocialAccount.objects.update_or_create(
+            user=user, provider="google", defaults={"uid": user_data.get("sub", ""), "extra_data": {**user_data}}
+        )
+
+        # Create EmailAddress
+        emails = EmailAddress.objects.filter(user=user)
+        if not emails:
+            EmailAddress.objects.create(user=user, email=user_data["email"], primary=True, verified=True)
+        else:
+            if not emails[0].verified:
+                emails[0].verified = True
+                emails[0].save()
+
+        # User login
         login(request, user, backend="allauth.account.auth_backends.AuthenticationBackend")
 
-        # Создайте запись в таблице SocialAccount
-        social_accounts = SocialAccount.objects.filter(user=user)
-        print(social_accounts)
+        token, created = Token.objects.get_or_create(user=user)
 
-        SocialAccount.objects.create(
-            user=user, provider="google", uid=user_data.get("sub", ""), extra_data={**user_data}
-        )
+        # Create JSON response with token
+        response_data = {"token": token.key}
 
-        # Создайте запись в таблице EmailAddress
-        user_email = EmailAddress.objects.create(
-            user=user,
-            email=user_data["email"],
-            primary=True,
-        )
-        user_email.verified = True
-        user_email.save()
+        # Create HTTP response with JSON data and redirect
+        response = HttpResponse(json.dumps(response_data), content_type="application/json")
+        if not users:
+            response["Location"] = request.path_info  # Redirect to the same page
+        else:
+            response["Location"] = "/"  # Redirect to the main page
 
-        return HttpResponseRedirect("/")
+        return response
