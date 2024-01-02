@@ -9,6 +9,8 @@ from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
+
+from apps.base.utils import get_frontend_url
 from apps.users.models import User
 
 
@@ -65,8 +67,8 @@ class SocialLoginView(View):
         # Create HTTP response with JSON data and redirect
         response = HttpResponse(json.dumps(response_data), content_type="application/json")
         if created:
-            response["Location"] = "http://dmytromigirov.space:3000/createUnAccount/"  # request.path_info
+            response["Location"] = get_frontend_url("front_create_profile_from_social_account")  # request.path_info
         else:
-            response["Location"] = "/"  # Redirect to the main page
+            response["Location"] = get_frontend_url("front_home")  # Redirect to the main page
 
         return response
