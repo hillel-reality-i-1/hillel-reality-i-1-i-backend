@@ -119,7 +119,7 @@ AUTH_USER_MODEL = "users.User"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [APPS_DIR / "templates", APPS_DIR / 'users' / 'adapters' / 'templates' / 'allauth'],
+        "DIRS": [APPS_DIR / "templates", APPS_DIR / "users" / "adapters" / "templates" / "allauth"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -295,6 +295,7 @@ CORS_ALLOWED_ORIGINS = [
     # Frond-end origins
     "http://localhost:3000",
     "http://dmytromigirov.space:3000",
+    "http://dmytromigirov.space",
     "http://195.189.226.99:3000",
 ]
 
