@@ -30,16 +30,10 @@ class SocialLoginView(View):
         if not user_data.get("email"):
             return JsonResponse({"detail": "Email is missing in user_data"}, status=400)
 
-        # Create user
-        users = User.objects.filter(email=user_data["email"])
-        if not users:
-            user = User.objects.create(
-                email=user_data["email"],
-            )
+        user, created = User.objects.get_or_create(email=user_data["email"])
+        if created:
             user.set_unusable_password()
             user.save()
-        else:
-            user = users[0]
 
         # Create/update SocialAccount
         SocialAccount.objects.update_or_create(
@@ -47,13 +41,18 @@ class SocialLoginView(View):
         )
 
         # Create EmailAddress
-        emails = EmailAddress.objects.filter(user=user)
-        if not emails:
-            EmailAddress.objects.create(user=user, email=user_data["email"], primary=True, verified=True)
-        else:
-            if not emails[0].verified:
-                emails[0].verified = True
-                emails[0].save()
+        email, created = EmailAddress.objects.get_or_create(
+            user=user,
+            email=user_data["email"],
+            defaults={
+                "primary": True,
+                "verified": True,
+            },
+        )
+
+        if not created and not email.verified:
+            email.verified = True
+            email.save()
 
         # User login
         login(request, user, backend="allauth.account.auth_backends.AuthenticationBackend")
@@ -65,7 +64,7 @@ class SocialLoginView(View):
 
         # Create HTTP response with JSON data and redirect
         response = HttpResponse(json.dumps(response_data), content_type="application/json")
-        if not users:
+        if created:
             response["Location"] = "http://dmytromigirov.space:3000/createUnAccount/"  # request.path_info
         else:
             response["Location"] = "/"  # Redirect to the main page
