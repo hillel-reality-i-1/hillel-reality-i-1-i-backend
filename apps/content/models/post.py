@@ -20,7 +20,7 @@ class Post(models.Model):
     professional_tags = models.ManyToManyField(Profession, related_name="professional_tags")
     creation_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, default=None, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, null=True, default=None, blank=True)
 
     def get_images(self):
         return self.images.all()
