@@ -30,6 +30,7 @@ class PostSerializer(serializers.ModelSerializer):
             "creation_date",
             "comments",
             "reactions",
+            "category",
         ]
 
     def get_comments(self, obj):

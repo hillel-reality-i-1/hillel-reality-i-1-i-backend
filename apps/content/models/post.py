@@ -6,7 +6,7 @@ from django.db.models import Count
 
 from apps.content.models.reaction import Reaction
 from apps.files.models import Image
-from apps.expert.models import Profession
+from apps.expert.models import Profession, Category
 
 User = get_user_model()
 
@@ -20,6 +20,7 @@ class Post(models.Model):
     professional_tags = models.ManyToManyField(Profession, related_name="professional_tags")
     creation_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
 
     def get_images(self):
         return self.images.all()
