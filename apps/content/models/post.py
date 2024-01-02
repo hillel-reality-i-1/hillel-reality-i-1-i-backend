@@ -20,7 +20,7 @@ class Post(models.Model):
     professional_tags = models.ManyToManyField(Profession, related_name="professional_tags")
     creation_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING)
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, default=None, blank=True)
 
     def get_images(self):
         return self.images.all()
@@ -41,4 +41,4 @@ class Post(models.Model):
             return None
 
     def __str__(self):
-        return f"Article {self.title} by {self.author}. Created at {self.creation_date}"
+        return f"Post {self.title} by {self.author}. Created at {self.creation_date}"
