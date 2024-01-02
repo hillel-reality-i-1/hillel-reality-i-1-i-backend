@@ -6,15 +6,16 @@ from django.contrib.auth import login
 from allauth.socialaccount.models import SocialAccount
 from django.http import HttpResponse
 from django.views import View
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
+
+# from django.utils.decorators import method_decorator
+# from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
 
 from apps.base.utils import get_frontend_url
 from apps.users.models import User
 
 
-@method_decorator(csrf_exempt, name="dispatch")
+# @method_decorator(csrf_exempt, name="dispatch")
 class SocialLoginView(View):
     def post(self, request, *args, **kwargs):
         access_token = request.POST.get("access_token")
