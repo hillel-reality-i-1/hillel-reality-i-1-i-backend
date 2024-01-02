@@ -66,7 +66,7 @@ class SocialLoginView(View):
         # Create HTTP response with JSON data and redirect
         response = HttpResponse(json.dumps(response_data), content_type="application/json")
         if not users:
-            response["Location"] = request.path_info  # Redirect to the same page
+            response["Location"] = "http://dmytromigirov.space:3000/createUnAccount/"  # request.path_info
         else:
             response["Location"] = "/"  # Redirect to the main page
 
