@@ -119,7 +119,7 @@ AUTH_USER_MODEL = "users.User"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [APPS_DIR / "templates", APPS_DIR / 'users' / 'adapters' / 'templates' / 'allauth'],
+        "DIRS": [APPS_DIR / "templates", APPS_DIR / "users" / "adapters" / "templates" / "allauth"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
