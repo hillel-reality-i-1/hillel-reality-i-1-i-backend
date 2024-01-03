@@ -18,8 +18,7 @@ from apps.users.models import User
 @method_decorator(require_POST, name="post")
 class SocialLoginView(View):
     def post(self, request, *args, **kwargs):
-        # access_token = request.POST.get("access_token")
-        access_token = request.headers.get("access_token")
+        access_token = request.POST.get("access_token")
 
         # Data parsing from access token
         url = f"https://oauth2.googleapis.com/tokeninfo?access_token={access_token}"
