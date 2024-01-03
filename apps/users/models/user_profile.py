@@ -21,4 +21,4 @@ class UserProfile(models.Model):
     phone_verified_request_id = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.user.username}'s user profile"
+        return f"{self.user.username}'s user profile with id{self.pk}"
