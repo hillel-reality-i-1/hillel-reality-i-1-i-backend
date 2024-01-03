@@ -295,7 +295,6 @@ CORS_ALLOWED_ORIGINS = [
     # Frond-end origins
     "http://localhost:3000",
     "http://dmytromigirov.space:3000",
-    "http://dmytromigirov.space",
     "http://195.189.226.99:3000",
 ]
 
