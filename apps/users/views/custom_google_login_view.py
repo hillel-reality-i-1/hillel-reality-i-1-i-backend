@@ -80,7 +80,7 @@ class SocialLoginView(View):
             "token": token.key,
             "redirect_url": reverse("front_create_profile_from_social_account", args=[*args])[:-1]
             if user.full_name == "Anonim User"
-            else "/",  # get_frontend_url("front_home"),
+            else reverse("front_home"),  # get_frontend_url("front_home"),
         }
 
         # Create HTTP response with JSON data and redirect
