@@ -4,7 +4,7 @@ from django.urls import path
 from apps.base.views import set_language_api
 
 urlpatterns = [
-    path("/", TemplateView.as_view(), name="front_home"),
+    path("", TemplateView.as_view(), name="front_home"),
     path("", TemplateView.as_view(template_name="index.html"), name="home"),
     path("createUnAccount/<str:key>/", TemplateView.as_view(), name="front_account_confirm_email"),
     path("createUnAccount/", TemplateView.as_view(), name="front_create_profile_from_social_account"),

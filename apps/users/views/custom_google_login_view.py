@@ -25,12 +25,23 @@ class SocialLoginView(View):
         # Data parsing from access token
         url = f"https://oauth2.googleapis.com/tokeninfo?access_token={access_token}"
         response = requests.get(url)
-        user_data_token = response.json()
+        if 300 > response.status_code >= 200:
+            if "application/json" in response.headers.get("Content-Type", ""):
+                user_data_token = response.json()
+            else:
+                user_data_token = {}
+        else:
+            return JsonResponse({"google_api_detail": f"{response.status_code}"}, status=400)
 
         response = requests.get("https://www.googleapis.com/oauth2/v3/userinfo", params={"access_token": access_token})
-
-        user_data = response.json()
-        user_data.update(user_data_token)
+        if 300 > response.status_code >= 200:
+            if "application/json" in response.headers.get("Content-Type", ""):
+                user_data = response.json()
+            else:
+                user_data = {}
+                user_data.update(user_data_token)
+        else:
+            return JsonResponse({"google_api_detail": f"{response.status_code}"}, status=400)
 
         if not user_data.get("email"):
             return JsonResponse({"detail": "Email is missing in user_data", "user_data": user_data}, status=400)
@@ -67,16 +78,11 @@ class SocialLoginView(View):
         # Create JSON response with token and redirect_url
         response_data = {
             "token": token.key,
-            "redirect_url": reverse("front_create_profile_from_social_account", args=[*args])
+            "redirect_url": reverse("front_create_profile_from_social_account", args=[*args])[:-1]
             if user.full_name == "Anonim User"
-            else reverse("front_home", args=[*args]),  # get_frontend_url("front_home"),
+            else "/",  # get_frontend_url("front_home"),
         }
 
         # Create HTTP response with JSON data and redirect
         response = HttpResponse(json.dumps(response_data), content_type="application/json")
-        # if created:
-        #     response["Location"] = get_frontend_url("front_create_profile_from_social_account")  # request.path_info
-        # else:
-        #     response["Location"] = get_frontend_url("front_home")  # Redirect to the main page
-
         return response
