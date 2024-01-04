@@ -10,8 +10,10 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
 from django.views.decorators.http import require_POST
-from apps.base.utils import get_frontend_url
+
+# from apps.base.utils import get_frontend_url
 from apps.users.models import User
+from django.urls import reverse
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -65,9 +67,9 @@ class SocialLoginView(View):
         # Create JSON response with token and redirect_url
         response_data = {
             "token": token.key,
-            "redirect_url": get_frontend_url("front_create_profile_from_social_account")
-            if created
-            else get_frontend_url("front_home"),
+            "redirect_url": reverse("front_create_profile_from_social_account", args=[*args])
+            if user.full_name == "Anonim User"
+            else reverse("front_home", args=[*args]),  # get_frontend_url("front_home"),
         }
 
         # Create HTTP response with JSON data and redirect
