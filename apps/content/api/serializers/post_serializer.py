@@ -44,6 +44,11 @@ class PostSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Ви можете додати до 3 професийніх галузей")
         return value
 
+    def validate_category(self, value):
+        if len(value) > 3:
+            raise serializers.ValidationError("Ви можете додати до 3 категорій")
+        return value
+
     def validate_country(self, value):
         try:
             if len(value) > 5:
@@ -56,4 +61,5 @@ class PostSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation["country"] = [country.name for country in instance.country.all()]
         representation["professional_tags"] = [tag.name for tag in instance.professional_tags.all()]
+        representation["category"] = [category.name for category in instance.category.all()]
         return representation
