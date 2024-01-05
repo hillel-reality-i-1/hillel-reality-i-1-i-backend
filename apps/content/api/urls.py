@@ -6,6 +6,7 @@ from .views.contributions.contribution_list_view import ContributionListView
 from .views.contributions.vote_contribution_view import VoteContributionView
 from .views.posts import PostListView, PostCreateView, PostModifiedDeleteView
 from .views.comments import CommentModifiedDeleteView, NestedCommentsCreateView, CommentsCreateView, CommentsListView
+from .views.posts.search_view import SearchView
 
 app_name = "api-content"
 
@@ -22,4 +23,5 @@ urlpatterns = [
     path("comment/<int:comment_id>/vote_not_helpful/", VoteNotHelpfulView.as_view(), name="vote_not_helpful"),
     path("post/<int:pk>/contributions/", ContributionListView.as_view(), name="contribution_list"),
     path("contribution/<int:pk>/vote_helpful/", VoteContributionView.as_view(), name="vote_contribution_helpful"),
+    path("search/", SearchView.as_view(), name="search_view"),
 ]
