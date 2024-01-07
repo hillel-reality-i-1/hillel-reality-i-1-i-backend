@@ -1,4 +1,3 @@
-
 from apps.files.api.views.upload_portfolio_view import UploadPortfolioView
 
 # from django.views.generic import TemplateView
@@ -17,6 +16,7 @@ from django.urls import path, include
 
 from apps.users.views.delete_all_content_confirm_view import DeleteAllContentConfirmView
 from apps.users.views.delete_all_content_view import DeleteAllContentView
+from apps.users.views.get_user_profile_by_user_id_view import UserProfileByUserIdView
 from apps.users.views.password_reset_confirm_view import PasswordResetConfirmView
 from apps.users.views.register_user_profile_ext_view import RegisterProfileExtView
 from apps.users.views.register_user_profile_view import RegisterProfileView
@@ -54,6 +54,7 @@ urlpatterns = [
     path("auth/registration/", CustomRegisterView.as_view(), name="rest_register"),
     path("users/upload_img/", UploadImageView.as_view(), name="upload_img"),
     path("users/upload_portfolio/", UploadPortfolioView.as_view(), name="upload_portfolio"),
+    path(r"users/user_profile_by_user_id/<int:user_id>/", UserProfileByUserIdView.as_view(), name="get_user_profile"),
     path("auth/registration_user_profile/", RegisterProfileView.as_view(), name="registration_user_profile"),
     path("auth/registration_user_profile_ext/", RegisterProfileExtView.as_view(), name="registration_user_profile_ext"),
     path("accounts/resend-email/", ResendEmailVerificationView.as_view(), name="rest_resend_email"),
@@ -68,15 +69,12 @@ urlpatterns = [
     path("location/country_list/", CountryListView.as_view({"get": "list"}), name="country_list"),
     path("location/city_list/", CityListView.as_view({"get": "list"}), name="city_list"),
     path("auth/", include("dj_rest_auth.urls")),
-    path('accounts/delete/', UserDeleteView.as_view(), name='account-delete'),
-    path('accounts/delete/content/', DeleteAllContentView.as_view(), name='account-content-delete'),
+    path("accounts/delete/", UserDeleteView.as_view(), name="account-delete"),
+    path("accounts/delete/content/", DeleteAllContentView.as_view(), name="account-content-delete"),
     path(
-        'accounts/delete/content/confirm/',
-        DeleteAllContentConfirmView.as_view(),
-        name='account-content-delete-confirm'
+        "accounts/delete/content/confirm/", DeleteAllContentConfirmView.as_view(), name="account-content-delete-confirm"
     ),
-    path('accounts/check-email/', CheckEmailExists.as_view(), name='check_email_exists'),
-
+    path("accounts/check-email/", CheckEmailExists.as_view(), name="check_email_exists"),
 ]
 
 allauth_views_urlpatterns = [
