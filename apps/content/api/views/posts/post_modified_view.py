@@ -1,14 +1,14 @@
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.generics import RetrieveUpdateAPIView
 
 from apps.content.models import Post
 from apps.content.permissions import IsAuthorOrReadOnly
 from apps.content.api.serializers import PostSerializer
 
 
-class PostModifiedDeleteView(RetrieveUpdateDestroyAPIView):
+class PostModifiedView(RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
 
     queryset = Post.objects.all()
