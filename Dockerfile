@@ -29,7 +29,9 @@ COPY --chown=${USER} ./apps apps
 # Вставка команд для создания директории /var/www/static/
 USER root
 RUN mkdir -p /var/www/static/ \
-    &&  chmod -R 775 /var/www/static/
+    &&  chmod -R 775 /var/www/static/ \
+    mkdir -p /var/www/media/ \
+    &&  chmod -R 775 /var/www/media/ \
 
 USER ${USER}
 
