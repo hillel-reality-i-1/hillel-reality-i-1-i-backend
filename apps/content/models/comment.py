@@ -2,7 +2,7 @@ from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.db import models
 from django.contrib.auth import get_user_model
 
-from apps.content.models import Post, Contribution
+from apps.content.models import Post
 
 User = get_user_model()
 
@@ -24,12 +24,13 @@ class Comment(models.Model):
     is_parent = models.BooleanField(default=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
-    contribution = models.OneToOneField(Contribution, null=True, blank=True, on_delete=models.SET_NULL)
+    is_contribution = models.BooleanField(default=False)
     helpful_count = models.IntegerField(default=0)
     not_helpful_count = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"Comment by {self.author}. Created at {self.creation_date}"
+        formatted_creation_date = self.creation_date.strftime("%Y-%m-%d %H:%M:%S")
+        return f"ID: {self.id}  |  Comment by {self.author}  |  Created: {formatted_creation_date}"
 
     def get_helpful_count(self):
         return UserCommentVote.objects.filter(comment=self, helpful=True).count()
@@ -44,13 +45,11 @@ class Comment(models.Model):
     def contribute(self):
         total_positive_votes = self.helpful_count - self.not_helpful_count
 
-        if total_positive_votes >= 10 and self.is_parent and not self.contribution:
-            contribution = Contribution.objects.create(post=self.post, author=self.author, text=self.text)
-            self.contribution = contribution
+        if total_positive_votes >= 10 and self.is_parent and not self.is_contribution:
+            self.is_contribution = True
             self.save()
-        elif total_positive_votes < 10 and self.is_parent and self.contribution:
-            self.contribution.delete()
-            self.contribution = None
+        elif total_positive_votes < 10 and self.is_parent and self.is_contribution:
+            self.is_contribution = False
             self.save()
 
     def update_vote_counts(self):
