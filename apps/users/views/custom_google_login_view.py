@@ -77,10 +77,14 @@ class SocialLoginView(View):
 
         # Create JSON response with token and redirect_url
         response_data = {
+            "user_id": user.pk,
             "token": token.key,
             "redirect_url": reverse("front_create_profile_from_social_account", args=[*args])[:-1]
             if user.full_name == "Anonim User"
             else reverse("front_home"),  # get_frontend_url("front_home"),
+            "full_name": f"{user_data.get('name')}"
+            if user_data.get("name")
+            else f"{user_data.get('given_name')} {user_data.get('family_name')}",
         }
 
         # Create HTTP response with JSON data and redirect
