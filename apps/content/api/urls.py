@@ -20,6 +20,8 @@ from .views.comments import (
     CommentModifiedView,
     CommentDeleteView,
 )
+from .views.posts.search_view import SearchView
+
 
 app_name = "api-content"
 
@@ -41,4 +43,5 @@ urlpatterns = [
     path("comment/<int:comment_id>/vote_helpful/", VoteHelpfulView.as_view(), name="vote_helpful"),
     path("comment/<int:comment_id>/vote_not_helpful/", VoteNotHelpfulView.as_view(), name="vote_not_helpful"),
     path("post/<int:pk>/contributions/", ContributionListView.as_view(), name="contributions-list"),
+    path("search/", SearchView.as_view(), name="search_view"),
 ]

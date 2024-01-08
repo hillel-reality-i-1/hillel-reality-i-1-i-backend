@@ -5,14 +5,19 @@ from allauth.account.models import EmailAddress
 from django.contrib.auth import login
 from allauth.socialaccount.models import SocialAccount
 from django.http import HttpResponse
-from django.views import View
 from django.utils.decorators import method_decorator
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.authtoken.models import Token
+from django.views.decorators.http import require_POST
+
+# from apps.base.utils import get_frontend_url
 from apps.users.models import User
+from django.urls import reverse
 
 
 @method_decorator(csrf_exempt, name="dispatch")
+@method_decorator(require_POST, name="post")
 class SocialLoginView(View):
     def post(self, request, *args, **kwargs):
         access_token = request.POST.get("access_token")
@@ -20,15 +25,26 @@ class SocialLoginView(View):
         # Data parsing from access token
         url = f"https://oauth2.googleapis.com/tokeninfo?access_token={access_token}"
         response = requests.get(url)
-        user_data_token = response.json()
+        if 300 > response.status_code >= 200:
+            if "application/json" in response.headers.get("Content-Type", ""):
+                user_data_token = response.json()
+            else:
+                user_data_token = {}
+        else:
+            return JsonResponse({"google_api_detail": f"{response.status_code}"}, status=400)
 
         response = requests.get("https://www.googleapis.com/oauth2/v3/userinfo", params={"access_token": access_token})
-
-        user_data = response.json()
-        user_data.update(user_data_token)
+        if 300 > response.status_code >= 200:
+            if "application/json" in response.headers.get("Content-Type", ""):
+                user_data = response.json()
+            else:
+                user_data = {}
+                user_data.update(user_data_token)
+        else:
+            return JsonResponse({"google_api_detail": f"{response.status_code}"}, status=400)
 
         if not user_data.get("email"):
-            return JsonResponse({"detail": "Email is missing in user_data"}, status=400)
+            return JsonResponse({"detail": "Email is missing in user_data", "user_data": user_data}, status=400)
 
         user, created = User.objects.get_or_create(email=user_data["email"])
         if created:
@@ -59,14 +75,18 @@ class SocialLoginView(View):
 
         token, created = Token.objects.get_or_create(user=user)
 
-        # Create JSON response with token
-        response_data = {"token": token.key}
+        # Create JSON response with token and redirect_url
+        response_data = {
+            "user_id": user.pk,
+            "token": token.key,
+            "redirect_url": reverse("front_create_profile_from_social_account", args=[*args])[:-1]
+            if user.full_name == "Anonim User"
+            else reverse("front_home"),  # get_frontend_url("front_home"),
+            "full_name": f"{user_data.get('name')}"
+            if user_data.get("name")
+            else f"{user_data.get('given_name')} {user_data.get('family_name')}",
+        }
 
         # Create HTTP response with JSON data and redirect
         response = HttpResponse(json.dumps(response_data), content_type="application/json")
-        if created:
-            response["Location"] = "http://dmytromigirov.space:3000/createUnAccount/"  # request.path_info
-        else:
-            response["Location"] = "/"  # Redirect to the main page
-
         return response

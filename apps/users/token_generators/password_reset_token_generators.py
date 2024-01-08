@@ -18,7 +18,8 @@ class PasswordResetTokenGenerator(_PasswordResetTokenGenerator):
         )
         email_field = user.get_email_field_name()
         email = getattr(user, email_field, "") or ""
-        hash_value = f"{user.pk}{user.password}{login_timestamp}{timestamp}{email}"
+        # hash_value = f"{user.pk}{user.password}{login_timestamp}{timestamp}{email}"
+        hash_value = f"{user.pk}{login_timestamp}{timestamp}{email}"
         hash_string = salted_hmac(
             self.key_salt,
             hash_value,
