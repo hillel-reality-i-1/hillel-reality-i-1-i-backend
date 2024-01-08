@@ -1,3 +1,5 @@
-from .post_list_view import PostListView
+from .posts_list_view import PostListView
 from .post_create_view import PostCreateView
-from .post_modified_delete_view import PostModifiedDeleteView
+from .post_modified_view import PostModifiedView
+from .post_delete_view import PostDeleteView
+from .save_post_view import SavePostAPIView, UnsavePostAPIView

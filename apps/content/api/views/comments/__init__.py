@@ -1,4 +1,6 @@
-from .comments_create_view import CommentsCreateView
+from .comment_create_view import CommentsCreateView
 from .comments_list_view import CommentsListView
-from .comments_modified_delete_view import CommentModifiedDeleteView
-from .nested_comments_create_view import NestedCommentsCreateView
+from .comment_modified_view import CommentModifiedView
+from .comment_delete_view import CommentDeleteView
+from .nested_comment_create_view import NestedCommentsCreateView
+from .save_comment_view import SaveCommentAPIView, UnsaveCommentAPIView
