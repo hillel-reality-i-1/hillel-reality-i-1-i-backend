@@ -10,12 +10,12 @@ User = get_user_model()
 
 
 class PostSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source="author.username", read_only=True)
     title = serializers.CharField(min_length=2, max_length=100)
     content = serializers.CharField(min_length=100, max_length=10000)
     images = ImageSerializer(many=True, required=False)
     reactions = ReactionSerializer(many=True, read_only=True)
     comments = serializers.SerializerMethodField()
+    contributions = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
@@ -23,19 +23,26 @@ class PostSerializer(serializers.ModelSerializer):
             "id",
             "author",
             "title",
-            "country",
-            "content",
-            "professional_tags",
             "images",
+            "country",
+            "professional_tags",
+            "content",
+            "reactions",
             "creation_date",
             "comments",
-            "reactions",
+            "contributions",
         ]
 
     def get_comments(self, obj):
         root_comments = Comment.objects.filter(post=obj, parent=None)
 
         serializer = CommentSerializer(root_comments, many=True)
+        return serializer.data
+
+    def get_contributions(self, obj):
+        contributions = Comment.objects.filter(post=obj, parent=None, is_contribution=True)
+
+        serializer = CommentSerializer(contributions, many=True)
         return serializer.data
 
     def validate_professional_tags(self, value):
@@ -46,7 +53,7 @@ class PostSerializer(serializers.ModelSerializer):
     def validate_country(self, value):
         try:
             if len(value) > 5:
-                raise serializers.ValidationError("Ви можете обраті не більше 5 країн")
+                raise serializers.ValidationError("Ви можете обраті не більше 4 країн")
             return value
         except TypeError:
             raise serializers.ValidationError("Некоректні дані для країни")
