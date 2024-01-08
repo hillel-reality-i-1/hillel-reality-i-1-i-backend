@@ -40,4 +40,5 @@ class Post(models.Model):
             return None
 
     def __str__(self):
-        return f"Article {self.title} by {self.author}. Created at {self.creation_date}"
+        formatted_creation_date = self.creation_date.strftime("%Y-%m-%d %H:%M:%S")
+        return f"ID: {self.id}  |  Title: {self.title}  |  Author: {self.author}  |  Created: {formatted_creation_date}"
