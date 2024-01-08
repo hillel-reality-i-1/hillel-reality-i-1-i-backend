@@ -9,6 +9,7 @@ class CommentSerializer(serializers.ModelSerializer):
     is_parent = serializers.BooleanField(read_only=True)
     helpful_count = serializers.IntegerField(read_only=True)
     not_helpful_count = serializers.IntegerField(read_only=True)
+    is_contribution = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Comment
@@ -23,6 +24,7 @@ class CommentSerializer(serializers.ModelSerializer):
             "updated_date",
             "replies",
             "is_parent",
+            "is_contribution",
         ]
         read_only_fields = ["post", "helpful_count", "not_helpful_count"]
 
