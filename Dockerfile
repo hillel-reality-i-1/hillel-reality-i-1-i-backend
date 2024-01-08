@@ -30,8 +30,9 @@ COPY --chown=${USER} ./apps apps
 USER root
 RUN mkdir -p /var/www/static/ \
     &&  chmod -R 775 /var/www/static/ \
+    
     && mkdir -p /var/www/media/ \
-    &&  chmod -R 775 /var/www/media/ \
+    &&  chmod -R 775 /var/www/media/ 
 
 USER ${USER}
 
