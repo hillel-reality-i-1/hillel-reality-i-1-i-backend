@@ -3,7 +3,8 @@ version: '3.9'
 volumes:
   postgres_data: { }
   pgadmin-data: { }
-  media_data: { }
+  media_volume: { }
+  static_volume: { }
 
 
 services:
@@ -24,8 +25,8 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - /var/www/static/:/var/www/static/
-      - media_data:/var/www/media/
+      - static_volume:/var/www/static/
+      - media_volume:/var/www/media/
    
   postgres:
     image: postgres:15.4
@@ -107,5 +108,5 @@ services:
       - "80:80"
     volumes:
       - "./default.conf:/etc/nginx/conf.d/default.conf:ro"
-      - /var/www/static/:/var/www/static/
-      - media_data:/var/www/media/
+      - static_volume:/var/www/static/
+      - media_volume:/var/www/media/
