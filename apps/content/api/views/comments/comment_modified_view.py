@@ -1,13 +1,13 @@
 from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.generics import RetrieveUpdateAPIView
 
 from apps.content.models import Comment
 from apps.content.permissions import IsAuthorOrReadOnly
 from apps.content.api.serializers import CommentSerializer
 
 
-class CommentModifiedDeleteView(RetrieveUpdateDestroyAPIView):
+class CommentModifiedView(RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
 
     queryset = Comment.objects.all()
