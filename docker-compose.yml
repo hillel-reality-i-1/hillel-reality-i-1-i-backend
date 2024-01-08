@@ -3,6 +3,7 @@ version: '3.9'
 volumes:
   postgres_data: { }
   pgadmin-data: { }
+  media_data: { }
 
 
 services:
@@ -24,6 +25,7 @@ services:
     tty: true
     volumes:
       - /var/www/static/:/var/www/static/
+      - media_data:/var/www/media/
    
   postgres:
     image: postgres:15.4

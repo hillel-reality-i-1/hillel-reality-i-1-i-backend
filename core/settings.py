@@ -206,6 +206,14 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = "/var/www/static/"
 
+MEDIA_URL = "/media/"
+MEDIA_ROOT = "/var/www/media/"
+
+if DEBUG:
+    MIDDLEWARE += [
+        "django.contrib.staticfiles.middleware.StaticFilesMiddleware",
+    ]
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Superuser
