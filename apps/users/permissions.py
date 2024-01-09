@@ -90,4 +90,34 @@ class IsAdminOrUserProfileOwner(permissions.BasePermission):
         if user.is_staff:
             return True
 
-        return view.kwargs.get("user_id") == user.id
+        if UserProfile.objects.filter(user=user).exists():
+            return view.kwargs.get("user_id") == user.id
+        else:
+            return False
+
+
+class IsAdminOrAvatarOwner(permissions.BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+
+        if user.is_staff:
+            return True
+
+        if Image.objects.filter(author=user).exists():
+            image = Image.objects.get(author=user)
+            return view.kwargs.get("user_id") == image.author.id
+        else:
+            return False
+
+
+class IsAdminOrExpertUserProfileOwner(permissions.BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+
+        if user.is_staff:
+            return True
+
+        if UserProfileExtended.objects.filter(user=user).exists():
+            return view.kwargs.get("user_id") == user.id
+        else:
+            return False
