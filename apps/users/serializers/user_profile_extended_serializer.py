@@ -22,6 +22,7 @@ class UserProfileExtendedSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfileExtended
         fields = (
+            "id",
             "user",
             "profession",
             "service",

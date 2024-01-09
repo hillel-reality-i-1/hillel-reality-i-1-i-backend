@@ -16,6 +16,7 @@ from django.urls import path, include
 
 from apps.users.views.delete_all_content_confirm_view import DeleteAllContentConfirmView
 from apps.users.views.delete_all_content_view import DeleteAllContentView
+from apps.users.views.get_expert_user_profile_by_user_id_view import ExpertUserProfileByUserIdView
 from apps.users.views.get_user_profile_by_user_id_view import UserProfileByUserIdView
 from apps.users.views.password_reset_confirm_view import PasswordResetConfirmView
 from apps.users.views.register_user_profile_ext_view import RegisterProfileExtView
@@ -54,7 +55,12 @@ urlpatterns = [
     path("auth/registration/", CustomRegisterView.as_view(), name="rest_register"),
     path("users/upload_img/", UploadImageView.as_view(), name="upload_img"),
     path("users/upload_portfolio/", UploadPortfolioView.as_view(), name="upload_portfolio"),
-    path(r"users/user_profile_by_user_id/<int:user_id>/", UserProfileByUserIdView.as_view(), name="get_user_profile"),
+    path("users/user_profile_by_user_id/<int:user_id>/", UserProfileByUserIdView.as_view(), name="get_user_profile"),
+    path(
+        "users/expert_user_profile_by_user_id/<int:user_id>/",
+        ExpertUserProfileByUserIdView.as_view(),
+        name="get_expert_user_profile",
+    ),
     path("auth/registration_user_profile/", RegisterProfileView.as_view(), name="registration_user_profile"),
     path("auth/registration_user_profile_ext/", RegisterProfileExtView.as_view(), name="registration_user_profile_ext"),
     path("accounts/resend-email/", ResendEmailVerificationView.as_view(), name="rest_resend_email"),
