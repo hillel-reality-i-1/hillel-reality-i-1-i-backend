@@ -14,6 +14,6 @@ class DeleteAllContentView(APIView):
     def post(self, request, *args, **kwargs):
 
         key = DeleteAllContentTokenGenerator().make_token(request.user)
-        get_adapter().send_delete_all_content_confirmation_email(request.user, key)
+        get_adapter().send_delete_all_content_confirmation_mail(request.user, key)
 
         return Response({"detail": "Confirmation email sent successfully."}, status=status.HTTP_200_OK)
