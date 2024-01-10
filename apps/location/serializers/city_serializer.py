@@ -5,6 +5,7 @@ from cities_light.models import City
 
 class CitySerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField(read_only=True)
+    country = serializers.IntegerField(required=False)
 
     class Meta:
         model = City
