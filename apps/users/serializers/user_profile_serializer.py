@@ -2,10 +2,27 @@ from cities_light.models import Country, City
 from rest_framework import serializers
 from apps.content.api.serializers import PostSerializer, CommentSerializer, SavedPostSerializer, SavedCommentSerializer
 from apps.files.api.serializers import ImageSerializer
-from apps.location.serializers.city_serializer import CitySerializer
+
+# from apps.location.serializers.city_serializer import CitySerializer
 from apps.location.serializers.country_serializer import CountrySerializer
 from apps.users.models import UserProfile
 import re
+from django.utils.translation import get_language
+
+
+class CitySerializerNew(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = City
+        fields = [
+            "id",
+            "name",
+        ]
+
+    def get_name(self, obj):
+        language = get_language()
+        return obj.alternate_names if language == "uk" else obj.name
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -15,7 +32,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField(read_only=True)
     username = serializers.SerializerMethodField(read_only=True)
     country = CountrySerializer(read_only=True)
-    city = CitySerializer(read_only=True)
+    city = CitySerializerNew(read_only=True)
     country_id = serializers.PrimaryKeyRelatedField(
         queryset=Country.objects.all(), write_only=True, required=False, allow_null=True
     )
