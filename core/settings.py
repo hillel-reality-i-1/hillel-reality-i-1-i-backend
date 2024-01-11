@@ -248,6 +248,8 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
+# CELERY
+
 CELERY_BROKER_URL = "amqp://{}:{}@{}:{}//".format(
     env.str("RABBITMQ_DEFAULT_USER", "guest"),
     env.str("RABBITMQ_DEFAULT_PASS", "guest"),
@@ -259,6 +261,19 @@ CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
+
+# CACHES
+
+CACHES = {
+    'default': {
+        "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
+        "LOCATION": f"{env.str(
+            'CACHES_DEFAULT_HOST', 'localhost'
+        )}:{env.str(
+            'CACHES_DEFAULT_PORT', '11211'
+        )}",
+    }
+}
 
 CUSTOM_SETTINGS_ACCOUNT_EMAIL_CELERY_SEND = True
 

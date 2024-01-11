@@ -51,6 +51,7 @@ urlpatterns = [
     path("api/v1/files/", include("apps.files.urls")),
     path("api/v1/content/", include("apps.content.api.urls")),
     path("api/v1/prof_service/", include("apps.expert.urls")),
+    path("api/v1/location/", include("apps.location.urls")),
     # path("", TemplateView.as_view(template_name="index.html")),
     # re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     # re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),

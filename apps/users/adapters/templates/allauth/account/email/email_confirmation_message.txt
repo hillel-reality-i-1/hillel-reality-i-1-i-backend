@@ -2,6 +2,17 @@
 {% load account %}
 {% load i18n %}
 
-{% block content %}{% autoescape off %}{% user_display user as user_display %}{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}You're receiving this email because user {{ user_display }} has given your email address to register an account on {{ site_domain }}.
+{% block content %}{% autoescape off %}
+{% user_display user as user_display %}
+{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}
 
-To confirm this is correct, go to {{ activate_url }}{% endblocktrans %}{% endautoescape %}{% endblock content %}
+Ви отримали цей лист, оскільки користувач {{ user_display }} вказав вашу електронну адресу для реєстрації облікового запису на {{ site_domain }}.
+
+Для підтвердження правильності цих даних перейдіть за посиланням {{ activate_url }}.
+
+Врахуйте, що необхідно завершити цю дію протягом 24 годин.
+
+
+{% endblocktrans %}
+{% endautoescape %}
+{% endblock content %}

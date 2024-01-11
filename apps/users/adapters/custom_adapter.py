@@ -1,20 +1,31 @@
 from allauth.account.adapter import DefaultAccountAdapter
+from django.contrib.sites.shortcuts import get_current_site
 from rest_framework import status
 from rest_framework.response import Response
 from django.conf import settings
 
 from apps.base.utils import get_frontend_url
 from apps.users.tasks import send_adapter_mail_task
+from allauth.core import context
 
 
 class CustomAdapter(DefaultAccountAdapter):
 
-    def send_delete_all_content_confirmation_email(self, user, key):
+    def send_delete_all_content_confirmation_mail(self, user, key):
         delete_all_content_url = self.get_delete_all_content_url(key)
         ctx = {
+            "current_site": get_current_site(context.request),
             "delete_all_content_url": delete_all_content_url,
         }
-        email_template = "account/delete_all_content"
+        email_template = "account/email/delete_all_content"
+        self.send_mail(email_template, user.email, ctx)
+
+    def send_reset_password_confirm_success_mail(self, user):
+        email_template = "account/email/password_reset_confirm_success"
+        ctx = {
+            "current_site": get_current_site(context.request),
+            "username": user.username,
+        }
         self.send_mail(email_template, user.email, ctx)
 
     def get_delete_all_content_url(self, key):

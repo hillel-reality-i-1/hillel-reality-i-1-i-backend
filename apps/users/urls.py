@@ -2,8 +2,6 @@ from apps.files.api.views.upload_portfolio_view import UploadPortfolioView
 
 # from django.views.generic import TemplateView
 
-from apps.location.views.city_view import CityListView
-from apps.location.views.country_view import CountryListView
 from apps.users.views.change_email_request_view import ChangeEmailRequestView, ChangeEmailConfirmView
 from apps.users.views.custom_google_login_view import SocialLoginView
 from apps.users.views.check_user_with_email_exist_view import CheckEmailExists
@@ -72,8 +70,6 @@ urlpatterns = [
         name="password_reset_confirm",
     ),
     path("users/", include(router.urls)),
-    path("location/country_list/", CountryListView.as_view({"get": "list"}), name="country_list"),
-    path("location/city_list/", CityListView.as_view({"get": "list"}), name="city_list"),
     path("auth/", include("dj_rest_auth.urls")),
     path("accounts/delete/", UserDeleteView.as_view(), name="account-delete"),
     path("accounts/delete/content/", DeleteAllContentView.as_view(), name="account-content-delete"),

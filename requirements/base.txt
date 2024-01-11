@@ -71,3 +71,7 @@ openpyxl==3.1.2
 
 # google auth
 google-auth==2.25.2
+
+pymemcache
+
+google-cloud-storage==2.14.0
