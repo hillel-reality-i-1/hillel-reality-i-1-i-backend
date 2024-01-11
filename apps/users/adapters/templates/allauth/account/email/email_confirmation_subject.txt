@@ -1,4 +1,4 @@
 {% load i18n %}
 {% autoescape off %}
-{% blocktrans %}Підтвердження електронної пошти{% endblocktrans %}
+{% blocktrans %}Підтвердження реєстрації на U-Help{% endblocktrans %}
 {% endautoescape %}
