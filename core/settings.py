@@ -265,13 +265,9 @@ CELERY_TIMEZONE = "UTC"
 # CACHES
 
 CACHES = {
-    'default': {
+    "default": {
         "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
-        "LOCATION": f"{env.str(
-            'CACHES_DEFAULT_HOST', 'localhost'
-        )}:{env.str(
-            'CACHES_DEFAULT_PORT', '11211'
-        )}",
+        "LOCATION": f"{env.str('CACHES_DEFAULT_HOST', 'localhost')}" f":{env.str('CACHES_DEFAULT_PORT','11211')}",
     }
 }
 

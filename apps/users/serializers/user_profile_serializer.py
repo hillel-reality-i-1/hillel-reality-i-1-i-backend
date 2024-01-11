@@ -1,11 +1,11 @@
 from cities_light.models import Country, City
 from rest_framework import serializers
-
 from apps.content.api.serializers import PostSerializer, CommentSerializer, SavedPostSerializer, SavedCommentSerializer
 from apps.files.api.serializers import ImageSerializer
 from apps.location.serializers.city_serializer import CitySerializer
 from apps.location.serializers.country_serializer import CountrySerializer
 from apps.users.models import UserProfile
+import re
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -25,6 +25,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     saved_posts = SavedPostSerializer(many=True, read_only=True)
     saved_comments = SavedCommentSerializer(many=True, read_only=True)
+
+    telegram = serializers.CharField(required=False, allow_blank=True, allow_null=True, max_length=50)
+    instagram = serializers.CharField(required=False, allow_blank=True, allow_null=True, max_length=50)
+    facebook = serializers.CharField(required=False, allow_blank=True, allow_null=True, max_length=200)
+    linkedin = serializers.CharField(required=False, allow_blank=True, allow_null=True, max_length=200)
 
     class Meta:
         model = UserProfile
@@ -72,10 +77,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return user_profile
 
     def update(self, instance, validated_data):
-        t_country = validated_data.get("country_id")
-        t_city = validated_data.get("city_id")
-        instance.country = t_country if t_country else None
-        instance.city = t_city if t_city else None
+        instance.country = validated_data.get("country_id")
+        instance.city = validated_data.get("city_id")
+        instance.telegram = validated_data.get("telegram", instance.telegram)
+        instance.instagram = validated_data.get("instagram", instance.instagram)
+        instance.facebook = validated_data.get("facebook", instance.facebook)
+        instance.linkedin = validated_data.get("linkedin", instance.linkedin)
 
         new_phone_number = validated_data.get("phone_number")
 
@@ -91,3 +98,24 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+    def validate_username(self, value, field_name):
+        if value is not None:
+            pattern = r"^[a-zA-Z0-9_.-@!#$%^&*()<>/?|}{~:]*$"
+            if not re.match(pattern, value):
+                raise serializers.ValidationError(
+                    f"{field_name} username can only contain latin letters, numbers, special symbols"
+                )
+        return value
+
+    def validate_telegram(self, value):
+        return self.validate_username(value, "Telegram")
+
+    def validate_instagram(self, value):
+        return self.validate_username(value, "Instagram")
+
+    def validate_facebook(self, value):
+        return self.validate_username(value, "Facebook")
+
+    def validate_linkedin(self, value):
+        return self.validate_username(value, "LinkedIn")
