@@ -9,7 +9,6 @@ from apps.location.serializers.city_serializer import CitySerializer
 class CitiesAPIView(APIView):
 
     def get(self, request, *args, **kwargs):
-
         serializer = CitySerializer(data=request.query_params)
         serializer.is_valid(raise_exception=True)
         country_id = serializer.validated_data.get('country')
@@ -21,12 +20,14 @@ class CitiesAPIView(APIView):
             return Response({'status': 'success', 'data': cached_data}, status=200)
 
         if country_id is None:
-            cities = list(City.objects.all())
+            cities_list = list(City.objects.all())
         else:
-            cities = list(City.objects.filter(country_id=country_id))
+            cities_list = list(City.objects.filter(country=country_id))
 
-        serializer = CitySerializer(cities, many=True)
+        cities_dict = {
+            city.id: {"name": city.name, "country": city.country.id} for city in cities_list
+        }
 
-        cache.set(cache_key, serializer.data)
+        cache.set(cache_key, cities_dict)
 
-        return Response({'status': 'success', 'data': serializer.data}, status=200)
+        return Response({'status': 'success', 'data': cities_dict}, status=200)
