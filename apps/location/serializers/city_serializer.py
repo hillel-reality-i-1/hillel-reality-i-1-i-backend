@@ -14,3 +14,19 @@ class CitySerializer(serializers.ModelSerializer):
     def get_name(self, obj):
         language = get_language()
         return obj.alternate_names if language == "uk" else obj.name
+
+
+class CitySerializerNew(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = City
+        fields = [
+            "id",
+            "name",
+            "country",
+        ]
+
+    def get_name(self, obj):
+        language = get_language()
+        return obj.alternate_names if language == "uk" else obj.name

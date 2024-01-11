@@ -4,10 +4,12 @@ from rest_framework import viewsets
 # from rest_framework.response import Response
 from cities_light.models import City
 
+from apps.location.serializers.city_serializer import CitySerializerNew
+
+
 # from apps.content.api.paginations import ThreeHundredPagination
 # from apps.content.api.paginations.three_hundred_pagination import CityPagination
 # from apps.location.serializers.city_serializer import CitySerializer
-from apps.users.serializers.user_profile_serializer import CitySerializerNew
 
 
 # class CityListView(APIView):
