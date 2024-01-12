@@ -17,6 +17,7 @@ from apps.users.views.delete_all_content_view import DeleteAllContentView
 from apps.users.views.get_expert_user_profile_by_user_id_view import ExpertUserProfileByUserIdView
 from apps.users.views.get_user_profile_by_user_id_view import UserProfileByUserIdView
 from apps.users.views.password_reset_confirm_view import PasswordResetConfirmView
+from apps.users.views.profiles.open_user_info_view import UserOpenInfoView
 from apps.users.views.register_user_profile_ext_view import RegisterProfileExtView
 from apps.users.views.register_user_profile_view import RegisterProfileView
 from apps.files.api.views.upload_image_view import UploadImageView
@@ -59,6 +60,7 @@ urlpatterns = [
         ExpertUserProfileByUserIdView.as_view(),
         name="get_expert_user_profile",
     ),
+    path("users/user_open_info/<int:user_id>/", UserOpenInfoView.as_view(), name="user_open_info"),
     path("auth/registration_user_profile/", RegisterProfileView.as_view(), name="registration_user_profile"),
     path("auth/registration_user_profile_ext/", RegisterProfileExtView.as_view(), name="registration_user_profile_ext"),
     path("accounts/resend-email/", ResendEmailVerificationView.as_view(), name="rest_resend_email"),
