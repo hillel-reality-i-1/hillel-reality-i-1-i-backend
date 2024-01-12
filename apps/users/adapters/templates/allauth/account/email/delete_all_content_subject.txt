@@ -1,5 +1,5 @@
 {% load i18n %}
 
-{% blocktrans with site_name=current_site.name %}
-    Видалення контенту вашого обліково запису.
+{% blocktrans %}
+    Підтвердження видалення контенту на U-Help
 {% endblocktrans %}

@@ -1,3 +1,4 @@
+from allauth.account.models import EmailAddress
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
 
@@ -13,7 +14,7 @@ class CustomRegistrationSerializer(RegisterSerializer):
         return super().validate(data)
 
     def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
+        if EmailAddress.objects.filter(email=value, verified=True).exists():
             raise serializers.ValidationError("This email is already in use. Please, use another or sign in")
 
         return value

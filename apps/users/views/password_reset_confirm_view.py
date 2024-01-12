@@ -2,6 +2,7 @@ from allauth.account.adapter import get_adapter
 from django.contrib.auth import get_user_model
 from django.utils.http import urlsafe_base64_decode
 from django.utils.translation import gettext_lazy as _
+from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from dj_rest_auth.views import PasswordResetConfirmView as _PasswordResetConfirmView
 
@@ -20,7 +21,11 @@ class PasswordResetConfirmView(_PasswordResetConfirmView):
         user = get_user_model().objects.get(pk=uid)
 
         get_adapter().send_reset_password_confirm_success_mail(user)
+        token, created = Token.objects.get_or_create(user=user)
 
         return Response(
-            {'detail': _('Password has been reset with the new password.')},
+            {
+                'detail': _('Password has been reset with the new password.'),
+                'token': token.key,
+            },
         )
