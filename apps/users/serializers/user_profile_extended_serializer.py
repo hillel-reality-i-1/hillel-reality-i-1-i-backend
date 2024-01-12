@@ -3,7 +3,7 @@ from apps.expert.models import Profession, Service
 from apps.expert.serializers import ProfessionSerializer, ServiceSerializer
 from apps.files.api.serializers.porfolio_serializer import PortfolioSerializer
 from apps.files.models import File
-from apps.users.models import UserProfileExtended
+from apps.users.models import UserProfileExtended, UserProfile
 
 
 class UserProfileExtendedSerializer(serializers.ModelSerializer):
@@ -39,3 +39,17 @@ class UserProfileExtendedSerializer(serializers.ModelSerializer):
         portfolio = File.objects.filter(author=instance.user)
         data["portfolio"] = PortfolioSerializer(portfolio, many=True).data
         return data
+
+    def create(self, validated_data):
+        user = validated_data.get("user")
+        if UserProfile.objects.filter(user=user).exists():
+            if not UserProfileExtended.objects.filter(user=user).exists():
+                expert_user_profile = UserProfileExtended.objects.create(**validated_data)
+            else:
+                raise serializers.ValidationError("This user already has an expert profile")
+        else:
+            raise serializers.ValidationError(
+                "In order to create an expert profile, " "you first need to create a user profile."
+            )
+
+        return expert_user_profile

@@ -5,8 +5,8 @@ from apps.users.models import User
 
 class UserProfileExtended(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    profession = models.ForeignKey(Profession, on_delete=models.PROTECT)
-    service = models.ForeignKey(Service, on_delete=models.PROTECT)
+    profession = models.ForeignKey(Profession, on_delete=models.PROTECT, null=True, blank=True)
+    service = models.ForeignKey(Service, on_delete=models.PROTECT, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username}'s extended user profile with id {self.pk}"
