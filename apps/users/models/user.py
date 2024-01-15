@@ -132,6 +132,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         validators=[MinLengthValidator(limit_value=2), MaxLengthValidator(limit_value=32)],
         max_length=32,
         default="anonim_user_1",
+        unique=True,
     )
 
     is_active = models.BooleanField(default=True)

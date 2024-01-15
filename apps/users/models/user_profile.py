@@ -9,7 +9,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone_number = PhoneNumberField(max_length=15, null=True, blank=True)
+    phone_number = PhoneNumberField(max_length=15, null=True, blank=True, unique=True)
     about_my_self = models.TextField(
         max_length=500,
         null=True,
@@ -28,24 +28,28 @@ class UserProfile(models.Model):
     twilio_verification_sid = models.CharField(max_length=255, null=True, blank=True)
 
     telegram = models.CharField(
+        unique=True,
         max_length=50,
         null=True,
         blank=True,
         validators=[MinLengthValidator(limit_value=2), MaxLengthValidator(limit_value=50)],
     )
     instagram = models.CharField(
+        unique=True,
         max_length=50,
         null=True,
         blank=True,
         validators=[MinLengthValidator(limit_value=2), MaxLengthValidator(limit_value=50)],
     )
     facebook = models.CharField(
+        unique=True,
         max_length=200,
         null=True,
         blank=True,
         validators=[MaxLengthValidator(limit_value=200)],
     )
     linkedin = models.CharField(
+        unique=True,
         max_length=200,
         null=True,
         blank=True,
