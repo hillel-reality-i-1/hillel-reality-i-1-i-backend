@@ -5,6 +5,7 @@ from apps.content.models import Post, Comment
 from apps.files.models import Image
 from apps.users.models import User
 from phonenumber_field.modelfields import PhoneNumberField
+from rest_framework import serializers
 
 
 class UserProfile(models.Model):
@@ -58,3 +59,35 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s user profile with id {self.pk}"
+
+    def clean(self):
+        # Check unique of telegram, instagram, facebook, linkedin
+        if (
+            self.telegram is not None
+            and UserProfile.objects.exclude(pk=self.pk).filter(telegram=self.telegram).exists()
+        ):
+            raise serializers.ValidationError({"telegram": "Such telegram account already exists."})
+
+        if (
+            self.instagram is not None
+            and UserProfile.objects.exclude(pk=self.pk).filter(instagram=self.instagram).exists()
+        ):
+            raise serializers.ValidationError({"instagram": "Such instagram account already exists."})
+
+        if (
+            self.facebook is not None
+            and UserProfile.objects.exclude(pk=self.pk).filter(facebook=self.facebook).exists()
+        ):
+            raise serializers.ValidationError({"facebook": "Such facebook account already exists."})
+
+        if (
+            self.linkedin is not None
+            and UserProfile.objects.exclude(pk=self.pk).filter(linkedin=self.linkedin).exists()
+        ):
+            raise serializers.ValidationError({"linkedin": "Such linkedin account already exists."})
+
+        super().clean()
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)

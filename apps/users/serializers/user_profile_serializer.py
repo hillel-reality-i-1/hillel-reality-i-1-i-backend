@@ -3,29 +3,9 @@ from rest_framework import serializers
 from apps.content.api.serializers import PostSerializer, CommentSerializer, SavedPostSerializer, SavedCommentSerializer
 from apps.files.api.serializers import ImageSerializer
 from apps.location.serializers.city_serializer import CitySerializerNew
-
-# from apps.location.serializers.city_serializer import CitySerializer
 from apps.location.serializers.country_serializer import CountrySerializer
 from apps.users.models import UserProfile
 import re
-
-# from django.utils.translation import get_language
-
-
-# class CitySerializerNew(serializers.ModelSerializer):
-#     name = serializers.SerializerMethodField(read_only=True)
-#
-#     class Meta:
-#         model = City
-#         fields = [
-#             "id",
-#             "name",
-#             "country",
-#         ]
-#
-#     def get_name(self, obj):
-#         language = get_language()
-#         return obj.alternate_names if language == "uk" else obj.name
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -82,6 +62,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return CommentSerializer(saved_comments, many=True).data
 
     def create(self, validated_data):
+        validated_data = self.check_empty_strings(validated_data)
+
         user = validated_data.get("user")
         if not UserProfile.objects.filter(user=user).exists():
             country = validated_data.get("country_id")
@@ -97,6 +79,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return user_profile
 
     def update(self, instance, validated_data):
+        validated_data = self.check_empty_strings(validated_data)
+
         instance.country = validated_data.get("country_id")
         instance.city = validated_data.get("city_id")
         instance.telegram = validated_data.get("telegram", instance.telegram)
@@ -112,14 +96,22 @@ class UserProfileSerializer(serializers.ModelSerializer):
             instance.twilio_verification_sid = None
             instance.phone_verified_request_id = None
 
+        if "phone_number" in list(validated_data.keys()) and not validated_data["phone_number"]:
+            instance.phone_number = None
+            instance.phone_verified = False
+            instance.twilio_verification_sid = None
+            instance.phone_verified_request_id = None
+
         instance.about_my_self = validated_data.get("about_my_self", instance.about_my_self)
         instance.country = validated_data.get("country", instance.country)
         instance.city = validated_data.get("city", instance.city)
 
         instance.save()
+
         return instance
 
-    def validate_username(self, value, field_name):
+    @staticmethod
+    def validate_username(value, field_name):
         if value is not None:
             pattern = r"^[a-zA-Z0-9_.-@!#$%^&*()<>/?|}{~:]*$"
             if not re.match(pattern, value):
@@ -139,3 +131,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     def validate_linkedin(self, value):
         return self.validate_username(value, "LinkedIn")
+
+    @staticmethod
+    def check_empty_strings(dictionary):
+        for key, value in dictionary.items():
+            if isinstance(value, str) and value.strip() == "":
+                dictionary[key] = None
+        return dictionary
