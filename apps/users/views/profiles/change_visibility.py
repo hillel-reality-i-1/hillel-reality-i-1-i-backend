@@ -50,7 +50,7 @@ class ChangeContactVisibilityView(APIView):
 
             return Response(
                 data={
-                    "details": f"Visibility of {contact_type} set to {result}"
+                    contact_type: result
                 },
                 status=status.HTTP_200_OK
             )
