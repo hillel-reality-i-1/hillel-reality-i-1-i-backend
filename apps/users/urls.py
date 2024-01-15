@@ -65,7 +65,7 @@ urlpatterns = [
     path("auth/registration_user_profile/", RegisterProfileView.as_view(), name="registration_user_profile"),
     path("auth/registration_user_profile_ext/", RegisterProfileExtView.as_view(), name="registration_user_profile_ext"),
     path("accounts/resend-email/", ResendEmailVerificationView.as_view(), name="rest_resend_email"),
-    path("accounts/change-contact-visibility", ChangeContactVisibilityView.as_view(), name="change_contact_visibility"),
+    path("accounts/change-contact-visibility/", ChangeContactVisibilityView.as_view(), name="change_contact_visibility"),
     path("accounts/confirm-email/", VerifyEmailView.as_view(), name="account_confirm_email"),
     path("auth/password/reset/", PasswordResetView.as_view(), name="rest_password_reset"),
     path(
