@@ -11,6 +11,7 @@ class ChangeContactVisibilityView(APIView):
     permission_classes = [
         IsAuthenticated,
     ]
+    serializer_class = ContactVisibilitySerializer
 
     def post(self, request):
         serializer = ContactVisibilitySerializer(data=request.data)
