@@ -1,7 +1,7 @@
 {% load i18n %}
 {% autoescape off %}
 {% blocktrans %}
-Вітаємо!
+Вас вітає U-Help!
 {% endblocktrans %}
 
 {% block content %}{% endblock content %}
