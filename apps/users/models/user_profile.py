@@ -30,6 +30,13 @@ class UserProfile(models.Model):
     # Fields for Twilio verification
     twilio_verification_sid = models.CharField(max_length=255, null=True, blank=True)
 
+    email_is_visible = models.BooleanField(default=True)
+    phone_is_visible = models.BooleanField(default=True)
+    telegram_is_visible = models.BooleanField(default=True)
+    instagram_is_visible = models.BooleanField(default=True)
+    facebook_is_visible = models.BooleanField(default=True)
+    linkedin_is_visible = models.BooleanField(default=True)
+
     telegram = models.CharField(
         unique=True,
         max_length=50,
