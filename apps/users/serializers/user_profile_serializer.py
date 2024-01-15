@@ -5,7 +5,6 @@ from apps.files.api.serializers import ImageSerializer
 from apps.location.serializers.city_serializer import CitySerializerNew
 from apps.location.serializers.country_serializer import CountrySerializer
 from apps.users.models import UserProfile
-import re
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -109,28 +108,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
-
-    @staticmethod
-    def validate_username(value, field_name):
-        if value is not None:
-            pattern = r"^[a-zA-Z0-9_.-@!#$%^&*()<>/?|}{~:]*$"
-            if not re.match(pattern, value):
-                raise serializers.ValidationError(
-                    f"{field_name} username can only contain latin letters, numbers, special symbols"
-                )
-        return value
-
-    def validate_telegram(self, value):
-        return self.validate_username(value, "Telegram")
-
-    def validate_instagram(self, value):
-        return self.validate_username(value, "Instagram")
-
-    def validate_facebook(self, value):
-        return self.validate_username(value, "Facebook")
-
-    def validate_linkedin(self, value):
-        return self.validate_username(value, "LinkedIn")
 
     @staticmethod
     def check_empty_strings(dictionary):
