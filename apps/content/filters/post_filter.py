@@ -10,7 +10,6 @@ class PostFilter(django_filters.FilterSet):
         fields = {
             "country": ["exact"],
             "creation_date": ["gte", "lte"],
-            "professional_tags": ["exact"],
             "category": ["exact"],
         }
 
