@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-
+from django.utils.translation import get_language
 from apps.files.api.serializers import ImageSerializer
 from .reaction_serializer import ReactionSerializer
 from .comment_serializer import CommentSerializer
@@ -66,6 +66,9 @@ class PostSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["country"] = [country.name for country in instance.country.all()]
+        language = get_language()
+        representation["country"] = [
+            country.alternate_names if language != "en" else country.name for country in instance.country.all()
+        ]
         representation["category"] = [category.name for category in instance.category.all()]
         return representation
