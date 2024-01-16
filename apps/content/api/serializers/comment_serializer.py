@@ -4,7 +4,6 @@ from apps.content.models import Comment
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source="author.username", read_only=True)
     replies = serializers.SerializerMethodField()
     is_parent = serializers.BooleanField(read_only=True)
     helpful_count = serializers.IntegerField(read_only=True)
@@ -26,7 +25,7 @@ class CommentSerializer(serializers.ModelSerializer):
             "is_parent",
             "is_contribution",
         ]
-        read_only_fields = ["post", "helpful_count", "not_helpful_count"]
+        read_only_fields = ["post", "author", "helpful_count", "not_helpful_count"]
 
     def get_replies(self, obj):
         replies = Comment.objects.filter(parent=obj)

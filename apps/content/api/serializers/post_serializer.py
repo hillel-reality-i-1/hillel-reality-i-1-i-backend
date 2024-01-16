@@ -23,16 +23,16 @@ class PostSerializer(serializers.ModelSerializer):
             "id",
             "author",
             "title",
-            "images",
+            "category",
             "country",
-            "professional_tags",
             "content",
             "reactions",
             "creation_date",
             "comments",
             "contributions",
-            "category",
+            "images",
         ]
+        read_only_fields = ["author"]
 
     def get_comments(self, obj):
         root_comments = Comment.objects.filter(post=obj, parent=None)
@@ -67,6 +67,5 @@ class PostSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation["country"] = [country.name for country in instance.country.all()]
-        representation["professional_tags"] = [tag.name for tag in instance.professional_tags.all()]
         representation["category"] = [category.name for category in instance.category.all()]
         return representation

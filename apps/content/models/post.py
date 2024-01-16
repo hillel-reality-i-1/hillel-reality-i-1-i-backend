@@ -6,7 +6,7 @@ from django.db.models import Count
 
 from apps.content.models.reaction import Reaction
 from apps.files.models import Image
-from apps.expert.models import Profession, Category
+from apps.expert.models import Category
 
 User = get_user_model()
 
@@ -14,19 +14,15 @@ User = get_user_model()
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(validators=[MinLengthValidator(2)], max_length=100)
+    category = models.ManyToManyField(Category, related_name="post_category")
     country = models.ManyToManyField(Country, related_name="post_countries")
     content = models.CharField(validators=[MinLengthValidator(100)], max_length=10000)
     images = models.ManyToManyField(Image, related_name="post_images", blank=True)
-    professional_tags = models.ManyToManyField(Profession, related_name="professional_tags")
     creation_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
-    category = models.ManyToManyField(Category, related_name="post_category")
 
     def get_images(self):
         return self.images.all()
-
-    def get_professional_tags(self):
-        return self.professional_tags.all()
 
     def get_reactions_count(self):
         return self.reactions.values("reaction_type").annotate(count=Count("id"))
