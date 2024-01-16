@@ -1,6 +1,4 @@
 from rest_framework import serializers
-from apps.expert.models import Profession, Service
-from apps.expert.serializers import ProfessionSerializer, ServiceSerializer
 from apps.files.api.serializers.porfolio_serializer import PortfolioSerializer
 from apps.files.models import File
 from apps.users.models import UserProfileExtended, UserProfile
@@ -8,16 +6,7 @@ from apps.users.models import UserProfileExtended, UserProfile
 
 class UserProfileExtendedSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField(read_only=True)
-
     portfolio = PortfolioSerializer(read_only=True)
-    profession = ProfessionSerializer(read_only=True)
-    service = ServiceSerializer(read_only=True)
-    profession_id = serializers.PrimaryKeyRelatedField(
-        queryset=Profession.objects.all(), source="profession", write_only=True, required=False, allow_null=True
-    )
-    service_id = serializers.PrimaryKeyRelatedField(
-        queryset=Service.objects.all(), source="service", write_only=True, required=False, allow_null=True
-    )
 
     class Meta:
         model = UserProfileExtended
@@ -26,16 +15,26 @@ class UserProfileExtendedSerializer(serializers.ModelSerializer):
             "user",
             "profession",
             "service",
-            "profession_id",
-            "service_id",
             "portfolio",
         )
 
     def get_user(self, obj):
         return obj.user.pk
 
+    def validate_profession(self, value):
+        if len(value) > 5:
+            raise serializers.ValidationError("You can add no more than 5 professions")
+        return value
+
+    def validate_service(self, value):
+        if len(value) > 5:
+            raise serializers.ValidationError("You can add no more than 5 services")
+        return value
+
     def to_representation(self, instance):
         data = super().to_representation(instance)
+        data["profession"] = [profession.name for profession in instance.profession.all()]
+        data["service"] = [service.name for service in instance.service.all()]
         portfolio = File.objects.filter(author=instance.user)
         data["portfolio"] = PortfolioSerializer(portfolio, many=True).data
         return data
@@ -44,7 +43,11 @@ class UserProfileExtendedSerializer(serializers.ModelSerializer):
         user = validated_data.get("user")
         if UserProfile.objects.filter(user=user).exists():
             if not UserProfileExtended.objects.filter(user=user).exists():
+                professions = validated_data.pop("profession", [])
+                services = validated_data.pop("service", [])
                 expert_user_profile = UserProfileExtended.objects.create(**validated_data)
+                expert_user_profile.profession.set(professions)
+                expert_user_profile.service.set(services)
             else:
                 raise serializers.ValidationError("This user already has an expert profile")
         else:
