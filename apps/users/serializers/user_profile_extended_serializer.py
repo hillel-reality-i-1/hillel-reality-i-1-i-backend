@@ -49,7 +49,7 @@ class UserProfileExtendedSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("This user already has an expert profile")
         else:
             raise serializers.ValidationError(
-                "In order to create an expert profile, " "you first need to create a user profile."
+                "In order to create an expert profile, you first need to create a user profile."
             )
 
         return expert_user_profile
