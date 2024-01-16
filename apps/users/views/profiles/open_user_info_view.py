@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
+from apps.expert.models import Profession, Service
 from apps.files.models import File
 from apps.users.models import User
 
@@ -18,13 +19,16 @@ class UserOpenInfoView(APIView):
         return get_object_or_404(
             User.objects.select_related(
                 "userprofile",
-                "userprofileextended",
                 "userprofile__country",
                 "userprofile__city",
                 "userprofile__profile_picture",
-                "userprofileextended__profession",
-                "userprofileextended__service",
-            ).prefetch_related(Prefetch("file_set", queryset=File.objects.all(), to_attr="user_files")),
+            ).prefetch_related(
+                Prefetch("file_set", queryset=File.objects.all(), to_attr="user_files"),
+                Prefetch(
+                    "userprofileextended__profession", queryset=Profession.objects.all(), to_attr="user_professions"
+                ),
+                Prefetch("userprofileextended__service", queryset=Service.objects.all(), to_attr="user_services"),
+            ),
             id=user_id,
         )
 
@@ -46,10 +50,7 @@ class UserOpenInfoView(APIView):
         if user_profile.linkedin_is_visible:
             keys.append("linkedin")
         return (
-            {
-                key: str(getattr(user_profile, key)) if getattr(user_profile, key) else None
-                for key in keys
-            }
+            {key: str(getattr(user_profile, key)) if getattr(user_profile, key) else None for key in keys}
             if user_profile
             else None
         )
