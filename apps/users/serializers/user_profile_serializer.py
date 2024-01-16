@@ -32,7 +32,29 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = "__all__"
+        # fields = "__all__"
+        fields = (
+            "id",
+            "user",
+            "email",
+            "full_name",
+            "username",
+            "profile_picture",
+            "country",
+            "city",
+            "country_id",
+            "city_id",
+            "telegram",
+            "instagram",
+            "facebook",
+            "linkedin",
+            "phone_number",
+            "about_my_self",
+            "phone_verified",
+            "twilio_verification_sid",
+            "saved_posts",
+            "saved_comments",
+        )
         read_only_fields = (
             "twilio_verification_sid",
             "phone_verified",
@@ -67,15 +89,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
         if not UserProfile.objects.filter(user=user).exists():
             country = validated_data.get("country_id")
             city = validated_data.get("city_id")
-            if country:
-                validated_data["country_id"] = country.pk
-            if city:
-                validated_data["city_id"] = city.pk
-            user_profile = UserProfile.objects.create(**validated_data)
+            validated_data["country_id"] = country.pk if country else None
+            validated_data["city_id"] = city.pk if city else None
         else:
             raise serializers.ValidationError("This user already has a profile")
 
-        return user_profile
+        return UserProfile.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         validated_data = self.check_empty_strings(validated_data)
@@ -89,14 +108,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
         new_phone_number = validated_data.get("phone_number")
 
-        if new_phone_number:
-            instance.phone_number = new_phone_number
-            instance.phone_verified = False
-            instance.twilio_verification_sid = None
-            instance.phone_verified_request_id = None
-
-        if "phone_number" in list(validated_data.keys()) and not validated_data["phone_number"]:
-            instance.phone_number = None
+        if new_phone_number or "phone_number" in list(validated_data.keys()) and validated_data["phone_number"] is None:
+            instance.phone_number = new_phone_number if new_phone_number else None
             instance.phone_verified = False
             instance.twilio_verification_sid = None
             instance.phone_verified_request_id = None
