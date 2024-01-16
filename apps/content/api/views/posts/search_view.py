@@ -8,10 +8,14 @@ from apps.content.api.serializers import PostSerializer
 from apps.content.models import Post
 from apps.expert.models import Category
 import json
+from rest_framework.permissions import AllowAny
+from apps.content.api.paginations import TenHundredPagination
 
 
 class SearchView(generics.ListAPIView):
     serializer_class = PostSerializer
+    permission_classes = [AllowAny]
+    pagination_class = TenHundredPagination
 
     @staticmethod
     def validate_query_data(query_data):
