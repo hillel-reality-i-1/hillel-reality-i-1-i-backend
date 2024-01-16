@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-
+from django.utils.translation import get_language
 from apps.expert.models import Profession, Service
 from apps.files.models import File
 from apps.users.models import User
@@ -49,11 +49,15 @@ class UserOpenInfoView(APIView):
             keys.append("facebook")
         if user_profile.linkedin_is_visible:
             keys.append("linkedin")
-        return (
+        user_profile_dict = (
             {key: str(getattr(user_profile, key)) if getattr(user_profile, key) else None for key in keys}
             if user_profile
             else None
         )
+
+        self._set_location_language(user_profile_dict, user_profile)
+
+        return user_profile_dict
 
     def _get_user_profile_dict_ext(self, user_profile_ext):
         return (
@@ -99,3 +103,11 @@ class UserOpenInfoView(APIView):
         combined_data = self._get_combined_data(user_info, user_profile, user_profile_dict, user_profile_dict_ext)
 
         return Response(combined_data, status=status.HTTP_200_OK)
+
+    def _set_location_language(self, dct, profile):
+        language = get_language()
+        if dct:
+            if profile.country is not None:
+                dct["country"] = profile.country.alternate_names if language != "en" else profile.country.name
+            if profile.city is not None:
+                dct["city"] = profile.city.alternate_names if language != "en" else profile.city.name
