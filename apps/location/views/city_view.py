@@ -1,25 +1,16 @@
 from rest_framework import viewsets
-
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
+from django.utils.translation import get_language
 from cities_light.models import City
 
 from apps.location.serializers.city_serializer import CitySerializerNew
 
 
-# from apps.content.api.paginations import ThreeHundredPagination
-# from apps.content.api.paginations.three_hundred_pagination import CityPagination
-# from apps.location.serializers.city_serializer import CitySerializer
-
-
-# class CityListView(APIView):
-#     def get(self, request):
-#         cities = City.objects.all()
-#         serializer = CitySerializer(cities, many=True)
-#         return Response(serializer.data)
-
-
 class CityListView(viewsets.ModelViewSet):
-    queryset = City.objects.all()
     serializer_class = CitySerializerNew
     # pagination_class = CityPagination
+
+    def get_queryset(self):
+        language = get_language()
+        return (
+            City.objects.all().order_by("alternate_names") if language != "en" else City.objects.all().order_by("name")
+        )
