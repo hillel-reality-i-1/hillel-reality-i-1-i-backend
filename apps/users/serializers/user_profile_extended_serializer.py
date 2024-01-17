@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from rest_framework import serializers
 from apps.files.api.serializers.porfolio_serializer import PortfolioSerializer
 from apps.files.models import File
@@ -40,16 +41,18 @@ class UserProfileExtendedSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        user = validated_data.get("user")
+        user = validated_data.pop("user")
         if UserProfile.objects.filter(user=user).exists():
-            if not UserProfileExtended.objects.filter(user=user).exists():
-                professions = validated_data.pop("profession", [])
-                services = validated_data.pop("service", [])
-                expert_user_profile = UserProfileExtended.objects.create(**validated_data)
+            professions = validated_data.pop("profession", [])
+            services = validated_data.pop("service", [])
+            try:
+                expert_user_profile, created = UserProfileExtended.objects.update_or_create(
+                    user=user, defaults=validated_data
+                )
                 expert_user_profile.profession.set(professions)
                 expert_user_profile.service.set(services)
-            else:
-                raise serializers.ValidationError("This user already has an expert profile")
+            except IntegrityError:
+                raise serializers.ValidationError("Unable to create or update profile")
         else:
             raise serializers.ValidationError(
                 "In order to create an expert profile, you first need to create a user profile."

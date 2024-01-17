@@ -5,6 +5,7 @@ from apps.files.api.serializers import ImageSerializer
 from apps.location.serializers.city_serializer import CitySerializerNew
 from apps.location.serializers.country_serializer import CountrySerializer
 from apps.users.models import UserProfile
+from django.db import IntegrityError
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -85,16 +86,19 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data = self.check_empty_strings(validated_data)
 
-        user = validated_data.get("user")
-        if not UserProfile.objects.filter(user=user).exists():
-            country = validated_data.get("country_id")
-            city = validated_data.get("city_id")
-            validated_data["country_id"] = country.pk if country else None
-            validated_data["city_id"] = city.pk if city else None
-        else:
-            raise serializers.ValidationError("This user already has a profile")
+        user = validated_data.pop("user")
+        country = validated_data.get("country_id")
+        city = validated_data.get("city_id")
 
-        return UserProfile.objects.create(**validated_data)
+        validated_data["country_id"] = country.pk if country else None
+        validated_data["city_id"] = city.pk if city else None
+
+        try:
+            profile, created = UserProfile.objects.update_or_create(user=user, defaults=validated_data)
+        except IntegrityError:
+            raise serializers.ValidationError("Unable to create or update profile")
+
+        return profile
 
     def update(self, instance, validated_data):
         validated_data = self.check_empty_strings(validated_data)
