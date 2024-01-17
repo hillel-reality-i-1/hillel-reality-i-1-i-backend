@@ -12,7 +12,6 @@ class SavedPostSerializer(serializers.ModelSerializer):
             "title",
             "images",
             "country",
-            "professional_tags",
             "content",
             "reactions",
             "creation_date",
