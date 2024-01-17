@@ -12,7 +12,7 @@ from rest_framework import serializers
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone_number = PhoneNumberField(max_length=15, null=True, blank=True, unique=True)
+    phone_number = PhoneNumberField(max_length=14, null=True, blank=True, unique=True)
     about_my_self = models.TextField(
         max_length=500,
         null=True,
