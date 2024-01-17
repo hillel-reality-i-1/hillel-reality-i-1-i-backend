@@ -112,7 +112,8 @@ class UserProfile(models.Model):
     @staticmethod
     def validate_social_media_name(value, field_name):
         if value is not None:
-            pattern = r"^[a-zA-Z0-9_.-@!#$%^&*()<>/?|}{~:]*$"
+            pattern = r"^[a-zA-Z0-9-_.-@!#$%^&*()<>/?|}{~:]*$"
+
             if not re.match(pattern, value):
                 raise serializers.ValidationError(
                     f"{field_name} username can only contain latin letters, numbers, special symbols"
