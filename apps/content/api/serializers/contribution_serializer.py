@@ -4,7 +4,6 @@ from apps.content.models import Comment
 
 
 class ContributionSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source="author.username", read_only=True)
     helpful_count = serializers.IntegerField(read_only=True)
     not_helpful_count = serializers.IntegerField(read_only=True)
     is_contribution = serializers.BooleanField(read_only=True)

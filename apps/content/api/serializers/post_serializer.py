@@ -46,11 +46,6 @@ class PostSerializer(serializers.ModelSerializer):
         serializer = CommentSerializer(contributions, many=True)
         return serializer.data
 
-    def validate_professional_tags(self, value):
-        if len(value) > 3:
-            raise serializers.ValidationError("Ви можете додати до 3 професийніх галузей")
-        return value
-
     def validate_category(self, value):
         if len(value) > 3:
             raise serializers.ValidationError("Ви можете додати до 3 категорій")
