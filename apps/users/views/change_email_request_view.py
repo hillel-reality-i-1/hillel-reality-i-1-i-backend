@@ -51,8 +51,9 @@ class ChangeEmailRequestView(APIView):
         # Создание и отправка письма с токеном
         token = token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
+        encoded_new_email = urlsafe_base64_encode(force_bytes(new_email))
 
-        self.get_adapter().send_email_change_mail(uid, token, new_email)
+        self.get_adapter().send_email_change_mail(uid, token, new_email, encoded_new_email)
 
         return Response(
             data={"detail": "An email with instructions has been sent to a new email address."},
@@ -61,8 +62,7 @@ class ChangeEmailRequestView(APIView):
 
 
 class ChangeEmailConfirmView(APIView):
-    def get(self, request, uidb64, token, *args, **kwargs):
-        new_email = request.query_params.get("new_email")
+    def get(self, request, uidb64, token, encoded_new_email, *args, **kwargs):
 
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
@@ -70,14 +70,20 @@ class ChangeEmailConfirmView(APIView):
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
             raise NotFound("User is not found.")
 
+        try:
+            new_email_address = urlsafe_base64_decode(encoded_new_email).decode()
+            new_email, _ = EmailAddress.objects.get_or_create(email=new_email_address)
+            new_email.verified = True
+        except (TypeError, ValueError, OverflowError):
+            raise NotFound("Invalid email.")
+
         if token_generator.check_token(user, token):
             with transaction.atomic():
-                user.email = new_email
+                user.email = new_email.email
                 user.save()
 
-                email_address = EmailAddress.objects.get(user=user)
-                email_address.email = new_email
-                email_address.save()
+                new_email.user = user
+                new_email.save()
             return Response({"detail": "Email successfully changed."}, status=status.HTTP_200_OK)
         else:
             return Response({"detail": "Wrong token."}, status=status.HTTP_400_BAD_REQUEST)

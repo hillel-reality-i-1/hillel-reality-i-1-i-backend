@@ -59,12 +59,12 @@ class CustomAdapter(DefaultAccountAdapter):
         # print(ret)
         return url
 
-    def get_email_change_url(self, uid, key):
-        url = get_frontend_url("front_change_email", uid, key)
+    def get_email_change_url(self, uid, key, encoded_new_email):
+        url = get_frontend_url("front_change_email", uid, key, encoded_new_email)
         return url
 
-    def send_email_change_mail(self, encoded_uid, key, new_email):
-        change_email_url = self.get_email_change_url(encoded_uid, key)
+    def send_email_change_mail(self, encoded_uid, key, new_email, encoded_new_email):
+        change_email_url = self.get_email_change_url(encoded_uid, key, encoded_new_email)
         ctx = {
             "current_site": get_current_site(context.request),
             "change_email_url": change_email_url,

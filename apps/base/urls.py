@@ -11,5 +11,5 @@ urlpatterns = [
     path("createNewPasswordForm/<str:user_id>/<str:key>/", TemplateView.as_view(), name="front_reset_password"),
     path("deleteAllContent/<str:key>/", TemplateView.as_view(), name="front_account_delete_all_content"),
     path("set-language/<str:language_code>/", set_language_api, name="set_language"),
-    path("change_email/<str:uid>/<str:key>", TemplateView.as_view(), name="front_change_email")
+    path("change_email/<str:uid>/<str:key>/<str:new_email>", TemplateView.as_view(), name="front_change_email")
 ]
