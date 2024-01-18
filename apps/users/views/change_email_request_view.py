@@ -63,7 +63,6 @@ class ChangeEmailRequestView(APIView):
 
 class ChangeEmailConfirmView(APIView):
     def get(self, request, uidb64, token, encoded_new_email, *args, **kwargs):
-
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
             user = get_user_model().objects.get(pk=uid)
@@ -72,7 +71,9 @@ class ChangeEmailConfirmView(APIView):
 
         try:
             new_email_address = urlsafe_base64_decode(encoded_new_email).decode()
-            new_email, _ = EmailAddress.objects.get_or_create(email=new_email_address)
+            user_emails = EmailAddress.objects.filter(user=user)
+            user_emails.delete()
+            new_email = EmailAddress.objects.create(user=user, email=new_email_address)
             new_email.verified = True
         except (TypeError, ValueError, OverflowError):
             raise NotFound("Invalid email.")
