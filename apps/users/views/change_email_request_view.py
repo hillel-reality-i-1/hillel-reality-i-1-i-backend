@@ -83,7 +83,6 @@ class ChangeEmailConfirmView(APIView):
             with transaction.atomic():
                 user.email = new_email.email
                 user.save()
-
                 new_email.user = user
                 new_email.save()
             return Response({"detail": "Email successfully changed."}, status=status.HTTP_200_OK)
