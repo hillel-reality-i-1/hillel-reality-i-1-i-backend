@@ -67,7 +67,7 @@ class CustomAdapter(DefaultAccountAdapter):
         change_email_url = self.get_email_change_url(encoded_uid, key)
         ctx = {
             "current_site": get_current_site(context.request),
-            "delete_all_content_url": change_email_url,
+            "change_email_url": change_email_url,
         }
         email_template = "account/email/email_change"
         self.send_mail(email_template, new_email, ctx)
