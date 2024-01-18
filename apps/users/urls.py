@@ -96,7 +96,7 @@ allauth_views_urlpatterns = [
 change_email_urlpatterns = [
     path("change-email/request/", ChangeEmailRequestView.as_view(), name="change-email-request"),
     path(
-        "change-email/confirm/<str:uidb64>/<str:token>/<str:new_email>",
+        "change-email/confirm/<str:uidb64>/<str:token>/<str:new_email>/",
         ChangeEmailConfirmView.as_view(),
         name="change-email-confirm",
     ),
