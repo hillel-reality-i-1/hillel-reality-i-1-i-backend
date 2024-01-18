@@ -1,5 +1,7 @@
 from allauth.account.adapter import DefaultAccountAdapter
 from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from rest_framework import status
 from rest_framework.response import Response
 from django.conf import settings
@@ -10,6 +12,15 @@ from allauth.core import context
 
 
 class CustomAdapter(DefaultAccountAdapter):
+
+    def send_mail(self, template_prefix, email, context):
+        if getattr(settings, 'CUSTOM_SETTINGS_ACCOUNT_EMAIL_CELERY_SEND', False):
+            msg = self.render_mail(template_prefix, email, context)
+            # Serialize the message
+            serialized_msg = msg.__dict__
+            send_adapter_mail_task.delay(serialized_msg)
+        else:
+            super().send_mail(template_prefix, email, context)
 
     def send_delete_all_content_confirmation_mail(self, user, key):
         delete_all_content_url = self.get_delete_all_content_url(key)
@@ -48,11 +59,16 @@ class CustomAdapter(DefaultAccountAdapter):
         # print(ret)
         return url
 
-    def send_mail(self, template_prefix, email, context):
-        if getattr(settings, 'CUSTOM_SETTINGS_ACCOUNT_EMAIL_CELERY_SEND', False):
-            msg = self.render_mail(template_prefix, email, context)
-            # Serialize the message
-            serialized_msg = msg.__dict__
-            send_adapter_mail_task.delay(serialized_msg)
-        else:
-            super().send_mail(template_prefix, email, context)
+    def get_email_change_url(self, uid, key):
+        url = get_frontend_url("front_change_email", uid, key)
+        return url
+
+    def send_email_change_mail(self, encoded_uid, key, new_email):
+        change_email_url = self.get_email_change_url(encoded_uid, key)
+        ctx = {
+            "current_site": get_current_site(context.request),
+            "delete_all_content_url": change_email_url,
+        }
+        email_template = "account/email/email_change"
+        self.send_mail(email_template, new_email, ctx)
+

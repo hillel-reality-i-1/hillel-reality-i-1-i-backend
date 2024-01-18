@@ -1,0 +1,18 @@
+{% extends "account/email/base_message.txt" %}
+{% load account %}
+{% load i18n %}
+
+{% block content %}{% autoescape off %}
+{% user_display user as user_display %}
+{% blocktrans %}
+
+Ви отримали цей лист для зміни електронної пошти на нашому сайті U-Help. Будь ласка, скористайтеся посиланням нижче, щоб продовжити:
+
+{{ change_email_url }}
+
+Строк дії посилання 60 хвилин.
+Якщо Ви не робили запит щодо зміни електронної пошти на сайті U-Help — проігноруйте цей електронний лист.
+
+{% endblocktrans %}
+{% endautoescape %}
+{% endblock content %}

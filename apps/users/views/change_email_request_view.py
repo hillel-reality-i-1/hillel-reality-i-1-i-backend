@@ -5,27 +5,18 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.core.mail import send_mail
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth import get_user_model
 from django.utils.http import urlsafe_base64_decode
 from rest_framework.exceptions import NotFound, ValidationError
+
+from apps.users.adapters import CustomAdapter
 from apps.users.serializers.change_email_serializer import ChangeEmailSerializer
 from django.contrib.auth.hashers import check_password
 
 from apps.users.token_generators import EmailChangeTokenGenerator
-from core.settings import env, ALLOWED_HOSTS, DEBUG
 
-
-PORT = "8000"
-
-if DEBUG:
-    HOST = f"http://{ALLOWED_HOSTS[1]}:{PORT}"
-else:
-    HOST = ALLOWED_HOSTS[0]
-
-EMAIL_HOST_USER = env.str("EMAIL_HOST_USER")
 
 token_generator = EmailChangeTokenGenerator()
 
@@ -35,6 +26,11 @@ class ChangeEmailRequestView(APIView):
     permission_classes = [
         IsAuthenticated,
     ]
+
+    adapter_class = CustomAdapter
+
+    def get_adapter(self):
+        return self.adapter_class()
 
     @swagger_auto_schema(request_body=ChangeEmailSerializer)
     def post(self, request, *args, **kwargs):
@@ -49,19 +45,18 @@ class ChangeEmailRequestView(APIView):
         if not check_password(password, user.password):
             raise ValidationError("Wrong password.")
 
+        if get_user_model().objects.filter(email=new_email).exists():
+            raise ValidationError("User with such email has already been created.")
+
         # Создание и отправка письма с токеном
         token = token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
 
-        email_subject = "Change email"
-        email_message = (
-            f"To change your email, please use this link: "
-            f"{HOST}/api/v1/change-email/confirm/{uid}/{token}/?new_email={new_email}"
-        )
-        send_mail(email_subject, email_message, EMAIL_HOST_USER, [new_email])
+        self.get_adapter().send_email_change_mail(uid, token, new_email)
 
         return Response(
-            {"detail": "An email with instructions has been sent to a new email address."}, status=status.HTTP_200_OK
+            data={"detail": "An email with instructions has been sent to a new email address."},
+            status=status.HTTP_200_OK,
         )
 
 
