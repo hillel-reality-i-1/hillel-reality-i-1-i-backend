@@ -75,6 +75,7 @@ class ChangeEmailConfirmView(APIView):
             user_emails.delete()
             new_email = EmailAddress.objects.create(user=user, email=new_email_address)
             new_email.verified = True
+            new_email.primary = True
         except (TypeError, ValueError, OverflowError):
             raise NotFound("Invalid email.")
 
