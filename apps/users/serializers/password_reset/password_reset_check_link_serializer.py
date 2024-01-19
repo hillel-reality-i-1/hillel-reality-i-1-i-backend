@@ -7,16 +7,16 @@ from apps.users.token_generators import PasswordResetTokenGenerator
 
 
 class PasswordResetCheckLinkSerializer(serializers.Serializer):
-    user_id = serializers.CharField()
-    token = serializers.CharField()
+    uid = serializers.CharField(required=True)
+    token = serializers.CharField(required=True)
 
     def validate(self, attrs):
 
         try:
-            user_id = urlsafe_base64_decode(attrs["user_id"]).decode()
-            user = get_user_model().objects.get(pk=user_id)
+            uid = urlsafe_base64_decode(attrs["uid"]).decode()
+            user = get_user_model().objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
-            raise ValidationError({'user_id': ['Invalid value']})
+            raise ValidationError({'uid': ['Invalid value']})
 
         checker = PasswordResetTokenGenerator().check_token(user, attrs['token'])
         if not checker['status']:
