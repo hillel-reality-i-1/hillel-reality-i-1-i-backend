@@ -1,3 +1,4 @@
+from django.contrib.sites.shortcuts import get_current_site
 from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny
@@ -72,7 +73,10 @@ class UserOpenInfoView(APIView):
             else None
         )
 
-    def _get_combined_data(self, user_info, user_profile, user_profile_dict, user_profile_dict_ext):
+    def _get_combined_data(self, request, user_info, user_profile, user_profile_dict, user_profile_dict_ext):
+        current_site = get_current_site(request)
+        current_domain = current_site.domain
+
         user_data = {
             "full_name": user_info.full_name,
             "username": user_info.username,
@@ -85,7 +89,7 @@ class UserOpenInfoView(APIView):
             "user_profile_extended": user_profile_dict_ext,
             "portfolio": [
                 {
-                    "file_url": str(file.file.url) if file else None,
+                    "file_url": f"{current_domain}{str(file.file.url)}" if file else None,
                 }
                 for file in user_info.user_files
             ],
@@ -100,7 +104,9 @@ class UserOpenInfoView(APIView):
         user_profile_ext = user_info.userprofileextended if hasattr(user_info, "userprofileextended") else None
         user_profile_dict_ext = self._get_user_profile_dict_ext(user_profile_ext)
 
-        combined_data = self._get_combined_data(user_info, user_profile, user_profile_dict, user_profile_dict_ext)
+        combined_data = self._get_combined_data(
+            request, user_info, user_profile, user_profile_dict, user_profile_dict_ext
+        )
 
         return Response(combined_data, status=status.HTTP_200_OK)
 
