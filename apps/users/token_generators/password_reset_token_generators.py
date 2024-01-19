@@ -1,3 +1,5 @@
+import hashlib
+
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator as _PasswordResetTokenGenerator
 
@@ -18,8 +20,8 @@ class PasswordResetTokenGenerator(_PasswordResetTokenGenerator):
         )
         email_field = user.get_email_field_name()
         email = getattr(user, email_field, "") or ""
-        # hash_value = f"{user.pk}{user.password}{login_timestamp}{timestamp}{email}"
-        hash_value = f"{user.pk}{login_timestamp}{timestamp}{email}"
+        hash_value = f"{user.pk}{user.password}{login_timestamp}{timestamp}{email}"
+        # hash_value = f"{user.pk}{login_timestamp}{timestamp}{email}"
         hash_string = salted_hmac(
             self.key_salt,
             hash_value,
@@ -28,7 +30,13 @@ class PasswordResetTokenGenerator(_PasswordResetTokenGenerator):
         ).hexdigest()[
             ::2
         ]  # Limit to shorten the URL.
-        return "%s-%s" % (ts_b36, hash_string)
+
+        token_string = f"{ts_b36}-{hash_string}"
+
+        token_hash = hashlib.sha256(token_string.encode('utf-8')).hexdigest()[::3]
+        final_token = f"{token_string}-{token_hash}"
+
+        return final_token
 
     def check_token(self, user, token):
         """
@@ -38,7 +46,7 @@ class PasswordResetTokenGenerator(_PasswordResetTokenGenerator):
             return {'status': False, 'details': 'token is empty'}
         # Parse the token
         try:
-            ts_b36, _ = token.split("-")
+            ts_b36, hash_string, token_hash = token.split("-")
         except ValueError:
             return {'status': False, 'details': 'bad token'}
 
@@ -47,15 +55,21 @@ class PasswordResetTokenGenerator(_PasswordResetTokenGenerator):
         except ValueError:
             return {'status': False, 'details': 'bad token'}
 
+        token_string = f"{ts_b36}-{hash_string}"
+
+        if token_hash != hashlib.sha256(token_string.encode('utf-8')).hexdigest()[::3]:
+            return {'status': False, 'details': 'token has been corrupted'}
+
         # Check that the timestamp/uid has not been tampered with
         for secret in [self.secret, *self.secret_fallbacks]:
+            checking_token = self._make_token_with_timestamp(user, ts, secret)
             if constant_time_compare(
-                self._make_token_with_timestamp(user, ts, secret),
+                checking_token,
                 token,
             ):
                 break
         else:
-            return {'status': False, 'details': 'bad token'}
+            return {'status': False, 'details': 'token already has been used'}
 
         # Check the timestamp is within limit.
         change_email_timeout = getattr(settings, 'PASSWORD_RESET_TIMEOUT', 900)

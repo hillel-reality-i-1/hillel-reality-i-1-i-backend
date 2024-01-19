@@ -5,8 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from dj_rest_auth.views import PasswordResetConfirmView as _PasswordResetConfirmView
-
-from apps.users.serializers.password_reset_confirm_serializer import PasswordResetConfirmSerializer
+from apps.users.serializers import PasswordResetConfirmSerializer
 
 
 class PasswordResetConfirmView(_PasswordResetConfirmView):
