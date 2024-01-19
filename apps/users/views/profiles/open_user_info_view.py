@@ -78,6 +78,7 @@ class UserOpenInfoView(APIView):
     def _get_combined_data(self, request, user_info, user_profile, user_profile_dict, user_profile_dict_ext):
         current_site = get_current_site(request)
         current_domain = current_site.domain
+        protocol = "https" if request.is_secure() else "http"
 
         user_data = {
             "full_name": user_info.full_name,
@@ -91,7 +92,7 @@ class UserOpenInfoView(APIView):
             "user_profile_extended": user_profile_dict_ext,
             "portfolio": [
                 {
-                    "file_url": f"{current_domain}{str(file.file.url)}" if file else None,
+                    "file_url": f"{protocol}://{current_domain}{str(file.file.url)}" if file else None,
                 }
                 for file in user_info.user_files
             ],
