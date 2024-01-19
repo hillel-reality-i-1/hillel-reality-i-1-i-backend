@@ -1,10 +1,11 @@
-from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from apps.users.serializers import PasswordResetCheckLinkSerializer
 
 
-class PasswordResetCheckAPIView(APIView):
+class PasswordResetCheckAPIView(GenericAPIView):
+    serializer_class = PasswordResetCheckLinkSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = PasswordResetCheckLinkSerializer(data=request.data)
