@@ -19,8 +19,13 @@ class SearchView(generics.ListAPIView):
 
     @staticmethod
     def validate_query_data(query_data):
-        if not isinstance(query_data["query"], str):
-            raise serializers.ValidationError({"query": "The query parameter must be a string."})
+        if query_data["query"]:
+            if not (2 <= len(query_data["query"]) <= 100):
+                raise serializers.ValidationError(
+                    {"query": "The query parameter must be between 2 and 100 characters long."}
+                )
+            if not isinstance(query_data["query"], str):
+                raise serializers.ValidationError({"query": "The query parameter must be a string."})
 
         try:
             if query_data["countries_id"]:
@@ -65,7 +70,11 @@ class SearchView(generics.ListAPIView):
             Post.objects.annotate(
                 search=SearchVector("title", "content"),
             )
-            .filter(Q(search=SearchQuery(query)) | Q(author__full_name__icontains=query))
+            .filter(
+                Q(search=SearchQuery(query))
+                | Q(author__full_name__icontains=query)
+                | Q(author__username__icontains=query)
+            )
             .distinct()
         )
 
@@ -76,4 +85,4 @@ class SearchView(generics.ListAPIView):
         if categories:
             post_queryset = post_queryset.filter(category__name__in=categories)
 
-        return post_queryset
+        return post_queryset.order_by("-creation_date")
