@@ -63,7 +63,9 @@ class UserOpenInfoView(APIView):
     def _get_user_profile_dict_ext(self, user_profile_ext):
         return (
             {
-                key: str(getattr(user_profile_ext, key)) if getattr(user_profile_ext, key) else None
+                key: [el.name for el in getattr(user_profile_ext, key).all()]
+                if getattr(user_profile_ext, key)
+                else None
                 for key in [
                     "profession",
                     "service",
