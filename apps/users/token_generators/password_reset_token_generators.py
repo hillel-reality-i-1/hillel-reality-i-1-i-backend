@@ -58,7 +58,7 @@ class PasswordResetTokenGenerator(_PasswordResetTokenGenerator):
         token_string = f"{ts_b36}-{hash_string}"
 
         if token_hash != hashlib.sha256(token_string.encode('utf-8')).hexdigest()[::3]:
-            return {'status': False, 'details': 'token has been corrupted'}
+            return {'status': False, 'details': 'bad token'}
 
         # Check that the timestamp/uid has not been tampered with
         for secret in [self.secret, *self.secret_fallbacks]:
