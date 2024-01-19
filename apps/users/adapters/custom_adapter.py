@@ -1,7 +1,5 @@
 from allauth.account.adapter import DefaultAccountAdapter
 from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
 from rest_framework import status
 from rest_framework.response import Response
 from django.conf import settings
