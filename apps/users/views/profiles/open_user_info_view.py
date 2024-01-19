@@ -95,8 +95,6 @@ class UserOpenInfoView(APIView):
                 }
                 for file in user_info.user_files
             ],
-            "current_domain": current_site.domain,
-            "current_name": current_site.name,
         }
 
     def get(self, request, user_id, *args, **kwargs):
