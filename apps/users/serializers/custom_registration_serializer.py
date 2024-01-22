@@ -16,6 +16,9 @@ class CustomRegistrationSerializer(RegisterSerializer):
     def validate_email(self, value):
         if EmailAddress.objects.filter(email=value, verified=True).exists():
             raise serializers.ValidationError("This email is already in use. Please, use another or sign in")
+        if EmailAddress.objects.filter(email=value).exists():
+            obj = User.objects.filter(email=value)
+            obj.delete()
 
         return value
 
