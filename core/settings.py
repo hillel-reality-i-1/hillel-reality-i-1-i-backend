@@ -310,11 +310,16 @@ REST_USE_JWT = True
 JWT_AUTH_COOKIE = "access_token"
 
 # CORS
+# CORS_ALLOWED_ORIGINS = [
+#     # Frond-end origins
+#     "http://localhost:3000",
+#     "http://dmytromigirov.space:3000",
+#     "http://195.189.226.99:3000",
+# ]
 CORS_ALLOWED_ORIGINS = [
-    # Frond-end origins
-    "http://localhost:3000",
-    "http://dmytromigirov.space:3000",
-    "http://195.189.226.99:3000",
+    env.str("FRONTEND_ORIGIN_1"),
+    env.str("FRONTEND_ORIGIN_2"),
+    env.str("FRONTEND_ORIGIN_3"),
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
