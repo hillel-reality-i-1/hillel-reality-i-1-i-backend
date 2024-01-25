@@ -24,6 +24,11 @@ class UserProfile(models.Model):
     profile_picture = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
     phone_verified = models.BooleanField(default=False)
 
+    last_posts = models.ManyToManyField(Post, related_name="last_user_posts")
+    last_comments = models.ManyToManyField(Comment, related_name="last_user_comments")
+    last_reacted_posts = models.ManyToManyField(Post, related_name="last_reacted_user_posts")
+    last_contributions = models.ManyToManyField(Comment, related_name="last_user_contributions")
+
     saved_posts = models.ManyToManyField(Post, related_name="saved_posts_by_users", blank=True)
     saved_comments = models.ManyToManyField(Comment, related_name="saved_comments_by_users", blank=True)
 

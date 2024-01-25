@@ -1,5 +1,7 @@
+from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from apps.content.models import Post
 from apps.content.api.serializers import PostSerializer
@@ -15,4 +17,9 @@ class PostCreateView(CreateAPIView):
     serializer_class = PostSerializer
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        post = serializer.save(author=self.request.user)
+
+        user_profile = self.request.user.userprofile
+        user_profile.last_posts.add(post)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -2,6 +2,12 @@ from apps.files.api.views.upload_portfolio_view import UploadPortfolioView
 from apps.users.views.change_email_request_view import ChangeEmailRequestView, ChangeEmailConfirmView
 from apps.users.views.custom_google_login_view import SocialLoginView
 from apps.users.views.check_user_with_email_exist_view import CheckEmailExists
+from apps.users.views.last_activity import (
+    LastPostsByAuthor,
+    LastCommentsByAuthor,
+    LastReactedPostsView,
+    LastUserContributions,
+)
 from apps.users.views.password_reset import PasswordResetCheckAPIView
 from apps.users.views.password_reset import PasswordResetView
 from apps.users.views.custom_register_view import CustomRegisterView
@@ -27,7 +33,6 @@ from apps.users.views.user_view import UserListView
 from apps.users.views.twilio_send_verification_code_view import SendTwilioVerificationCode
 from apps.users.views.twilio_check_verification_code_view import CheckTwilioVerificationCode
 from apps.users.views.verify_email_view import VerifyEmailView
-from apps.users.views.vonage_views import SendVonageVerificationCode, CheckVonageVerificationCode
 from rest_framework.routers import DefaultRouter
 from allauth.account import views as allauth_views
 
@@ -39,17 +44,15 @@ router.register(r"user_profile_extended", UserProfileExtendedListView, basename=
 
 urlpatterns = [
     path("auth/send-verification-code/", SendTwilioVerificationCode.as_view(), name="send-verification-code"),
-    path(
-        "auth/send-verification-code-vonage/",
-        SendVonageVerificationCode.as_view(),
-        name="send-verification-code-vonage",
-    ),
     path("auth/check-verification-code/", CheckTwilioVerificationCode.as_view(), name="check-verification-code"),
+    path("users/user_profile/<int:profile_id>/last_posts/", LastPostsByAuthor.as_view(), name="last_posts"),
+    path("users/user_profile/<int:profile_id>/last_comments/", LastCommentsByAuthor.as_view(), name="last_comments"),
     path(
-        "auth/check-verification-code-vonage/",
-        CheckVonageVerificationCode.as_view(),
-        name="check-verification-code-vonage",
+        "users/user_profile/<int:profile_id>/last_reacted_posts/",
+        LastReactedPostsView.as_view(),
+        name="last_reacted_posts",
     ),
+    path("users/user_profile/<int:profile_id>/last_contributions/", LastUserContributions.as_view(), name="last_posts"),
     path("auth/registration/", CustomRegisterView.as_view(), name="rest_register"),
     path("users/upload_img/", UploadImageView.as_view(), name="upload_img"),
     path("users/upload_portfolio/", UploadPortfolioView.as_view(), name="upload_portfolio"),

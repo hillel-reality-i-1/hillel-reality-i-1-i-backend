@@ -48,9 +48,18 @@ class Comment(models.Model):
         if total_positive_votes >= 10 and self.is_parent and not self.is_contribution:
             self.is_contribution = True
             self.save()
+
+            user_profile = self.author.userprofile
+            user_profile.last_contributions.add(self)
+            user_profile.save()
+
         elif total_positive_votes < 10 and self.is_parent and self.is_contribution:
             self.is_contribution = False
             self.save()
+
+            user_profile = self.author.userprofile
+            user_profile.last_contributions.remove(self)
+            user_profile.save()
 
     def update_vote_counts(self):
         self.helpful_count = self.get_helpful_count()

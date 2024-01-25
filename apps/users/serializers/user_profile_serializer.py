@@ -53,6 +53,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "about_my_self",
             "phone_verified",
             "twilio_verification_sid",
+            "last_posts",
+            "last_comments",
+            "last_reacted_posts",
+            "last_contributions",
             "saved_posts",
             "saved_comments",
         )
@@ -61,6 +65,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "phone_verified",
             "saved_posts",
             "saved_comments",
+            "last_posts",
+            "last_comments",
+            "last_reacted_posts",
+            "last_contributions",
         )
 
     def get_full_name(self, obj):

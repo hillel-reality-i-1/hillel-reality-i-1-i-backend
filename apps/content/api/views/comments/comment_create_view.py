@@ -20,3 +20,7 @@ class CommentsCreateView(CreateAPIView):
         else:
             post = Post.objects.get(pk=post_id)
             serializer.save(author=self.request.user, post=post)
+
+            user_profile = self.request.user.userprofile
+            user_profile.last_comments.add(serializer.instance)
+            user_profile.save()

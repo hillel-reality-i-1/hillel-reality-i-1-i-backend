@@ -8,7 +8,9 @@ class ReactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reaction
-        fields = ["id", "reaction_type", "user_username"]
+        fields = ["id", "reaction_type", "user_username", "creation_date"]
+        # fields = ["id", "reaction_type", "user_username"]
+        read_only_fields = ["creation_date"]
 
     def get_user_username(self, obj):
         return obj.user.username
