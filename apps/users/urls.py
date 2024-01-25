@@ -1,3 +1,4 @@
+from apps.base.views import set_language_api
 from apps.files.api.views.upload_portfolio_view import UploadPortfolioView
 from apps.users.views.change_email_request_view import ChangeEmailRequestView, ChangeEmailConfirmView
 from apps.users.views.custom_google_login_view import SocialLoginView
@@ -85,6 +86,7 @@ urlpatterns = [
         "accounts/delete/content/confirm/", DeleteAllContentConfirmView.as_view(), name="account-content-delete-confirm"
     ),
     path("accounts/check-email/", CheckEmailExists.as_view(), name="check_email_exists"),
+    path("set-language/<str:language_code>/", set_language_api, name="set_language"),
 ]
 
 allauth_views_urlpatterns = [
