@@ -85,9 +85,9 @@ class UserOpenInfoView(APIView):
         if user_profile.email_is_visible:
             user_data["email"] = user_info.email
 
-        prof_picture_url = user_profile_dict["profile_picture"]
-        user_profile_dict["profile_picture"] = f"{protocol}://{current_domain}/{prof_picture_url}"
-
+        user_profile_dict[
+            "profile_picture"
+        ] = f"{protocol}://{current_domain}{str(user_profile.profile_picture.image.url)}"
         return {
             "user": user_data,
             "user_profile": user_profile_dict,
