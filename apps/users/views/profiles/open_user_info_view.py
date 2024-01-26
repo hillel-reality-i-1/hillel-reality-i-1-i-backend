@@ -39,6 +39,7 @@ class UserOpenInfoView(APIView):
             "country",
             "city",
             "profile_picture",
+            "phone_verified",
         ]
         if user_profile.phone_is_visible:
             keys.append("phone_number")
@@ -76,16 +77,17 @@ class UserOpenInfoView(APIView):
         )
 
     def _get_combined_data(self, request, user_info, user_profile, user_profile_dict, user_profile_dict_ext):
-        current_site = get_current_site(request)
-        current_domain = current_site.domain
-        protocol = "https" if request.is_secure() else "http"
-
+        protocol, current_domain = self._get_current_domain(request)
         user_data = {
             "full_name": user_info.full_name,
             "username": user_info.username,
         }
         if user_profile.email_is_visible:
             user_data["email"] = user_info.email
+
+        prof_picture_url = user_profile_dict["profile_picture"]
+        user_profile_dict["profile_picture"] = f"{protocol}://{current_domain}/{prof_picture_url}"
+
         return {
             "user": user_data,
             "user_profile": user_profile_dict,
@@ -97,6 +99,21 @@ class UserOpenInfoView(APIView):
                 for file in user_info.user_files
             ],
         }
+
+    def _get_current_domain(self, request):
+        current_site = get_current_site(request)
+        current_domain = current_site.domain
+        protocol = "https" if request.is_secure() else "http"
+
+        return protocol, current_domain
+
+    def _set_location_language(self, dct, profile):
+        language = get_language()
+        if dct:
+            if profile.country is not None:
+                dct["country"] = profile.country.alternate_names if language != "en" else profile.country.name
+            if profile.city is not None:
+                dct["city"] = profile.city.alternate_names if language != "en" else profile.city.name
 
     def get(self, request, user_id, *args, **kwargs):
         user_info = self._get_user_info_or_404(user_id)
@@ -112,11 +129,3 @@ class UserOpenInfoView(APIView):
         )
 
         return Response(combined_data, status=status.HTTP_200_OK)
-
-    def _set_location_language(self, dct, profile):
-        language = get_language()
-        if dct:
-            if profile.country is not None:
-                dct["country"] = profile.country.alternate_names if language != "en" else profile.country.name
-            if profile.city is not None:
-                dct["city"] = profile.city.alternate_names if language != "en" else profile.city.name
