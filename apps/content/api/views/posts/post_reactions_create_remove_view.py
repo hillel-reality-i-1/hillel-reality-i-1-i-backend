@@ -11,7 +11,7 @@ from apps.content.models import Post
 from apps.content.models.reaction import Reaction
 
 
-class PostReactionCreateView(CreateAPIView):
+class PostReactionCreateRemoveView(CreateAPIView):
     permission_classes = [IsAuthenticated, IsVerifiedUser]
     serializer_class = ReactionSerializer
 

@@ -30,7 +30,6 @@ class UserProfile(models.Model):
     last_contributions = models.ManyToManyField(Comment, related_name="last_user_contributions")
 
     saved_posts = models.ManyToManyField(Post, related_name="saved_posts_by_users", blank=True)
-    saved_comments = models.ManyToManyField(Comment, related_name="saved_comments_by_users", blank=True)
 
     # Fields for Twilio verification
     twilio_verification_sid = models.CharField(max_length=255, null=True, blank=True)

@@ -4,11 +4,13 @@ from rest_framework.permissions import IsAuthenticated
 
 from apps.content.api.serializers import PostSerializer
 from apps.users.models import UserProfile
+from apps.users.views.last_activity.last_activity_pagination import LastFiveActivityPagination
 
 
 class LastReactedPostsView(ListAPIView):
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = LastFiveActivityPagination
 
     def get_queryset(self):
         profile_id = self.kwargs.get("profile_id")
