@@ -1,6 +1,7 @@
 from apps.base.views import set_language_api
 from apps.files.api.views.upload_portfolio_view import UploadPortfolioView
 from apps.users.views.change_email_request_view import ChangeEmailRequestView, ChangeEmailConfirmView
+from apps.users.views.check_username_api_view import check_username_api
 from apps.users.views.custom_google_login_view import SocialLoginView
 from apps.users.views.check_user_with_email_exist_view import CheckEmailExists
 from apps.users.views.last_activity import (
@@ -55,6 +56,7 @@ urlpatterns = [
     ),
     path("users/user_profile/<int:profile_id>/last_contributions/", LastUserContributions.as_view(), name="last_posts"),
     path("auth/registration/", CustomRegisterView.as_view(), name="rest_register"),
+    path("auth/is_username_unique/", check_username_api, name="is_username_unique"),
     path("users/upload_img/", UploadImageView.as_view(), name="upload_img"),
     path("users/upload_portfolio/", UploadPortfolioView.as_view(), name="upload_portfolio"),
     path("users/user_profile_by_user_id/<int:user_id>/", UserProfileByUserIdView.as_view(), name="get_user_profile"),
