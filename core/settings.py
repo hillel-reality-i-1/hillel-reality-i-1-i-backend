@@ -40,6 +40,7 @@ if DEBUG:
             "127.0.0.1",
             "dmytromigirov.space",
             "195.189.226.99",
+            "dmtest.space",
         ]
     )
 
