@@ -3,9 +3,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from cities_light.models import Country
 from django.db.models import Count
-
 from apps.content.models.reaction import Reaction
-from apps.files.models import Image
 from apps.expert.models import Category
 
 User = get_user_model()
@@ -17,12 +15,8 @@ class Post(models.Model):
     category = models.ManyToManyField(Category, related_name="post_category")
     country = models.ManyToManyField(Country, related_name="post_countries")
     content = models.CharField(validators=[MinLengthValidator(100)], max_length=10000)
-    images = models.ManyToManyField(Image, related_name="post_images", blank=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
-
-    def get_images(self):
-        return self.images.all()
 
     def get_reactions_count(self):
         return self.reactions.values("reaction_type").annotate(count=Count("id"))
