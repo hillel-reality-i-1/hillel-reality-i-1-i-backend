@@ -16,5 +16,7 @@ class PostDeleteView(RetrieveDestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()
-        self.destroy(instance)
+        # self.destroy(instance)
+        serializer = self.get_serializer(instance)
+        serializer.delete(instance)
         return Response({"message": "Допис успішно видалено"}, status=status.HTTP_204_NO_CONTENT)

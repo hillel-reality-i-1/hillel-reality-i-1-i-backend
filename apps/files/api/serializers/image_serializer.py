@@ -1,14 +1,11 @@
-from shutil import rmtree
-
+from django.core.files.temp import NamedTemporaryFile
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
 from apps.files.models import Image
 from apps.users.models import UserProfile
 
-from io import BytesIO
-from PIL import Image as PilImg
-from django.core.files.base import ContentFile
+from apps.content.utils.aws_utils import moderation_image_with_aws, image_handle, remove_img_from_disk
 
 User = get_user_model()
 
@@ -27,19 +24,19 @@ class ImageSerializer(serializers.ModelSerializer):
         return representation
 
     def create(self, validated_data):
-        image_data = validated_data.pop("image")
-        processed_image_data = image_handle(image_data)
-
         if UserProfile.objects.filter(user=validated_data.get("author")).exists():
+            image_data = validated_data.pop("image")
+            processed_image_data = image_handle(image_data)
+
+            with NamedTemporaryFile(delete=True, suffix=".jpg", dir="temp_images") as temp_file:
+                temp_file.write(processed_image_data.read())
+                temporary_path = temp_file.name
+                moderation_image_with_aws(temporary_path, serializers)
+
             images = Image.objects.filter(author=validated_data.get("author"))
             if images:
                 for img in images:
-                    path = str(img.image)
-                    folder_path = path[: path.rfind("/")]
-                    try:
-                        rmtree(folder_path)
-                    except Exception as e:
-                        print(f"Error while deleting file {folder_path}: {e}")
+                    remove_img_from_disk(str(img.image))
 
                 Image.objects.filter(author=validated_data.get("author")).delete()
 
@@ -51,22 +48,3 @@ class ImageSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("The user does not have a profile. You can't upload the image")
 
         return created_image
-
-
-def image_handle(image_data):
-    max_size_bytes = 5 * 1024 * 1024
-    if image_data.size > max_size_bytes:
-        raise serializers.ValidationError("Image size exceeds the maximum allowed size (5 MB).")
-
-    image = PilImg.open(image_data)
-    if image.format.lower() not in ["jpeg", "png"]:
-        raise serializers.ValidationError("Invalid image format. Supported formats: JPEG, PNG.")
-
-    max_size = (320, 240)
-    if image.size[0] > max_size[0] or image.size[1] > max_size[1]:
-        image.thumbnail(max_size)
-
-    compressed_image_buffer = BytesIO()
-    image.save(compressed_image_buffer, format=image.format.upper())
-
-    return ContentFile(compressed_image_buffer.getvalue(), name=image_data.name)
