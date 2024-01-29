@@ -2,17 +2,13 @@ from django.core.files.temp import NamedTemporaryFile
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.utils.translation import get_language
-
 from apps.files.models.post_image import PostImage
-from core.settings import env
 from .reaction_serializer import ReactionSerializer
 from .comment_serializer import CommentSerializer
 from ...models import Post, Comment
 from ...utils.aws_utils import moderation_image_with_aws, image_handle, remove_img_from_disk
 
 User = get_user_model()
-
-TEMP_FILES_PATH = env.str("TEMP_FILES_PATH")
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -86,7 +82,7 @@ class PostSerializer(serializers.ModelSerializer):
         if post_image_data:
             processed_image_data = image_handle(post_image_data)
 
-            with NamedTemporaryFile(delete=True, suffix=".jpg", dir=TEMP_FILES_PATH) as temp_file:
+            with NamedTemporaryFile(delete=True, suffix=".jpg", dir="temp_images") as temp_file:
                 temp_file.write(processed_image_data.read())
                 temporary_path = temp_file.name
                 moderation_image_with_aws(temporary_path, serializers)
@@ -103,7 +99,7 @@ class PostSerializer(serializers.ModelSerializer):
         if post_image_data:
             processed_image_data = image_handle(post_image_data)
 
-            with NamedTemporaryFile(delete=True, suffix=".jpg", dir=TEMP_FILES_PATH) as temp_file:
+            with NamedTemporaryFile(delete=True, suffix=".jpg", dir="temp_images") as temp_file:
                 temp_file.write(processed_image_data.read())
                 temporary_path = temp_file.name
                 moderation_image_with_aws(temporary_path, serializers)
