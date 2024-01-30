@@ -2,6 +2,8 @@ import os
 import logging
 from botocore.exceptions import ClientError
 import boto3
+from django.core.files.temp import NamedTemporaryFile
+
 from core.settings import env
 from io import BytesIO
 from PIL import Image as PilImg
@@ -46,7 +48,7 @@ def moderate_image(photo, bucket):
     return response
 
 
-def moderation_image_with_aws(path_to_file, serializers):
+def moderation_image_with_aws(path_to_file):
     file_name = path_to_file.split("/")[-1]
     is_uploaded = upload_file_to_s3(path_to_file, "uhelp-bucket")
     if is_uploaded:
@@ -84,3 +86,10 @@ def remove_img_from_disk(path):
         rmtree(folder_path)
     except Exception as e:
         print(f"Error while deleting file: {e}")
+
+
+def save_moderate_img(processed_image_data):
+    with NamedTemporaryFile(delete=True, suffix=".jpg", dir="temp_images") as temp_file:
+        temp_file.write(processed_image_data.read())
+        temporary_path = temp_file.name
+        moderation_image_with_aws(temporary_path)

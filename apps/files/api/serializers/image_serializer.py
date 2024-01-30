@@ -1,10 +1,9 @@
-from django.core.files.temp import NamedTemporaryFile
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from apps.files.models import Image
 from apps.users.models import UserProfile
 
-from apps.content.utils.aws_utils import moderation_image_with_aws, image_handle, remove_img_from_disk
+from apps.content.utils.aws_utils import image_handle, remove_img_from_disk, save_moderate_img
 
 User = get_user_model()
 
@@ -26,11 +25,7 @@ class ImageSerializer(serializers.ModelSerializer):
         if UserProfile.objects.filter(user=validated_data.get("author")).exists():
             image_data = validated_data.pop("image")
             processed_image_data = image_handle(image_data)
-
-            with NamedTemporaryFile(delete=True, suffix=".jpg", dir="temp_images") as temp_file:
-                temp_file.write(processed_image_data.read())
-                temporary_path = temp_file.name
-                moderation_image_with_aws(temporary_path, serializers)
+            save_moderate_img(processed_image_data)
 
             images = Image.objects.filter(author=validated_data.get("author"))
             if images:
@@ -47,3 +42,21 @@ class ImageSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("The user does not have a profile. You can't upload the image")
 
         return created_image
+
+    def update(self, instance, validated_data):
+        image_data = validated_data.pop("image")
+
+        if image_data:
+            processed_image_data = image_handle(image_data)
+            save_moderate_img(processed_image_data)
+            remove_img_from_disk(str(instance.image))
+            instance.image = processed_image_data
+
+        instance.save()
+        return instance
+
+    def delete(self, instance, **kwargs):
+        remove_img_from_disk(str(instance.image))
+        instance.delete()
+
+        return instance
