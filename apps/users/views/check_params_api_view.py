@@ -11,7 +11,9 @@ def check_params_api(request):
     phone_number = request.query_params.get("phone_number", None)
     response = {
         "username_exists": get_user_model().objects.filter(username=username).exists() if username else None,
-        "phone_exists": UserProfile.objects.filter(phone_number=phone_number).exists() if phone_number else None,
+        "phone_exists": UserProfile.objects.filter(phone_number=phone_number, phone_verified=True).exists()
+        if phone_number
+        else None,
     }
 
     return Response(response)

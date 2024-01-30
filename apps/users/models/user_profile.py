@@ -12,7 +12,7 @@ from rest_framework import serializers
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone_number = PhoneNumberField(max_length=14, null=True, blank=True, unique=True)
+    phone_number = PhoneNumberField(max_length=14, null=True, blank=True)
     about_my_self = models.TextField(
         max_length=500,
         null=True,
@@ -104,6 +104,16 @@ class UserProfile(models.Model):
             and UserProfile.objects.exclude(pk=self.pk).filter(linkedin=self.linkedin).exists()
         ):
             raise serializers.ValidationError({"linkedin": "Such linkedin account already exists."})
+        else:
+            self.validate_linkedin(self.linkedin)
+
+        if (
+            self.phone_number is not None
+            and UserProfile.objects.exclude(pk=self.pk)
+            .filter(phone_number=self.phone_number, phone_verified=True)
+            .exists()
+        ):
+            raise serializers.ValidationError({"phone_number": "Such phone_number already verified."})
         else:
             self.validate_linkedin(self.linkedin)
 
