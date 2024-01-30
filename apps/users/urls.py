@@ -28,7 +28,7 @@ from apps.users.views.profiles.open_user_info_view import UserOpenInfoView
 from apps.users.views.profiles.register_user_profile_ext_view import RegisterProfileExtView
 from apps.users.views.profiles.register_user_profile_view import RegisterProfileView
 from apps.files.api.views.upload_image_view import UploadImageView
-from apps.users.views.twilio_send_verification_code_view import send_twilio_verification_code
+from apps.users.views.twilio_send_verification_code_view import SendTwilioVerificationCode
 from apps.users.views.user_delete_view import UserDeleteView
 from apps.users.views.profiles.user_profile_extended_view import UserProfileExtendedListView
 from apps.users.views.profiles.user_profile_view import UserProfileListView
@@ -47,7 +47,7 @@ router.register(r"user_profile", UserProfileListView, basename="user_profile")
 router.register(r"user_profile_extended", UserProfileExtendedListView, basename="user_profile_extended")
 
 urlpatterns = [
-    path("auth/send-verification-code/", send_twilio_verification_code, name="send-verification-code"),
+    path("auth/send-verification-code/", SendTwilioVerificationCode.as_view(), name="send-verification-code"),
     path("auth/check-verification-code/", check_twilio_verification_code, name="check-verification-code"),
     path("users/user_profile/<int:profile_id>/last_posts/", LastPostsByAuthor.as_view(), name="last_posts"),
     path("users/user_profile/<int:profile_id>/last_comments/", LastCommentsByAuthor.as_view(), name="last_comments"),

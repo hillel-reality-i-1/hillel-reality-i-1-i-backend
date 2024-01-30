@@ -1,3 +1,36 @@
+from django.conf import settings
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from twilio.rest import Client
+from django.contrib.auth.models import AnonymousUser
+from rest_framework.permissions import IsAuthenticated
+
+
+class SendTwilioVerificationCode(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        if isinstance(request.user, AnonymousUser):
+            return Response({"error": "User is not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        phone_number = request.data.get("phone_number", None)
+
+        if request.user.userprofile.phone_verified:
+            return Response({"status": "The number has already been verified"})
+
+        if not phone_number:
+            return Response({"error": "Phone number is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+
+        verification = client.verify.v2.services(settings.TWILIO_VERIFY_SID).verifications.create(
+            to=str(phone_number), channel="sms"
+        )
+        print(verification.status)
+        return Response({"status": "Started phone_number %s verification" % phone_number}, status=status.HTTP_200_OK)
+
+
 # from django.conf import settings
 # from rest_framework import status
 # from rest_framework.decorators import permission_classes
@@ -33,26 +66,3 @@
 #         return Response(
 #             {"status": "Started phone_number %s verification" % user_profile.phone_number}, status=status.HTTP_200_OK
 #         )
-from django.conf import settings
-from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from twilio.rest import Client
-
-
-@permission_classes([IsAuthenticated])
-@api_view(["POST"])
-def send_twilio_verification_code(request):
-    phone_number = request.data.get("phone_number", None)
-
-    if not phone_number:
-        return Response({"error": "Phone number is required"}, status=status.HTTP_400_BAD_REQUEST)
-
-    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-
-    verification = client.verify.v2.services(settings.TWILIO_VERIFY_SID).verifications.create(
-        to=str(phone_number), channel="sms"
-    )
-    print(verification.status)
-    return Response({"status": "Started phone_number %s verification" % phone_number}, status=status.HTTP_200_OK)

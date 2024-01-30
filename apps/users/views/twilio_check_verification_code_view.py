@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from twilio.rest import Client
 
+from apps.users.models import UserProfile
+
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
@@ -24,6 +26,13 @@ def check_twilio_verification_code(request):
     )
 
     if verification_check.status == "approved":
+        try:
+            user_profile = request.user.userprofile
+            user_profile.phone_verified = True
+            user_profile.save()
+        except UserProfile.DoesNotExist:
+            pass
+
         return Response({"status": "Verification successful"}, status=status.HTTP_200_OK)
     else:
         return Response({"status": "Invalid verification code"}, status=status.HTTP_400_BAD_REQUEST)
