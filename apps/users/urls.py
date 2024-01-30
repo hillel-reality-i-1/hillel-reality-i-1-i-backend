@@ -28,12 +28,14 @@ from apps.users.views.profiles.open_user_info_view import UserOpenInfoView
 from apps.users.views.profiles.register_user_profile_ext_view import RegisterProfileExtView
 from apps.users.views.profiles.register_user_profile_view import RegisterProfileView
 from apps.files.api.views.upload_image_view import UploadImageView
+from apps.users.views.twilio_send_verification_code_view import SendTwilioVerificationCode
 from apps.users.views.user_delete_view import UserDeleteView
 from apps.users.views.profiles.user_profile_extended_view import UserProfileExtendedListView
 from apps.users.views.profiles.user_profile_view import UserProfileListView
 from apps.users.views.user_view import UserListView
-from apps.users.views.twilio_send_verification_code_view import SendTwilioVerificationCode
-from apps.users.views.twilio_check_verification_code_view import CheckTwilioVerificationCode
+
+# from apps.users.views.twilio_send_verification_code_view import SendTwilioVerificationCode
+from apps.users.views.twilio_check_verification_code_view import check_twilio_verification_code
 from apps.users.views.verify_email_view import VerifyEmailView
 from rest_framework.routers import DefaultRouter
 from allauth.account import views as allauth_views
@@ -46,7 +48,7 @@ router.register(r"user_profile_extended", UserProfileExtendedListView, basename=
 
 urlpatterns = [
     path("auth/send-verification-code/", SendTwilioVerificationCode.as_view(), name="send-verification-code"),
-    path("auth/check-verification-code/", CheckTwilioVerificationCode.as_view(), name="check-verification-code"),
+    path("auth/check-verification-code/", check_twilio_verification_code, name="check-verification-code"),
     path("users/user_profile/<int:profile_id>/last_posts/", LastPostsByAuthor.as_view(), name="last_posts"),
     path("users/user_profile/<int:profile_id>/last_comments/", LastCommentsByAuthor.as_view(), name="last_comments"),
     path(
