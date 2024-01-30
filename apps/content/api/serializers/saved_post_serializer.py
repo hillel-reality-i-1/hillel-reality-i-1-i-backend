@@ -10,7 +10,6 @@ class SavedPostSerializer(serializers.ModelSerializer):
             "id",
             "author",
             "title",
-            "images",
             "country",
             "content",
             "reactions",
