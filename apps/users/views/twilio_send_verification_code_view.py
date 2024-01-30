@@ -6,6 +6,8 @@ from twilio.rest import Client
 from django.contrib.auth.models import AnonymousUser
 from rest_framework.permissions import IsAuthenticated
 
+from apps.users.models import UserProfile
+
 
 class SendTwilioVerificationCode(APIView):
     permission_classes = [IsAuthenticated]
@@ -15,6 +17,9 @@ class SendTwilioVerificationCode(APIView):
             return Response({"error": "User is not authenticated"}, status=status.HTTP_401_UNAUTHORIZED)
 
         phone_number = request.data.get("phone_number", None)
+
+        if phone_number and UserProfile.objects.filter(phone_number=phone_number, phone_verified=True).exists():
+            return Response({"status": "This number has already been verified"})
 
         if request.user.userprofile.phone_verified:
             return Response({"status": "The number has already been verified"})
