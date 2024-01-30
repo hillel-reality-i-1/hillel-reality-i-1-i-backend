@@ -9,12 +9,6 @@ from apps.users.models import UserProfile
 
 
 def send_twilio_verification_code(user_profile):
-    if (
-        user_profile.phone_number
-        and UserProfile.objects.filter(phone_number=user_profile.phone_number, phone_verified=True).exists()
-    ):
-        return Response({"status": "This number has already been verified"})
-
     client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 
     verification = client.verify.v2.services(settings.TWILIO_VERIFY_SID).verifications.create(
@@ -31,6 +25,12 @@ def send_twilio_verification_code(user_profile):
 class SendTwilioVerificationCode(APIView):
     def post(self, request):
         user_profile = request.user.userprofile
+
+        if (
+            user_profile.phone_number
+            and UserProfile.objects.filter(phone_number=user_profile.phone_number, phone_verified=True).exists()
+        ):
+            return Response({"status": "This number has already been verified"})
 
         if user_profile.phone_verified:
             return Response({"status": "already_verified"}, status=status.HTTP_200_OK)
