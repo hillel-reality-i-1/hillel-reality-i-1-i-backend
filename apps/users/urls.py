@@ -48,14 +48,14 @@ router.register(r"user_profile_extended", UserProfileExtendedListView, basename=
 urlpatterns = [
     path("auth/send-verification-code/", SendTwilioVerificationCode.as_view(), name="send-verification-code"),
     path("auth/check-verification-code/", CheckTwilioVerificationCode.as_view(), name="check-verification-code"),
-    path("users/user_profile/<int:profile_id>/last_posts/", LastPostsByAuthor.as_view(), name="last_posts"),
-    path("users/user_profile/<int:profile_id>/last_comments/", LastCommentsByAuthor.as_view(), name="last_comments"),
+    path("users/user/<int:user_id>/last_posts/", LastPostsByAuthor.as_view(), name="last_posts"),
+    path("users/user/<int:user_id>/last_comments/", LastCommentsByAuthor.as_view(), name="last_comments"),
     path(
-        "users/user_profile/<int:profile_id>/last_reacted_posts/",
+        "users/user/<int:user_id>/last_reacted_posts/",
         LastReactedPostsView.as_view(),
         name="last_reacted_posts",
     ),
-    path("users/user_profile/<int:profile_id>/last_contributions/", LastUserContributions.as_view(), name="last_posts"),
+    path("users/user/<int:user_id>/last_contributions/", LastUserContributions.as_view(), name="last_posts"),
     path("auth/registration/", CustomRegisterView.as_view(), name="rest_register"),
     path("auth/check_params/", check_params_api, name="check_params"),
     path("users/upload_img/", UploadImageView.as_view(), name="upload_img"),
