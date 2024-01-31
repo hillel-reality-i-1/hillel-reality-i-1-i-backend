@@ -87,6 +87,7 @@ class UserProfile(models.Model):
         self._original_facebook = self.facebook
         self._original_linkedin = self.linkedin
         self._original_phone_number = self.phone_number
+        self._original_phone_verified = self.phone_verified
 
     def clean(self):
         # Check unique of telegram, instagram, facebook, linkedin
@@ -126,7 +127,7 @@ class UserProfile(models.Model):
             else:
                 self.validate_linkedin(self.linkedin)
 
-        if self.phone_number != self._original_phone_number:
+        if self.phone_number != self._original_phone_number or self.phone_verified != self._original_phone_verified:
             if (
                 self.phone_number is not None
                 and UserProfile.objects.exclude(pk=self.pk)
