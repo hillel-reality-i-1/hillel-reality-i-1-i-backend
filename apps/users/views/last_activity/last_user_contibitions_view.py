@@ -11,6 +11,6 @@ class LastUserContributions(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        profile_id = self.kwargs.get("profile_id")
-        user_profile = get_object_or_404(UserProfile, id=profile_id)
-        return user_profile.last_contributions.order_by("-creation_date")
+        user_id = self.kwargs.get("user_id")
+        user_profile = get_object_or_404(UserProfile, user_id=user_id)
+        return user_profile.last_contributions.order_by("-updated_date")
