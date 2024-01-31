@@ -101,12 +101,25 @@ class UserProfileSerializer(serializers.ModelSerializer):
         validated_data["country_id"] = country.pk if country else None
         validated_data["city_id"] = city.pk if city else None
 
+        # try:
+        #     profile, created = UserProfile.objects.update_or_create(user=user, defaults=validated_data)
+        # except IntegrityError:
+        #     raise serializers.ValidationError("Unable to create or update profile")
         try:
-            profile, created = UserProfile.objects.update_or_create(user=user, defaults=validated_data)
+            profile = UserProfile.objects.filter(user=user).first()
+            if profile:
+                for field, value in validated_data.items():
+                    setattr(profile, field, value)
+                profile.save(clean=True)
+                return profile
+            else:
+                profile = UserProfile(user=user, **validated_data)
+                profile.save(clean=True)
+                return profile
         except IntegrityError:
             raise serializers.ValidationError("Unable to create or update profile")
 
-        return profile
+        # return profile
 
     def update(self, instance, validated_data):
         validated_data = self.check_empty_strings(validated_data)
@@ -130,7 +143,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         instance.country = validated_data.get("country", instance.country)
         instance.city = validated_data.get("city", instance.city)
 
-        instance.save()
+        instance.save(clean=True)
 
         return instance
 
