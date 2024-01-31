@@ -78,6 +78,7 @@ class UserProfile(models.Model):
         return f"{self.user.username}'s user profile with id {self.pk}"
 
     def __init__(self, *args, **kwargs):
+        print("__init__")
         super().__init__(*args, **kwargs)  # Call the parent's __init__ method
         self.set_origins_fields()
 
@@ -147,7 +148,7 @@ class UserProfile(models.Model):
 
     def save(self, *args, **kwargs):
         self.clean()
-        self.set_origins_fields()
+        # self.set_origins_fields()
         super().save(*args, **kwargs)
 
     @staticmethod
