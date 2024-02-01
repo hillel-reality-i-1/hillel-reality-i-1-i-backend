@@ -3,10 +3,14 @@ import re
 from cities_light.models import Country, City
 from django.db import models
 from django.core.validators import MinLengthValidator, MaxLengthValidator
+from rest_framework.exceptions import ValidationError
+
 from apps.content.models import Post, Comment
 from apps.files.models import Image
 from apps.users.models import User
 from phonenumber_field.modelfields import PhoneNumberField
+from phonenumber_field.phonenumber import PhoneNumber
+from phonenumber_field.validators import validate_international_phonenumber
 from rest_framework import serializers
 
 
@@ -113,14 +117,23 @@ class UserProfile(models.Model):
             .filter(phone_number=self.phone_number, phone_verified=True)
             .exists()
         ):
-            raise serializers.ValidationError({"phone_number": "Such phone_number already verified."})
+            raise serializers.ValidationError(
+                {"phone_number": "The phone number you specified has already been verified by another user."}
+            )
         else:
-            self.validate_linkedin(self.linkedin)
+            try:
+                if self.phone_number:
+                    phone_instance = PhoneNumber.from_string(str(self.phone_number))
+                    validate_international_phonenumber(phone_instance)
+            except ValidationError as e:
+                raise serializers.ValidationError({"phone_number": str(e)})
 
         super().clean()
 
     def save(self, *args, **kwargs):
-        self.clean()
+        if kwargs.get("clean"):
+            self.clean()
+        kwargs = {}
         super().save(*args, **kwargs)
 
     @staticmethod

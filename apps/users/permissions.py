@@ -1,7 +1,8 @@
-from rest_framework import permissions
+from rest_framework import permissions, status
+from rest_framework.response import Response
 
 from apps.files.models import Image, File
-from apps.users.models import UserProfile, UserProfileExtended
+from apps.users.models import UserProfile, UserProfileExtended, User
 
 
 class IsVerifiedUser(permissions.BasePermission):
@@ -90,10 +91,15 @@ class IsAdminOrUserProfileOwner(permissions.BasePermission):
         if user.is_staff:
             return True
 
-        if UserProfile.objects.filter(user=user).exists():
-            return view.kwargs.get("user_id") == user.id
+        requested_user = User.objects.filter(id=view.kwargs.get("user_id")).first()
+        if not requested_user:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        if UserProfile.objects.filter(user=requested_user).exists():
+            user_profile = UserProfile.objects.get(user=requested_user)
+            return user_profile.user.id == user.id
         else:
-            return False
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
 class IsAdminOrAvatarOwner(permissions.BasePermission):
@@ -103,11 +109,15 @@ class IsAdminOrAvatarOwner(permissions.BasePermission):
         if user.is_staff:
             return True
 
-        if Image.objects.filter(author=user).exists():
-            image = Image.objects.get(author=user)
-            return view.kwargs.get("user_id") == image.author.id
+        requested_user = User.objects.filter(id=view.kwargs.get("user_id")).first()
+        if not requested_user:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        if Image.objects.filter(author=requested_user).exists():
+            image = Image.objects.get(author=requested_user)
+            return user.id == image.author.id
         else:
-            return False
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
 class IsAdminOrExpertUserProfileOwner(permissions.BasePermission):
@@ -117,7 +127,12 @@ class IsAdminOrExpertUserProfileOwner(permissions.BasePermission):
         if user.is_staff:
             return True
 
-        if UserProfileExtended.objects.filter(user=user).exists():
-            return view.kwargs.get("user_id") == user.id
+        requested_user = User.objects.filter(id=view.kwargs.get("user_id")).first()
+        if not requested_user:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        if UserProfileExtended.objects.filter(user=requested_user).exists():
+            user_profile_ext = UserProfileExtended.objects.get(user=requested_user)
+            return user_profile_ext.user.id == user.id
         else:
-            return False
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)

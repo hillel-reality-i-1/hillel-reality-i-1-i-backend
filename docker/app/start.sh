@@ -18,7 +18,7 @@ make migrate
 
 python manage.py collectstatic --noinput --clear
 
-mkdir temp_images
+mkdir -p temp_images
 # [init]-[END]
 
 export RABBITMQ_URL="amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/"
