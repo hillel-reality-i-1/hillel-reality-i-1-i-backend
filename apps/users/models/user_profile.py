@@ -40,6 +40,9 @@ class UserProfile(models.Model):
 
     email_is_visible = models.BooleanField(default=True)
     phone_is_visible = models.BooleanField(default=True)
+
+    social_accounts_are_visible = models.BooleanField(default=True)
+
     telegram_is_visible = models.BooleanField(default=True)
     instagram_is_visible = models.BooleanField(default=True)
     facebook_is_visible = models.BooleanField(default=True)
