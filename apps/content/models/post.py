@@ -1,4 +1,4 @@
-import re
+# import re
 
 from django.core.validators import MinLengthValidator
 from django.db import models
@@ -36,19 +36,22 @@ class Post(models.Model):
         formatted_creation_date = self.creation_date.strftime("%Y-%m-%d %H:%M:%S")
         return f"ID: {self.id}  |  Title: {self.title}  |  Author: {self.author}  |  Created: {formatted_creation_date}"
 
-    def tag_users_in_content(self):
-        pattern = r"@(\w+)"
-        content = self.content
-
-        matches = re.findall(pattern, content)
-
-        for username in matches:
-            if User.objects.filter(username=username).exists():
-                user_profile_link = f'<a href="/profile/{username}">@{username}</a>'
-                content = content.replace(f"@{username}", user_profile_link)
-
-        self.content = content
-
-    def save(self, *args, **kwargs):
-        self.tag_users_in_content()
-        super().save(*args, **kwargs)
+    #
+    # Тегирование юзернеймов пользователей
+    #
+    # def tag_users_in_content(self):
+    #     pattern = r"@(\w+)"
+    #     content = self.content
+    #
+    #     matches = re.findall(pattern, content)
+    #
+    #     for username in matches:
+    #         if User.objects.filter(username=username).exists():
+    #             user_profile_link = f'<a href="/profile/{username}">@{username}</a>'
+    #             content = content.replace(f"@{username}", user_profile_link)
+    #
+    #     self.content = content
+    #
+    # def save(self, *args, **kwargs):
+    #     self.tag_users_in_content()
+    #     super().save(*args, **kwargs)
