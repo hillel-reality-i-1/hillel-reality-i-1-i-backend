@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 
@@ -10,9 +11,17 @@ class CommentsCreateView(CreateAPIView):
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated, IsVerifiedUser]
 
+    def get_queryset(self):
+        return Comment.objects.none()
+
     def perform_create(self, serializer):
         post_id = self.kwargs["pk"]
         parent_id = self.request.data.get("parent", None)
+
+        try:
+            post = Post.objects.get(pk=post_id)
+        except Post.DoesNotExist:
+            raise serializers.ValidationError("Поста с таким ID не существует")
 
         if parent_id:
             parent_comment = Comment.objects.get(pk=parent_id)
