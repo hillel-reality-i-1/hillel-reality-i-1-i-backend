@@ -14,7 +14,7 @@ class CustomAdapter(DefaultAccountAdapter):
     def send_mail(self, template_prefix, email, ctx):
         ctx["current_site"] = get_current_site(context.request)
         if getattr(settings, 'CUSTOM_SETTINGS_ACCOUNT_EMAIL_CELERY_SEND', False):
-            msg = self.render_mail(template_prefix, email, context)
+            msg = self.render_mail(template_prefix, email, ctx)
             # Serialize the message
             serialized_msg = msg.__dict__
             send_adapter_mail_task.delay(serialized_msg)
