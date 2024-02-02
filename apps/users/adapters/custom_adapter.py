@@ -11,14 +11,15 @@ from allauth.core import context
 
 class CustomAdapter(DefaultAccountAdapter):
 
-    def send_mail(self, template_prefix, email, context):
+    def send_mail(self, template_prefix, email, ctx):
+        ctx["current_site"] = get_current_site(context.request)
         if getattr(settings, 'CUSTOM_SETTINGS_ACCOUNT_EMAIL_CELERY_SEND', False):
             msg = self.render_mail(template_prefix, email, context)
             # Serialize the message
             serialized_msg = msg.__dict__
             send_adapter_mail_task.delay(serialized_msg)
         else:
-            super().send_mail(template_prefix, email, context)
+            super().send_mail(template_prefix, email, ctx)
 
     def send_delete_all_content_confirmation_mail(self, user, key):
         delete_all_content_url = self.get_delete_all_content_url(key)

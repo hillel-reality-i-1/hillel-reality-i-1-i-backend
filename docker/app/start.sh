@@ -49,6 +49,8 @@ echo >&2 'RabbitMQ is up - continuing...'
 
 python manage.py shell -c "from apps.base.tasks import run_start_tasks; run_start_tasks()"
 
+cp -r /wd/apps/users/adapters/images/* /var/www/static/images
+
 # Run application.
 gunicorn core.wsgi:application --bind 0.0.0.0:8000
 

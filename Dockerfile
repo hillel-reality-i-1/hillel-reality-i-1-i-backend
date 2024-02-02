@@ -21,7 +21,7 @@ RUN pip install --upgrade pip && \
 COPY --chown=${USER} --chmod=555 ./docker/app/entrypoint.sh /entrypoint.sh
 COPY --chown=${USER} --chmod=555 ./docker/app/start.sh /start.sh
 
-COPY --chown=${USER} ./Makefile Makefile
+COPY --chown=${USER} ./Makefile     Makefile
 COPY --chown=${USER} ./manage.py manage.py
 COPY --chown=${USER} ./core core
 COPY --chown=${USER} ./apps apps
@@ -32,7 +32,9 @@ RUN mkdir -p /var/www/static/ \
     &&  chmod -R 775 /var/www/static/ \
     
     && mkdir -p /var/www/media/ \
-    &&  chmod -R 775 /var/www/media/ 
+    &&  chmod -R 775 /var/www/media/
+
+RUN  mkdir -p /var/www/static/images/
 
 USER ${USER}
 

@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+	      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+	<style>
+		.table__registration{
+			font-family: 'Noto Sans', sans-serif;
+			border-collapse:separate;
+			width:100%!important;
+		}
+		.table__frontRow, .table__lastRow{
+			font-family:'open sans','helvetica neue', sans-serif;
+			font-size:16px;
+			vertical-align:top;
+		}
+		.table__middleRow{
+			font-family:'open sans','helvetica neue', sans-serif;
+			font-size:16px;
+			vertical-align:top;
+			display:block;
+			max-width:600px;
+			padding:15px 0;
+			width:100vw;
+			margin:0 auto!important;
+
+		}
+		.middleRow__main, .middleRow__footer{
+			background-color: #F8F9FB;
+			padding: 3%;
+			border-radius: 12px;
+		}
+		.middleRow__main_header{
+			display: inline-block;
+			margin-right: 10px;
+			vertical-align: middle;
+		}
+		.main_header-titleBody, .main_header-locationBody{
+			padding-top: 10px;
+		}
+		.middleRow__main_header-body{
+			width: 325px;
+			display: inline-block;
+		}
+		.main_header-titleBody_title{
+			display: inline;
+			vertical-align: middle;
+			margin: 0;
+			font-size: 18px;
+			padding-right: 3%;
+		}
+		.main_header-titleBody_category{
+			display: inline;
+			vertical-align: middle;
+			margin: 0;
+			background: #A5BCFE66;
+			border-radius: 12px;
+			color: #126FE1;
+			padding: 7px 10px;
+			font-size: 14px;
+
+		}
+		.main_header-locationBody p{
+			display: inline;
+			vertical-align: middle;
+			margin: 0;
+			font-size: 14px;
+			color: #808080FF;
+			padding-right: 2%;
+		}
+		.middleRow__main_title{
+			font-family: 'Noto Sans', sans-serif;
+			margin: 30px 0 20px 0;
+			font-weight: 600;
+		}
+		img{
+			display: inline-block;
+			vertical-align: middle;
+		}
+		.middleRow__main_text{
+			line-height: 1.7;
+			font-size: 14px;
+			font-family: 'Noto Sans', sans-serif;
+			max-width: 87%;
+		}
+		.middleRow__main_text p>span{
+			font-weight: 500;
+			font-size: 16px;
+		}
+		.middleRow__main_text a{
+			font-family: 'Noto Sans', sans-serif;
+			font-weight: 500;
+			text-decoration: none;
+			color:#126FE1;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+		.middleRow__main_categories{
+			font-family: 'Noto Sans', sans-serif;
+			display: inline-block;
+			padding: 10px 0 0 0;
+			gap: 10px;
+			list-style-type: none;
+		}
+		.middleRow__main_categories li {
+			display: inline;
+			vertical-align: middle;
+			padding: 5px;
+			background: #DBDBDDA5;
+			font-size: 13px;
+			border-radius: 12px;
+		}
+
+		.middleRow__footer{
+			font-family: 'Noto Sans', sans-serif;
+			text-align: center;
+			margin-top: 30px!important;
+		}
+		.middleRow__footer-title{
+			font-weight: 700;
+			margin: 0;
+			line-height: 1.5;
+			font-size: 26px;
+			text-transform: uppercase;
+
+		}
+		.middleRow__footer-navigation{
+			list-style-type: none;
+			margin: 15px 0 5px 0;
+			padding: 0;
+		}
+		.middleRow__footer-navigation li {
+			display: inline;
+			padding-right: 5px;
+		}
+		.middleRow__footer-navigation li a{
+			text-decoration: none;
+		}
+		.middleRow__footer-copyright{
+			color: #808080FF;
+			font-size: 12px;
+		}
+	</style>
+	<title>Registration Confirmation</title>
+</head>
+<body>
+<table class="table__registration">
+	<tbody>
+	<tr>
+		<td class="table__frontRow"></td>
+		<td class="table__middleRow">
+			<div class="table__middleRow middleRow__main">
+				<div class="middleRow__main_header">
+					<img class="main_header-image"width="56" height="56" src="{{ current_site }}/static/images/logo.jpeg" alt="logo">
+					<div class="middleRow__main_header-body">
+						<div class="main_header-titleBody">
+							<h2 class="main_header-titleBody_title">U-help</h2>
+							<img class="main_header-titleBody_verified"width="15" height="15" src="" alt="verified">
+							<p class="main_header-titleBody_category">Всесвітня допомога</p>
+						</div>
+						<div class="main_header-locationBody">
+							<p class="main_header-locationBody_nickname">@help4Ukraine</p>
+							<p class="main_header-locationBody_ico">•</p>
+							<p class="main_header-locationBody_location">Україна</p>
+						</div>
+					</div>
+
+				</div>
+				<h1 class="middleRow__main_title">Підтвердіть вашу реєстрацію!</h1>
+				<img class="middleRow__main_image" src="{{ current_site }}/static/images/email_confirm_image.jpeg" alt="head-image">
+				<div class="middleRow__main_text">
+					<p>Привіт та ласкаво просимо до U-Help! 🎉  Ви отримали цей лист для <br> підтвердження реєстрації на нашому сайті U-Help. </p>
+					<p><span>Для того, щоб продовжити реєстрацію, просто натисніть на чарівне посилання нижче:</span> </p>
+					<a class="middleRow__main_confirmation-link" href="{{ activate_url }}">Підтвердити пошту
+						<img width="15" height="17" src="{{ current_site }}/static/images/icon_arrow_right.jpeg" alt="arrow">
+					</a>
+					<p>Строк дії посилання 24 години.</p>
+					<p>Якщо ви не реєструвалися на сайті U-Help - можете просто проігнорувати цей лист, ми не образимось.</p>
+				</div>
+				<ul class="middleRow__main_categories">
+					<li>Реєстрація</li>
+					<li>Підтвердження пошти</li>
+				</ul>
+			</div>
+			<div class="table__middleRow middleRow__footer">
+				<img src="{{ current_site }}/static/images/logo.jpeg" alt="logo" width="91" height="50">
+				<h3 class="middleRow__footer-title">U-help</h3>
+				<ul class="middleRow__footer-navigation">
+						<li><a href="">Main</a></li>
+						<li><a href="">Map</a></li>
+						<li><a href="">Events</a></li>
+						<li><a href="">FAQ</a></li>
+						<li><a href="">Terms of Use</a></li>
+						<li><a href="">Privacy Policy</a></li>
+				</ul>
+				<p class="middleRow__footer-copyright">© Copyright 2024. All Rights Reserved by U-Help</p>
+			</div>
+		</td>
+		<td class="table__lastRow"></td>
+	</tr>
+	</tbody>
+</table>
+</body>
+</html>
