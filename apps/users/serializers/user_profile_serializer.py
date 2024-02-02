@@ -1,6 +1,6 @@
 from cities_light.models import Country, City
 from rest_framework import serializers
-from apps.content.api.serializers import PostSerializer, CommentSerializer, SavedPostSerializer, SavedCommentSerializer
+from apps.content.api.serializers import PostSerializer, CommentSerializer
 from apps.files.api.serializers import ImageSerializer
 from apps.location.serializers.city_serializer import CitySerializerNew
 from apps.location.serializers.country_serializer import CountrySerializer
@@ -23,8 +23,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         queryset=City.objects.all(), write_only=True, required=False, allow_null=True
     )
 
-    saved_posts = SavedPostSerializer(many=True, read_only=True)
-    saved_comments = SavedCommentSerializer(many=True, read_only=True)
+    saved_posts = PostSerializer(many=True, read_only=True)
 
     telegram = serializers.CharField(required=False, allow_blank=True, allow_null=True, max_length=50)
     instagram = serializers.CharField(required=False, allow_blank=True, allow_null=True, max_length=50)
@@ -58,7 +57,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "last_reacted_posts",
             "last_contributions",
             "saved_posts",
-            "saved_comments",
         )
         read_only_fields = (
             "twilio_verification_sid",

@@ -6,4 +6,4 @@ class IsAuthorOrReadOnly(BasePermission):
         if request.method in ["GET", "HEAD", "OPTIONS"]:
             return True
 
-        return obj.author == request.user and request.user.is_authenticated
+        return obj.author == request.user or request.user.is_staff
