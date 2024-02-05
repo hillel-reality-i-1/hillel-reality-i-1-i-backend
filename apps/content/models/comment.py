@@ -53,7 +53,7 @@ class Comment(models.Model):
             user_profile.last_contributions.add(self)
             user_profile.save()
 
-        elif total_positive_votes < 10 and self.is_parent and self.is_contribution:
+        elif total_positive_votes < 3 and self.is_parent and self.is_contribution:
             self.is_contribution = False
             self.save()
 
