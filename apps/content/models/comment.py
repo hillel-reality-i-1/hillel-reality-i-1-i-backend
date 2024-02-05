@@ -45,7 +45,7 @@ class Comment(models.Model):
     def contribute(self):
         total_positive_votes = self.helpful_count - self.not_helpful_count
 
-        if total_positive_votes >= 10 and self.is_parent and not self.is_contribution:
+        if total_positive_votes >= 3 and self.is_parent and not self.is_contribution:
             self.is_contribution = True
             self.save()
 
