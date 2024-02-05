@@ -6,4 +6,8 @@ from apps.content.models import Comment
 
 class ContributionListView(ListAPIView):
     serializer_class = ContributionSerializer
-    queryset = Comment.objects.filter(is_contribution=True).order_by("-creation_date")
+
+    def get_queryset(self):
+        post_id = self.kwargs.get("post_id")
+        queryset = Comment.objects.filter(post_id=post_id, is_contribution=True).order_by("-creation_date")
+        return queryset
