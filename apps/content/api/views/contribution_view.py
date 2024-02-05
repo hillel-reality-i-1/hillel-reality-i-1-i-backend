@@ -10,6 +10,6 @@ class ContributionListView(ListAPIView):
     pagination_class = LastFiveActivityPagination
 
     def get_queryset(self):
-        post_id = self.kwargs["pk"]
+        post_id = self.kwargs["post_id"]
         queryset = Comment.objects.filter(post_id=post_id, is_contribution=True).order_by("-creation_date")
         return queryset
