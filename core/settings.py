@@ -67,6 +67,7 @@ LOCAL_APPS = [
     "apps.expert",
     "apps.content",
     "apps.files",
+    "apps.phonenumbers"
 ]
 
 # Third-party installed applications.
@@ -332,6 +333,10 @@ TWILIO_VERIFY_SID = env.str("TWILIO_VERIFY_SID", "")
 
 VONAGE_API_KEY = env.str("VONAGE_API_KEY", "")
 VONAGE_API_SECRET = env.str("VONAGE_API_SECRET", "")
+
+ALPHA_SMS_API_KEY = env.str("ALPHA_SMS_API_KEY", "")
+ALPHA_SMS_ALPHA_NAME = env.str("ALPHA_SMS_ALPHA_NAME", "")
+SMS_VERIFY_TIMEOUT = 300
 
 CITIES_LIGHT_INCLUDE_COUNTRIES = ["UA", "PL", "CZ", "DE", "GB"]
 
