@@ -1,7 +1,6 @@
 from django.urls import path
 
 from apps.content.api.views.posts.post_reactions_create_remove_view import PostReactionCreateRemoveView
-from .views.comments.vote_helpful_view import VoteHelpfulView, VoteNotHelpfulView
 from .views.contribution_view import ContributionListView
 from .views.posts import (
     PostListView,
@@ -16,6 +15,9 @@ from .views.comments import (
     CommentsListView,
     CommentModifiedView,
     CommentDeleteView,
+    user_comment_vote_detail,
+    VoteHelpfulView,
+    VoteNotHelpfulView,
 )
 from .views.posts.search_view import SearchView
 
@@ -38,4 +40,7 @@ urlpatterns = [
     path("comment/<int:comment_id>/vote_not_helpful/", VoteNotHelpfulView.as_view(), name="vote_not_helpful"),
     path("post/<int:post_id>/contributions/", ContributionListView.as_view(), name="contributions-list"),
     path("search/", SearchView.as_view(), name="search_view"),
+    path(
+        "user-comment-vote/<int:user_id>/<int:comment_id>/", user_comment_vote_detail, name="user-comment-vote-detail"
+    ),
 ]

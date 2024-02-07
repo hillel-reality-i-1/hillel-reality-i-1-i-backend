@@ -3,3 +3,5 @@ from .comments_list_view import CommentsListView
 from .comment_modified_view import CommentModifiedView
 from .comment_delete_view import CommentDeleteView
 from .nested_comment_create_view import NestedCommentsCreateView
+from .user_comments_vote_detail_view import user_comment_vote_detail
+from .vote_helpful_view import VoteHelpfulView, VoteNotHelpfulView

@@ -24,19 +24,11 @@ class VoteHelpfulView(APIView):
         if existing_vote:
             if existing_vote.helpful == helpful:
                 existing_vote.delete()
-                if helpful:
-                    comment.vote_helpful_state = False
-                else:
-                    comment.vote_not_helpful_state = False
             else:
                 existing_vote.helpful = helpful
                 existing_vote.save()
-                comment.vote_helpful_state = helpful
-                comment.vote_not_helpful_state = not helpful
         else:
             UserCommentVote.objects.create(user=user, comment=comment, helpful=helpful)
-            comment.vote_helpful_state = helpful
-            comment.vote_not_helpful_state = not helpful
 
         comment.update_vote_counts()
         comment.save()
