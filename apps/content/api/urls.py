@@ -36,6 +36,6 @@ urlpatterns = [
     path("comment/<int:pk>/replies/", NestedCommentsCreateView.as_view(), name="nested-comment-create"),
     path("comment/<int:comment_id>/vote_helpful/", VoteHelpfulView.as_view(), name="vote_helpful"),
     path("comment/<int:comment_id>/vote_not_helpful/", VoteNotHelpfulView.as_view(), name="vote_not_helpful"),
-    path("post/<int:pk>/contributions/", ContributionListView.as_view(), name="contributions-list"),
+    path("post/<int:post_id>/contributions/", ContributionListView.as_view(), name="contributions-list"),
     path("search/", SearchView.as_view(), name="search_view"),
 ]
