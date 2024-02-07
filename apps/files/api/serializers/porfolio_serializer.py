@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
-from apps.content.utils.aws_utils import save_moderate_img, remove_img_from_disk
+from apps.content.utils.aws_utils import remove_img_from_disk
 from apps.files.api.serializers.image_serializer import image_handle
 from apps.files.models import File
 from apps.users.models import UserProfileExtended
@@ -28,7 +28,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
 
         if UserProfileExtended.objects.filter(user=validated_data.get("author")).exists():
             if len(File.objects.filter(author=validated_data.get("author"))) < 10:
-                save_moderate_img(processed_image_data)
+                # moderate_img(processed_image_data)
                 created_image = super().create({**validated_data, "file": processed_image_data})
             else:
                 raise serializers.ValidationError("An expert's profile cannot contain more than 10 files.")
@@ -42,8 +42,6 @@ class PortfolioSerializer(serializers.ModelSerializer):
 
         if image_data:
             processed_image_data = image_handle(image_data)
-            save_moderate_img(processed_image_data)
-            remove_img_from_disk(str(instance.file))
             instance.file = processed_image_data
 
         instance.save()

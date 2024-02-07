@@ -2,8 +2,8 @@ import os
 import logging
 from botocore.exceptions import ClientError
 import boto3
-from django.core.files.temp import NamedTemporaryFile
 
+from apps.content.models import Post
 from core.settings import env
 from io import BytesIO
 from PIL import Image as PilImg
@@ -53,22 +53,22 @@ def moderation_image_with_aws(path_to_file):
     is_uploaded = upload_file_to_s3(path_to_file, "uhelp-bucket")
     if is_uploaded:
         response = moderate_image(file_name, "uhelp-bucket")
-        if response.get("ModerationLabels"):
-            raise serializers.ValidationError("Your image violates our content moderation policy.")
+        return response
     else:
         raise serializers.ValidationError(
-            "We are sorry. The image cannot be loaded at this time. " "Moderation service is unavailable."
+            "We are sorry. The image cannot be loaded at this time. Moderation service is unavailable."
         )
 
 
 def image_handle(image_data):
     max_size_bytes = 5 * 1024 * 1024
-    if image_data.size > max_size_bytes:
-        raise serializers.ValidationError("Image size exceeds the maximum allowed size (5 MB).")
+    min_size_bytes = 3 * 1024
+    if image_data.size > max_size_bytes or image_data.size < min_size_bytes:
+        raise serializers.ValidationError("Photo size ranges from 3 kb to 5 mb. Be kind, take another photo.")
 
     image = PilImg.open(image_data)
     if image.format.lower() not in ["jpeg", "png"]:
-        raise serializers.ValidationError("Invalid image format. Supported formats: JPEG, PNG.")
+        raise serializers.ValidationError("Invalid image format. Supported formats: JPEG, JPG, PNG.")
 
     max_size = (320, 240)
     if image.size[0] > max_size[0] or image.size[1] > max_size[1]:
@@ -88,8 +88,31 @@ def remove_img_from_disk(path):
         print(f"Error while deleting file: {e}")
 
 
-def save_moderate_img(processed_image_data):
-    with NamedTemporaryFile(delete=True, suffix=".jpg", dir="temp_images") as temp_file:
-        temp_file.write(processed_image_data.read())
-        temporary_path = temp_file.name
-        moderation_image_with_aws(temporary_path)
+def moderate_img(model, response, path, serializer, prev_image, prev_image_path, attr: str, old_post_data=None):
+    if response.get("ModerationLabels"):
+        obj = model.objects.get(id=serializer.data.get("id"))
+        if model == Post:
+            if old_post_data:
+                obj.title = old_post_data.get("title")
+                obj.content = old_post_data.get("content")
+                obj.category.set(old_post_data.get("category"))
+                obj.country.set(old_post_data.get("country"))
+                if prev_image is not None:
+                    obj.postimage.post_image = prev_image.post_image
+                    prev_image.save()
+                obj.save()
+            else:
+                obj.delete()
+        else:
+            if prev_image is None:
+                print("delete")
+                obj.delete()
+            else:
+                setattr(obj, attr, prev_image)
+                obj.save()
+
+        remove_img_from_disk(path)
+        raise serializers.ValidationError("Your image violates our content moderation policy.")
+    if prev_image_path:
+        print(prev_image_path)
+        remove_img_from_disk(prev_image_path)
