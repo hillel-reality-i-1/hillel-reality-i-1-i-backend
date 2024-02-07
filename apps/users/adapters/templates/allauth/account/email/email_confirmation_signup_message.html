@@ -97,7 +97,6 @@
 			font-weight: 500;
 			text-decoration: none;
 			color:#126FE1;
-			display: flex;
 			align-items: center;
 			gap: 10px;
 		}
@@ -105,16 +104,16 @@
 			font-family: 'Noto Sans', sans-serif;
 			display: inline-block;
 			padding: 10px 0 0 0;
-			gap: 10px;
 			list-style-type: none;
 		}
 		.middleRow__main_categories li {
 			display: inline;
 			vertical-align: middle;
-			padding: 5px;
+			padding: 7px;
 			background: #DBDBDDA5;
 			font-size: 13px;
 			border-radius: 12px;
+			margin: 0;
 		}
 
 		.middleRow__footer{
@@ -157,11 +156,11 @@
 		<td class="table__middleRow">
 			<div class="table__middleRow middleRow__main">
 				<div class="middleRow__main_header">
-					<img class="main_header-image"width="56" height="56" src="{{ current_site }}/static/images/logo.jpg" alt="logo">
+					<img class="main_header-image"width="56" height="56" src="{{ current_site }}/static/images/logo.jpg" alt="logo" style="border-radius:22px">
 					<div class="middleRow__main_header-body">
 						<div class="main_header-titleBody">
 							<h2 class="main_header-titleBody_title">U-help</h2>
-							<img class="main_header-titleBody_verified"width="15" height="15" src="" alt="verified">
+							<img class="main_header-titleBody_verified"width="15" height="15" src="{{ current_site }}/static/images/icon_check.png" alt="verified">
 							<p class="main_header-titleBody_category">Всесвітня допомога</p>
 						</div>
 						<div class="main_header-locationBody">
@@ -173,7 +172,7 @@
 
 				</div>
 				<h1 class="middleRow__main_title">Підтвердіть вашу реєстрацію!</h1>
-				<img class="middleRow__main_image" src="{{ current_site }}/static/images/email_confirm_image.jpg" alt="head-image">
+				<img class="middleRow__main_image" src="{{ current_site }}/static/images/email_confirm_image.jpg" alt="head-image" width = "100%">
 				<div class="middleRow__main_text">
 					<p>Привіт та ласкаво просимо до U-Help! 🎉  Ви отримали цей лист для <br> підтвердження реєстрації на нашому сайті U-Help. </p>
 					<p><span>Для того, щоб продовжити реєстрацію, просто натисніть на чарівне посилання нижче:</span> </p>
@@ -189,7 +188,7 @@
 				</ul>
 			</div>
 			<div class="table__middleRow middleRow__footer">
-				<img src="{{ current_site }}/static/images/logo.jpg" alt="logo" width="91" height="50">
+				<img src="{{ current_site }}/static/images/logo_2.png" alt="logo" width="91" height="50">
 				<h3 class="middleRow__footer-title">U-help</h3>
 				<ul class="middleRow__footer-navigation">
 						<li><a href="">Main</a></li>
