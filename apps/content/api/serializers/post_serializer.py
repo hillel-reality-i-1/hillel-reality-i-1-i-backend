@@ -6,7 +6,7 @@ from apps.files.models.post_image import PostImage
 from .reaction_serializer import ReactionSerializer
 from .comment_serializer import CommentSerializer
 from ...models import Post, Comment
-from ...utils.aws_utils import image_handle, remove_img_from_disk, save_moderate_img
+from ...utils.aws_utils import image_handle, remove_img_from_disk
 
 User = get_user_model()
 
@@ -81,7 +81,7 @@ class PostSerializer(serializers.ModelSerializer):
 
         if post_image_data:
             processed_image_data = image_handle(post_image_data)
-            save_moderate_img(processed_image_data)
+            # moderate_img(processed_image_data)
 
         post = super().create(validated_data)
         if processed_image_data:
@@ -94,21 +94,23 @@ class PostSerializer(serializers.ModelSerializer):
 
         if post_image_data:
             processed_image_data = image_handle(post_image_data)
-            save_moderate_img(processed_image_data)
+            current_post_image = PostImage.objects.filter(post=instance).first()
 
-            if hasattr(instance, "postimage") and instance.postimage:
-                remove_img_from_disk(str(instance.postimage.post_image))
-                instance.postimage.delete()
-
-            post_image = PostImage.objects.create(post_image=processed_image_data, post=instance)
-            instance.postimage = post_image
+            if current_post_image:
+                current_post_image.post_image = processed_image_data
+                current_post_image.save()
+                instance.postimage.post_image = current_post_image.post_image
+            else:
+                current_post_image = PostImage.objects.create(post=instance, post_image=processed_image_data)
+                instance.postimage.post_image = current_post_image.post_image
 
         instance.title = validated_data.get("title", instance.title)
         instance.content = validated_data.get("content", instance.content)
-        instance.category.set(validated_data.get("category", instance.category))
-        instance.country.set(validated_data.get("country", instance.country))
+        instance.category.set(validated_data.get("category", instance.category.all()))
+        instance.country.set(validated_data.get("country", instance.country.all()))
 
         instance.save()
+
         return instance
 
     def delete(self, instance, **kwargs):

@@ -44,9 +44,12 @@ phonenumbers==8.13.24
 celery[redis]==5.3.5
 flower==2.0.1
 
-# Sender sms for validation phone_numbers
+# Sender sms for validation phonenumbers
 twilio==8.10.2
 vonage==3.11.0
+
+alphasms-client==0.1.3
+
 
 django-cors-headers==4.3.1
 

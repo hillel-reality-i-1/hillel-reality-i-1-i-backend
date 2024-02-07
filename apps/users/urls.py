@@ -46,8 +46,8 @@ router.register(r"user_profile", UserProfileListView, basename="user_profile")
 router.register(r"user_profile_extended", UserProfileExtendedListView, basename="user_profile_extended")
 
 urlpatterns = [
-    path("auth/send-verification-code/", SendTwilioVerificationCode.as_view(), name="send-verification-code"),
-    path("auth/check-verification-code/", CheckTwilioVerificationCode.as_view(), name="check-verification-code"),
+    # path("auth/send-verification-code/", SendTwilioVerificationCode.as_view(), name="send-verification-code"),
+    # path("auth/check-verification-code/", CheckTwilioVerificationCode.as_view(), name="check-verification-code"),
     path("users/user/<int:user_id>/last_posts/", LastPostsByAuthor.as_view(), name="last_posts"),
     path("users/user/<int:user_id>/last_comments/", LastCommentsByAuthor.as_view(), name="last_comments"),
     path(
