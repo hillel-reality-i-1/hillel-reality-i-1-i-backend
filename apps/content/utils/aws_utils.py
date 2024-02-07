@@ -26,6 +26,8 @@ def upload_file_to_s3(file_name, bucket, object_name=None):
     :return: True if file was uploaded, else False
     """
 
+    file_name = f"/var/www/{file_name}"
+    print(file_name)
     # If S3 object_name was not specified, use file_name
     if object_name is None:
         object_name = os.path.basename(file_name)
