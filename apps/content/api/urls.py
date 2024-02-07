@@ -15,9 +15,9 @@ from .views.comments import (
     CommentsListView,
     CommentModifiedView,
     CommentDeleteView,
-    user_comment_vote_detail,
     VoteHelpfulView,
     VoteNotHelpfulView,
+    UserCommentVoteDetailAPIView,
 )
 from .views.posts.search_view import SearchView
 
@@ -41,6 +41,8 @@ urlpatterns = [
     path("post/<int:post_id>/contributions/", ContributionListView.as_view(), name="contributions-list"),
     path("search/", SearchView.as_view(), name="search_view"),
     path(
-        "user-comment-vote/<int:user_id>/<int:comment_id>/", user_comment_vote_detail, name="user-comment-vote-detail"
+        "user-comment-vote/<int:user_id>/<int:comment_id>/",
+        UserCommentVoteDetailAPIView.as_view(),
+        name="user-comment-vote-detail",
     ),
 ]
