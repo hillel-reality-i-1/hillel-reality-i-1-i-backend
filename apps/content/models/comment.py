@@ -25,6 +25,8 @@ class Comment(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     is_contribution = models.BooleanField(default=False)
+    vote_helpful_state = models.BooleanField(default=False)
+    vote_not_helpful_state = models.BooleanField(default=False)
     helpful_count = models.IntegerField(default=0)
     not_helpful_count = models.IntegerField(default=0)
 

@@ -15,7 +15,7 @@ class VoteHelpfulView(APIView):
         comment = Comment.objects.get(pk=comment_id)
 
         if not comment.is_parent:
-            raise serializers.ValidationError("Ви не можете голосувати за вкладені коментарі.")
+            raise serializers.ValidationError("Вы не можете голосовать за вложенные комментарии.")
 
         user = request.user
 
@@ -24,13 +24,22 @@ class VoteHelpfulView(APIView):
         if existing_vote:
             if existing_vote.helpful == helpful:
                 existing_vote.delete()
+                if helpful:
+                    comment.vote_helpful_state = False
+                else:
+                    comment.vote_not_helpful_state = False
             else:
                 existing_vote.helpful = helpful
                 existing_vote.save()
+                comment.vote_helpful_state = helpful
+                comment.vote_not_helpful_state = not helpful
         else:
             UserCommentVote.objects.create(user=user, comment=comment, helpful=helpful)
+            comment.vote_helpful_state = helpful
+            comment.vote_not_helpful_state = not helpful
 
         comment.update_vote_counts()
+        comment.save()
 
         return Response(status=status.HTTP_200_OK)
 

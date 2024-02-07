@@ -24,8 +24,17 @@ class CommentSerializer(serializers.ModelSerializer):
             "replies",
             "is_parent",
             "is_contribution",
+            "vote_helpful_state",
+            "vote_not_helpful_state",
         ]
-        read_only_fields = ["post", "author", "helpful_count", "not_helpful_count"]
+        read_only_fields = [
+            "post",
+            "author",
+            "helpful_count",
+            "not_helpful_count",
+            "vote_helpful_state",
+            "vote_not_helpful_state",
+        ]
 
     def get_replies(self, obj):
         replies = Comment.objects.filter(parent=obj)
