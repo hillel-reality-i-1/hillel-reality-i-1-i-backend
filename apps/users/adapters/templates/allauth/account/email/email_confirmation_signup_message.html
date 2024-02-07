@@ -40,6 +40,7 @@
 			margin-right: 10px;
 			vertical-align: middle;
 			width: 100%;
+			max-height: 80px;
 		}
 		.main_header-titleBody, .main_header-locationBody{
 			padding-top: 10px;
@@ -76,7 +77,7 @@
 		}
 		.middleRow__main_title{
 			font-family: 'Noto Sans', sans-serif;
-			margin: 20px 0;
+			margin: 0 0 10px 0;
 			font-weight: 600;
 		}
 		img{
@@ -126,7 +127,7 @@
 			font-weight: 700;
 			margin: 0;
 			line-height: 1.5;
-			font-size: 26px;
+			font-size: 22px;
 			text-transform: uppercase;
 
 		}
@@ -173,7 +174,7 @@
 
 				</div>
 				<h1 class="middleRow__main_title">Підтвердіть вашу реєстрацію!</h1>
-				<img class="middleRow__main_image" src="{{ current_site }}/static/images/email_confirm_image.jpg" alt="head-image" width = "100%">
+				<img class="middleRow__main_image" src="{{ current_site }}/static/images/email_confirm_image.jpg" alt="head-image" width = "100%" style="border-radius:12px">
 				<div class="middleRow__main_text">
 					<p>Привіт та ласкаво просимо до U-Help! 🎉  Ви отримали цей лист для <br> підтвердження реєстрації на нашому сайті U-Help. </p>
 					<p><span>Для того, щоб продовжити реєстрацію, просто натисніть на чарівне посилання нижче:</span> </p>
@@ -192,12 +193,12 @@
 				<img src="{{ current_site }}/static/images/logo_2.png" alt="logo" width="81" height="40">
 				<h3 class="middleRow__footer-title">U-help</h3>
 				<ul class="middleRow__footer-navigation">
-						<li><a href="">Main</a></li>
-						<li><a href="">Map</a></li>
-						<li><a href="">Events</a></li>
-						<li><a href="">FAQ</a></li>
-						<li><a href="">Terms of Use</a></li>
-						<li><a href="">Privacy Policy</a></li>
+						<li><a href="{{ current_site }}">Main</a></li>
+						<li><a href="{{ current_site }}">Map</a></li>
+						<li><a href="{{ current_site }}">Events</a></li>
+						<li><a href="{{ current_site }}">FAQ</a></li>
+						<li><a href="{{ current_site }}">Terms of Use</a></li>
+						<li><a href="{{ current_site }}">Privacy Policy</a></li>
 				</ul>
 				<p class="middleRow__footer-copyright">© Copyright 2024. All Rights Reserved by U-Help</p>
 			</div>
