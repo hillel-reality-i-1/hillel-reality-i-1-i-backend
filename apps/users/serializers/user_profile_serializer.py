@@ -138,8 +138,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
             instance.phone_verified_request_id = None
 
         instance.about_my_self = validated_data.get("about_my_self", instance.about_my_self)
-        instance.country = validated_data.get("country", instance.country)
-        instance.city = validated_data.get("city", instance.city)
+        instance.country = validated_data.get("country_id", instance.country)
+        instance.city = validated_data.get("city_id", instance.city)
 
         instance.save(clean=True)
 
