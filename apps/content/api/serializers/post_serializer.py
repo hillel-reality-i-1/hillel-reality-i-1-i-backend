@@ -1,3 +1,5 @@
+import json
+
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.utils.translation import get_language
@@ -74,6 +76,15 @@ class PostSerializer(serializers.ModelSerializer):
             representation["image_to_post"] = None
 
         return representation
+
+    def to_internal_value(self, data):
+        if "category" in data and isinstance(data["category"], str):
+            data["category"] = json.loads(data["category"])
+
+        if "country" in data and isinstance(data["country"], str):
+            data["country"] = json.loads(data["country"])
+
+        return super().to_internal_value(data)
 
     def create(self, validated_data):
         post_image_data = validated_data.pop("post_image", None)
