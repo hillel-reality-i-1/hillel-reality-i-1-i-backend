@@ -122,8 +122,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         validated_data = self.check_empty_strings(validated_data)
 
-        instance.country = validated_data.get("country_id")
-        instance.city = validated_data.get("city_id")
+        # instance.country = validated_data.get("country_id")
+        # instance.city = validated_data.get("city_id")
         instance.telegram = validated_data.get("telegram", instance.telegram)
         instance.instagram = validated_data.get("instagram", instance.instagram)
         instance.facebook = validated_data.get("facebook", instance.facebook)
