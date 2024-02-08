@@ -78,13 +78,15 @@ class PostSerializer(serializers.ModelSerializer):
         return representation
 
     def to_internal_value(self, data):
-        if "category" in data and isinstance(data["category"], str):
-            data["category"] = json.loads(data["category"])
+        mutable_data = data.copy()
 
-        if "country" in data and isinstance(data["country"], str):
-            data["country"] = json.loads(data["country"])
+        if "category" in mutable_data and isinstance(mutable_data["category"], str):
+            mutable_data["category"] = json.loads(mutable_data["category"])
 
-        return super().to_internal_value(data)
+        if "country" in mutable_data and isinstance(mutable_data["country"], str):
+            mutable_data["country"] = json.loads(mutable_data["country"])
+
+        return super().to_internal_value(mutable_data)
 
     def create(self, validated_data):
         post_image_data = validated_data.pop("post_image", None)
