@@ -1,4 +1,4 @@
-import json
+# import json
 
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
@@ -79,12 +79,15 @@ class PostSerializer(serializers.ModelSerializer):
 
     def to_internal_value(self, data):
         mutable_data = data.copy()
-
-        if "category" in mutable_data and isinstance(mutable_data["category"], str):
-            mutable_data["category"] = json.loads(mutable_data["category"])
-
-        if "country" in mutable_data and isinstance(mutable_data["country"], str):
-            mutable_data["country"] = json.loads(mutable_data["country"])
+        # print(mutable_data)
+        #
+        # if "category" in mutable_data and isinstance(mutable_data["category"], str):
+        #     print("if inside")
+        #     mutable_data["category"] = json.loads(mutable_data["category"])
+        #
+        # if "country" in mutable_data and isinstance(mutable_data["country"], str):
+        #     mutable_data["country"] = json.loads(mutable_data["country"])
+        # print(mutable_data)
 
         return super().to_internal_value(mutable_data)
 
