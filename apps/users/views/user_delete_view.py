@@ -20,8 +20,12 @@ class UserDeleteView(DestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        self.perform_destroy(instance)
-        return Response(
-            data={"details": "Your account has been successfully deleted"},
-            status=status.HTTP_204_NO_CONTENT
-        )
+        if instance.check_password(request.data.get('password')):
+            self.perform_destroy(instance)
+            return Response(
+                data={"details": "Ваш обліковий запис успішно видалено"},
+                status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(
+                data={"error": "Неправильний пароль"},
+                status=status.HTTP_400_BAD_REQUEST)
