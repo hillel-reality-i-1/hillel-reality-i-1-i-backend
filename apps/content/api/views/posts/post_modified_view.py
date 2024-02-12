@@ -1,6 +1,5 @@
 from django.utils import timezone
 from rest_framework import serializers, status
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.response import Response
 
@@ -12,10 +11,15 @@ from apps.files.models.post_image import PostImage
 
 
 class PostModifiedView(RetrieveUpdateAPIView):
-    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
+    permission_classes = [IsAuthorOrReadOnly]
 
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):
         current_post = self.get_object()
